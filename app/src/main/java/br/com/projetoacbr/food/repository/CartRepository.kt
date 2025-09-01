@@ -1,0 +1,102 @@
+package br.com.projetoacbr.food.repository
+
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.map
+import br.com.projetoacbr.food.R
+import br.com.projetoacbr.food.model.Product
+
+/**
+ * CartRepository é um Singleton que gerencia o estado global do carrinho de compras.
+ * Ele mantém um mapa de produtos e suas quantidades, e expõe LiveData para observadores.
+ */
+object CartRepository {
+
+    private val _cartItems = MutableLiveData<MutableMap<String, Int>>(mutableMapOf())
+
+    val cartItems: MutableLiveData<MutableMap<String, Int>> get() = _cartItems
+
+    val totalItemsInCart: LiveData<Int> = _cartItems.map { cartMap ->
+        cartMap.values.sum()
+    }
+
+    val cartTotalValue: LiveData<Double> = _cartItems.map { cartMap ->
+
+        var total = 0.0
+        cartMap.forEach { (productId, quantity) ->
+            val product = ProductRepositoryMock.getProductById(productId)
+            if (product != null) {
+                total += product.price * quantity
+            }
+        }
+        total
+    }
+
+
+    /**
+     * Adiciona um item ao carrinho ou incrementa sua quantidade.
+     * @param product O produto a ser adicionado.
+     */
+    fun addItem(product: Product) {
+        val currentCart = _cartItems.value ?: mutableMapOf()
+        val newCart = currentCart.toMutableMap()
+
+        val currentQuantity = newCart[product.id] ?: 0
+        newCart[product.id] = currentQuantity + 1
+
+        _cartItems.value = newCart
+    }
+
+    /**
+     * Remove um item do carrinho ou decrementa sua quantidade.
+     * Se a quantidade chegar a zero, o item é removido do carrinho.
+     * @param product O produto a ser removido.
+     */
+    fun removeItem(product: Product) {
+        val currentCart = _cartItems.value ?: return
+        val newCart = currentCart.toMutableMap()
+
+        val currentQuantity = newCart[product.id] ?: 0
+        if (currentQuantity > 0) {
+            val newQuantity = currentQuantity - 1
+            if (newQuantity == 0) {
+                newCart.remove(product.id)
+            } else {
+                newCart[product.id] = newQuantity
+            }
+        }
+
+        _cartItems.value = newCart
+    }
+
+    /**
+     * Obtém a quantidade atual de um produto específico no carrinho.
+     * @param productId O ID do produto.
+     * @return A quantidade do produto no carrinho, ou 0 se não estiver presente.
+     */
+    fun getQuantity(productId: String): Int {
+        return _cartItems.value?.get(productId) ?: 0
+    }
+
+    /**
+     * Limpa completamente o carrinho.
+     */
+    fun clearCart() {
+        _cartItems.value = mutableMapOf()
+    }
+}
+
+object ProductRepositoryMock {
+    private val allProducts = listOf(
+        Product("1", "Camiseta ACBr", 99.99, R.drawable.img_camiseta, "Vestuário"),
+        Product("2", "Boné ACBr", 49.99, R.drawable.img_cap, "Vestuário"),
+        Product("3", "Caneca ACBr", 34.99, R.drawable.img_caneca, "Acessórios"),
+        Product("4", "Garrafa 500ml ACBr", 49.99, R.drawable.img_garrafa, "Acessórios"),
+        Product("5", "Mochila ACBr", 140.00, R.drawable.img_backpack, "Acessórios"),
+        Product("6", "Caderno ACBr", 25.00, R.drawable.img_book, "Papelaria"),
+    )
+
+    fun getProductById(id: String): Product? {
+        return allProducts.find { it.id == id }
+    }
+}

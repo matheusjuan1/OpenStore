@@ -1,3 +1,39 @@
 <resources>
-    <string name="app_name">acbr-food</string>
+    <string name="app_name">ACBr Food</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="logo_acbr">Logo ACBr</string>
+    <string name="demo">Demo</string>
+    <string name="menu">Menu</string>
+    <string name="loja_acbr">Loja ACBr</string>
+    <string name="carrinho_de_compras">Carrinho de Compras</string>
+    <string name="buscar">Buscar</string>
+    <string name="escanear_codigo_de_barras">Escanear Código de Barras</string>
+    <string name="todos">Todos</string>
+    <string name="vestuario">Vestuário</string>
+    <string name="acessorios">Acessórios</string>
+    <string name="papelaria">Papelaria</string>
+    <string name="imagem_do_produto">Imagem do Produto</string>
+    <string name="remover_item">Remover Item</string>
+    <string name="adicionar_item">Adicionar Item</string>
+    <string name="initial_value">0</string>
+    <string name="pagar">Pagar</string>
+    <string name="total">Total</string>
+    <string name="ver_carrinho_de_compras">Ver carrinho de compras</string>
+    <string name="escolha_a_forma_de_pagamento">Escolha a forma de pagamento</string>
+    <string name="debit">Débito</string>
+    <string name="credit">Crédito</string>
+    <string name="voucher">Voucher</string>
+    <string name="pix">PIX</string>
+    <string name="cancel">Cancelar</string>
+    <string name="navigation_drawer_open">Abrir menu de navegação</string>
+    <string name="navigation_drawer_close">Fechar menu de navegação</string>
+    <string name="venda">Venda</string>
+    <string name="configuracoes">Configurações</string>
+    <string name="impressao">Impressão</string>
+    <string name="acquirer_name">Adquirente: %s</string>
+    <string name="empty_cart">Carrinho vazio! Adicione itens primeiro.</string>
+    <string name="imprimir">Imprimir</string>
+    <string name="installment_options">Opções de parcelamento</string>
+    <string name="installments_quantity">Escolha a quantidade de parcelas</string>
 </resources>
