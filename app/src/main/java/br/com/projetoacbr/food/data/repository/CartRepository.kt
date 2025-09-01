@@ -1,4 +1,4 @@
-package br.com.projetoacbr.food.repository
+package br.com.projetoacbr.food.data.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

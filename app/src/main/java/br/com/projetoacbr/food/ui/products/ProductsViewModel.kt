@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import br.com.projetoacbr.food.R
 import br.com.projetoacbr.food.domain.model.Product
-import br.com.projetoacbr.food.repository.CartRepository
+import br.com.projetoacbr.food.data.repository.CartRepository
 
 class ProductsViewModel : ViewModel() {
 

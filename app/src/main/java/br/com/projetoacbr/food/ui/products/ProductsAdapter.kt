@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import br.com.projetoacbr.food.R
 import br.com.projetoacbr.food.databinding.ItemProductCardBinding
 import br.com.projetoacbr.food.domain.model.Product
-import br.com.projetoacbr.food.repository.CartRepository
+import br.com.projetoacbr.food.data.repository.CartRepository
 
 class ProductsAdapter(
     private val lifecycleOwner: LifecycleOwner,
