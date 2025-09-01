@@ -1,9 +1,13 @@
 package br.com.projetoacbr.food.domain.model
 
+import java.math.BigDecimal
+
 data class Product(
-    val id: String,
+    val id: Int,
+    val categoryId: Int,
     val name: String,
-    val price: Double,
-    val image: Int? = null,
-    val category: String
+    val description: String,
+    val price: BigDecimal,
+    val imageUrl: String,
+    val isAvailable: Boolean
 )

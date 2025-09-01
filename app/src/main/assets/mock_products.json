@@ -1,0 +1,121 @@
+{
+  "products": [
+    {
+      "id": 101,
+      "categoryId": 1,
+      "name": "X-Burger Clássico",
+      "description": "Pão, hambúrguer de 150g, queijo cheddar e picles. O sabor inconfundível que todo mundo ama.",
+      "price": 25.90,
+      "image_url": "https://placehold.co/400x300/F44336/FFFFFF?text=X-Burger",
+      "is_available": true
+    },
+    {
+      "id": 102,
+      "categoryId": 1,
+      "name": "X-Salada Especial",
+      "description": "Nosso X-Burger com um toque de frescor: alface crocante, tomate fresco e maionese especial.",
+      "price": 28.50,
+      "image_url": "https://placehold.co/400x300/4CAF50/FFFFFF?text=X-Salada",
+      "is_available": true
+    },
+    {
+      "id": 103,
+      "categoryId": 1,
+      "name": "Frango Grelhado no Pão",
+      "description": "Uma opção mais leve. Filé de frango grelhado, queijo branco, alface e tomate no pão integral.",
+      "price": 27.00,
+      "image_url": "https://placehold.co/400x300/FFEB3B/000000?text=Frango+Grelhado",
+      "is_available": true
+    },
+    {
+      "id": 104,
+      "categoryId": 1,
+      "name": "Sanduíche Vegetariano",
+      "description": "Delicioso hambúrguer à base de plantas, com queijo, alface, tomate e molho especial.",
+      "price": 29.90,
+      "image_url": "https://placehold.co/400x300/8BC34A/FFFFFF?text=Vegetariano",
+      "is_available": true
+    },
+    {
+      "id": 201,
+      "categoryId": 2,
+      "name": "Batatas Fritas (Média)",
+      "description": "Crocantes por fora, macias por dentro. Acompanhamento perfeito para qualquer lanche.",
+      "price": 12.00,
+      "image_url": "https://placehold.co/400x300/FFC107/000000?text=Batatas+Fritas",
+      "is_available": true
+    },
+    {
+      "id": 202,
+      "categoryId": 2,
+      "name": "Anéis de Cebola",
+      "description": "Anéis de cebola empanados e fritos. Crocantes e deliciosos.",
+      "price": 14.50,
+      "image_url": "https://placehold.co/400x300/CDDC39/000000?text=Onion+Rings",
+      "is_available": true
+    },
+    {
+      "id": 301,
+      "categoryId": 3,
+      "name": "Coca-Cola",
+      "description": "Lata 350ml, gelada e refrescante.",
+      "price": 7.50,
+      "image_url": "https://placehold.co/400x300/F44336/FFFFFF?text=Coca-Cola",
+      "is_available": true
+    },
+    {
+      "id": 302,
+      "categoryId": 3,
+      "name": "Guaraná Antarctica",
+      "description": "Lata 350ml. O sabor original do Brasil.",
+      "price": 7.50,
+      "image_url": "https://placehold.co/400x300/4CAF50/FFFFFF?text=Guaraná",
+      "is_available": true
+    },
+    {
+      "id": 303,
+      "categoryId": 3,
+      "name": "Suco de Laranja Natural",
+      "description": "Copo de 400ml, feito na hora com laranjas frescas.",
+      "price": 9.00,
+      "image_url": "https://placehold.co/400x300/FF9800/FFFFFF?text=Suco",
+      "is_available": true
+    },
+    {
+      "id": 304,
+      "categoryId": 3,
+      "name": "Água Mineral sem Gás",
+      "description": "Garrafa de 500ml.",
+      "price": 5.00,
+      "image_url": "https://placehold.co/400x300/03A9F4/FFFFFF?text=Água",
+      "is_available": true
+    },
+    {
+      "id": 401,
+      "categoryId": 4,
+      "name": "Sundae de Chocolate",
+      "description": "Sorvete de baunilha cremoso com calda de chocolate quente e castanhas.",
+      "price": 11.00,
+      "image_url": "https://placehold.co/400x300/795548/FFFFFF?text=Sundae",
+      "is_available": true
+    },
+    {
+      "id": 402,
+      "categoryId": 4,
+      "name": "Mousse de Maracujá",
+      "description": "Leve, cremoso e com o azedinho na medida certa. Uma sobremesa tropical.",
+      "price": 9.50,
+      "image_url": "https://placehold.co/400x300/FFEB3B/000000?text=Mousse",
+      "is_available": true
+    },
+    {
+      "id": 501,
+      "categoryId": 5,
+      "name": "Maionese Temperada",
+      "description": "Pote de 30g da nossa maionese secreta com ervas finas.",
+      "price": 3.00,
+      "image_url": "https://placehold.co/400x300/9E9E9E/000000?text=Maionese",
+      "is_available": true
+    }
+  ]
+}
