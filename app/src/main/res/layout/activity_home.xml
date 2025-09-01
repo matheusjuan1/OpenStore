@@ -165,7 +165,7 @@
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-    <br.com.projetoacbr.food.view.custom.CustomDrawerContentView
+    <br.com.projetoacbr.food.ui.common.components.CustomDrawerContentView
         android:id="@+id/custom_drawer"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"

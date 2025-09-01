@@ -1,4 +1,4 @@
-package br.com.projetoacbr.food.view.dialog
+package br.com.projetoacbr.food.ui.common.components
 
 import android.annotation.SuppressLint
 import android.content.Intent

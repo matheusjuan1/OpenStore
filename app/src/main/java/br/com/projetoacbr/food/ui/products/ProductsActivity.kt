@@ -22,8 +22,8 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.GridLayoutManager
 import br.com.projetoacbr.food.R
 import br.com.projetoacbr.food.databinding.ActivityHomeBinding
-import br.com.projetoacbr.food.view.custom.CustomDrawerContentView
-import br.com.projetoacbr.food.view.dialog.CartBottomSheetDialog
+import br.com.projetoacbr.food.ui.common.components.CustomDrawerContentView
+import br.com.projetoacbr.food.ui.common.components.CartBottomSheetDialog
 import com.google.android.material.badge.BadgeDrawable
 import com.google.android.material.badge.BadgeUtils
 import com.google.android.material.badge.ExperimentalBadgeUtils

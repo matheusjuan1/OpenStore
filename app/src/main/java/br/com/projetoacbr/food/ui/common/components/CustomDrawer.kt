@@ -1,4 +1,4 @@
-package br.com.projetoacbr.food.view.custom
+package br.com.projetoacbr.food.ui.common.components
 
 import android.content.Context
 import android.util.AttributeSet
