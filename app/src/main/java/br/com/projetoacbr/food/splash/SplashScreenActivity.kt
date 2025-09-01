@@ -1,4 +1,4 @@
-package br.com.projetoacbr.food.view.activity
+package br.com.projetoacbr.food.splash
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import br.com.projetoacbr.food.databinding.ActivitySplashScreenBinding
+import br.com.projetoacbr.food.view.activity.HomeActivity
 
 @SuppressLint("CustomSplashScreen")
 class SplashScreenActivity : AppCompatActivity() {
