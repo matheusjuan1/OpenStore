@@ -8,8 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import br.com.projetoacbr.food.databinding.DialogCartSummaryBinding
-import br.com.projetoacbr.food.view.activity.CheckoutActivity
-import br.com.projetoacbr.food.viewModel.HomeViewModel
+import br.com.projetoacbr.food.ui.checkout.CheckoutActivity
+import br.com.projetoacbr.food.ui.products.ProductsViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class CartBottomSheetDialog : BottomSheetDialogFragment() {
@@ -19,7 +19,7 @@ class CartBottomSheetDialog : BottomSheetDialogFragment() {
     }
 
     private lateinit var binding: DialogCartSummaryBinding
-    private val homeViewModel: HomeViewModel by activityViewModels()
+    private val productsViewModel: ProductsViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,12 +34,12 @@ class CartBottomSheetDialog : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        homeViewModel.cartTotalValue.observe(viewLifecycleOwner) { totalValue ->
+        productsViewModel.cartTotalValue.observe(viewLifecycleOwner) { totalValue ->
             binding.tvCartTotalValue.text = "R$ ${String.format("%.2f", totalValue)}"
         }
 
 
-        homeViewModel.totalCartItemsCount.observe(viewLifecycleOwner) { count ->
+        productsViewModel.totalCartItemsCount.observe(viewLifecycleOwner) { count ->
             if (count <= 0) {
                 if (isAdded) {
                     dismissAllowingStateLoss()

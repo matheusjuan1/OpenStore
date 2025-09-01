@@ -1,4 +1,4 @@
-package br.com.projetoacbr.food.view.adapter
+package br.com.projetoacbr.food.ui.products
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
@@ -9,14 +9,14 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import br.com.projetoacbr.food.R
 import br.com.projetoacbr.food.databinding.ItemProductCardBinding
-import br.com.projetoacbr.food.model.Product
+import br.com.projetoacbr.food.domain.model.Product
 import br.com.projetoacbr.food.repository.CartRepository
 
-class ProductAdapter(
+class ProductsAdapter(
     private val lifecycleOwner: LifecycleOwner,
     private val onAddItemClicked: (Product) -> Unit,
     private val onRemoveItemClicked: (Product) -> Unit
-) : ListAdapter<Product, ProductAdapter.ProductViewHolder>(ProductDiffCallback()) {
+) : ListAdapter<Product, ProductsAdapter.ProductViewHolder>(ProductDiffCallback()) {
 
     class ProductViewHolder(
         private val binding: ItemProductCardBinding,

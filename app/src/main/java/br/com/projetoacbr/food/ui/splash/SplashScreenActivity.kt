@@ -1,4 +1,4 @@
-package br.com.projetoacbr.food.splash
+package br.com.projetoacbr.food.ui.splash
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import br.com.projetoacbr.food.databinding.ActivitySplashScreenBinding
-import br.com.projetoacbr.food.view.activity.HomeActivity
+import br.com.projetoacbr.food.ui.products.ProductsActivity
 
 @SuppressLint("CustomSplashScreen")
 class SplashScreenActivity : AppCompatActivity() {
@@ -31,7 +31,7 @@ class SplashScreenActivity : AppCompatActivity() {
         }
 
         Handler(Looper.getMainLooper()).postDelayed({
-            startActivity(Intent(this, HomeActivity::class.java))
+            startActivity(Intent(this, ProductsActivity::class.java))
             finish()
         }, SPLASH_SCREEN_DURATION)
 

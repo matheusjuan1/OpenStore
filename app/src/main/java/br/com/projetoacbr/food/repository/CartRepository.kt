@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.map
 import br.com.projetoacbr.food.R
-import br.com.projetoacbr.food.model.Product
+import br.com.projetoacbr.food.domain.model.Product
 
 /**
  * CartRepository é um Singleton que gerencia o estado global do carrinho de compras.

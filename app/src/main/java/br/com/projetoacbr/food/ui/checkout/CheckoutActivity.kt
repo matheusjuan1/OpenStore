@@ -1,4 +1,4 @@
-package br.com.projetoacbr.food.view.activity
+package br.com.projetoacbr.food.ui.checkout
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -12,8 +12,8 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.commit
 import br.com.projetoacbr.food.R
 import br.com.projetoacbr.food.databinding.ActivityCheckoutBinding
-import br.com.projetoacbr.food.view.fragment.InstallmentFragment
-import br.com.projetoacbr.food.viewModel.CheckoutViewModel
+import br.com.projetoacbr.food.ui.checkout.InstallmentFragment
+import br.com.projetoacbr.food.ui.checkout.CheckoutViewModel
 
 class CheckoutActivity : AppCompatActivity() {
 

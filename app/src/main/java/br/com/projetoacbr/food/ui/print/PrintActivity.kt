@@ -1,4 +1,4 @@
-package br.com.projetoacbr.food.view.activity
+package br.com.projetoacbr.food.ui.print
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge

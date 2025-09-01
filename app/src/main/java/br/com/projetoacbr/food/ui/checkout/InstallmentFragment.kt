@@ -1,4 +1,4 @@
-package br.com.projetoacbr.food.view.fragment
+package br.com.projetoacbr.food.ui.checkout
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import br.com.projetoacbr.food.R
 import br.com.projetoacbr.food.databinding.FragmentInstallmentBinding
-import br.com.projetoacbr.food.viewModel.CheckoutViewModel
+import br.com.projetoacbr.food.ui.checkout.CheckoutViewModel
 
 /**
  * Fragmento responsável por exibir e gerenciar a seleção de parcelamento.

@@ -1,4 +1,4 @@
-package br.com.projetoacbr.food.model
+package br.com.projetoacbr.food.domain.model
 
 data class Product(
     val id: String,

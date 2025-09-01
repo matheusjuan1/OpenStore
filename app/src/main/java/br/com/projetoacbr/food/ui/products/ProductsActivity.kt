@@ -1,4 +1,4 @@
-package br.com.projetoacbr.food.view.activity
+package br.com.projetoacbr.food.ui.products
 
 import android.annotation.SuppressLint
 import android.graphics.PorterDuff
@@ -20,24 +20,21 @@ import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.GridLayoutManager
-import br.com.projetoacbr.food.AcbrApplication
 import br.com.projetoacbr.food.R
 import br.com.projetoacbr.food.databinding.ActivityHomeBinding
-import br.com.projetoacbr.food.view.adapter.ProductAdapter
 import br.com.projetoacbr.food.view.custom.CustomDrawerContentView
 import br.com.projetoacbr.food.view.dialog.CartBottomSheetDialog
-import br.com.projetoacbr.food.viewModel.HomeViewModel
 import com.google.android.material.badge.BadgeDrawable
 import com.google.android.material.badge.BadgeUtils
 import com.google.android.material.badge.ExperimentalBadgeUtils
 import com.google.android.material.chip.Chip
 import com.google.android.material.navigation.NavigationView
 
-class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private lateinit var binding: ActivityHomeBinding
-    private lateinit var productAdapter: ProductAdapter
-    private val homeViewModel: HomeViewModel by viewModels()
+    private lateinit var productsAdapter: ProductsAdapter
+    private val productsViewModel: ProductsViewModel by viewModels()
 
     private var cartBadge: BadgeDrawable? = null
     private lateinit var drawerLayout: DrawerLayout
@@ -60,25 +57,25 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     @SuppressLint("UnsafeOptInUsageError", "SetTextI18n")
     private fun initValues() {
-        productAdapter = ProductAdapter(
-            lifecycleOwner = this@HomeActivity,
-            onAddItemClicked = { product -> homeViewModel.addItemToCart(product) },
-            onRemoveItemClicked = { product -> homeViewModel.removeItemFromCart(product) }
+        productsAdapter = ProductsAdapter(
+            lifecycleOwner = this@ProductsActivity,
+            onAddItemClicked = { product -> productsViewModel.addItemToCart(product) },
+            onRemoveItemClicked = { product -> productsViewModel.removeItemFromCart(product) }
         )
 
         binding.recyclerViewProducts.layoutManager = GridLayoutManager(this, calculateNoOfColumns())
-        binding.recyclerViewProducts.adapter = productAdapter
+        binding.recyclerViewProducts.adapter = productsAdapter
 
         binding.customDrawer.setItemActive(CustomDrawerContentView.ItemDrawer.HOME)
     }
 
     @OptIn(ExperimentalBadgeUtils::class)
     private fun initObservers() {
-        homeViewModel.filteredProducts.observe(this) { filteredProducts ->
-            productAdapter.submitList(filteredProducts)
+        productsViewModel.filteredProducts.observe(this) { filteredProducts ->
+            productsAdapter.submitList(filteredProducts)
         }
 
-        homeViewModel.totalCartItemsCount.observe(this) { count ->
+        productsViewModel.totalCartItemsCount.observe(this) { count ->
             if (count > 0) {
                 if (cartBadge == null) {
                     cartBadge = BadgeDrawable.create(this).apply {
@@ -124,7 +121,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private fun initListeners() {
         binding.customAppBar.ivCartIcon.setOnClickListener {
-            val currentCartItemCount = homeViewModel.totalCartItemsCount.value ?: 0
+            val currentCartItemCount = productsViewModel.totalCartItemsCount.value ?: 0
             if (currentCartItemCount > 0) {
                 showCartDialog()
             } else {
@@ -139,13 +136,13 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         binding.searchTextInput.setEndIconOnClickListener {
             binding.searchEditText.setText("")
-            homeViewModel.filterBySearchQuery("")
+            productsViewModel.filterBySearchQuery("")
         }
 
         binding.searchEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                homeViewModel.filterBySearchQuery(s.toString())
+                productsViewModel.filterBySearchQuery(s.toString())
             }
 
             override fun afterTextChanged(s: Editable?) {}
@@ -157,7 +154,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 val selectedChip = group.findViewById<Chip>(selectedChipId)
                 val selectedCategory = selectedChip.text.toString()
 
-                homeViewModel.filterByCategory(selectedCategory)
+                productsViewModel.filterByCategory(selectedCategory)
             }
         }
 

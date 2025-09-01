@@ -1,13 +1,13 @@
-package br.com.projetoacbr.food.viewModel
+package br.com.projetoacbr.food.ui.products
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import br.com.projetoacbr.food.R
-import br.com.projetoacbr.food.model.Product
+import br.com.projetoacbr.food.domain.model.Product
 import br.com.projetoacbr.food.repository.CartRepository
 
-class HomeViewModel : ViewModel() {
+class ProductsViewModel : ViewModel() {
 
     private val _allProducts = MutableLiveData<List<Product>>()
 

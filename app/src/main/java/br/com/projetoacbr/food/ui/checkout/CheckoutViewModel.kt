@@ -1,4 +1,4 @@
-package br.com.projetoacbr.food.viewModel
+package br.com.projetoacbr.food.ui.checkout
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel

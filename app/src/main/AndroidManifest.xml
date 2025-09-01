@@ -14,16 +14,16 @@
         android:theme="@style/Theme.AcbrFood"
         tools:targetApi="31">
         <activity
-            android:name=".view.activity.PrintActivity"
+            android:name=".ui.print.PrintActivity"
             android:exported="false" />
         <activity
-            android:name=".view.activity.CheckoutActivity"
+            android:name=".ui.checkout.CheckoutActivity"
             android:exported="false" />
         <activity
-            android:name=".view.activity.HomeActivity"
+            android:name=".ui.products.ProductsActivity"
             android:exported="false" />
         <activity
-            android:name=".splash.SplashScreenActivity"
+            android:name=".ui.splash.SplashScreenActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
