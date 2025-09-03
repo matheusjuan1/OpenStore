@@ -7,45 +7,49 @@ import br.com.projetoacbr.food.domain.common.DataResult
 import br.com.projetoacbr.food.domain.model.Category
 import br.com.projetoacbr.food.domain.model.Product
 import br.com.projetoacbr.food.domain.repository.ProductsRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import java.io.IOException
 
 class LocalProductsRepository(private val context: Context) : ProductsRepository {
 
     private val TAG = "LocalProductsRepository"
 
-    override suspend fun getCategories(): DataResult<List<Category>> {
+    override suspend fun getCategories(): Flow<DataResult<List<Category>>> = flow {
+        emit(DataResult.Loading)
         val fileName = "mock_categories.json"
 
-        return try {
+         try {
             val jsonString = loadJsonFromAssets(fileName)
             if (jsonString == null) {
-                Log.w(TAG, "Arquivo mock não encontrado para: $fileName. Retornando lista vazia.")
-                DataResult.Success(emptyList())
+                Log.e(TAG, "Arquivo mock não encontrado para: $fileName.")
+                emit(DataResult.Error("Erro ao carregar categorias."))
             } else {
                 val categories = AppJson.decodeFromString<List<Category>>(jsonString)
-                DataResult.Success(categories)
+                emit(DataResult.Success(categories))
             }
         } catch (e: Exception) {
             Log.e(TAG, "Erro ao carregar categorias: ${e.localizedMessage}", e)
-            DataResult.Error("${e.localizedMessage}")
+            emit(DataResult.Error("${e.localizedMessage}"))
         }
     }
 
-    override suspend fun getProducts(): DataResult<List<Product>> {
+    override suspend fun getProducts(): Flow<DataResult<List<Product>>> = flow {
+        emit(DataResult.Loading)
         val fileName = "mock_products.json"
 
-        return try {
+        try {
             val jsonString = loadJsonFromAssets(fileName)
             if (jsonString == null) {
-                Log.w(TAG, "Arquivo mock não encontrado para: $fileName. Retornando lista vazia.")
-                DataResult.Success(emptyList())
+                Log.e(TAG, "Arquivo mock não encontrado para: $fileName. Retornando lista vazia.")
+                emit(DataResult.Error("Erro ao carregar produtos."))
             } else {
                 val products = AppJson.decodeFromString<List<Product>>(jsonString)
-                DataResult.Success(products)
+                emit(DataResult.Success(products))
             }
         } catch (e: Exception) {
             Log.e(TAG, "Erro ao carregar produtos: ${e.localizedMessage}", e)
-            DataResult.Error("${e.localizedMessage}")
+            emit(DataResult.Error("${e.localizedMessage}"))
         }
     }
 
