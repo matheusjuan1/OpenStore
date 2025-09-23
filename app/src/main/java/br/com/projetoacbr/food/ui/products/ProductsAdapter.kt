@@ -39,27 +39,27 @@ class ProductsAdapter(
                 }
             }
 
-            CartRepository.cartItems.observe(lifecycleOwner) { cartMap ->
-                currentProduct?.let { product ->
-                    val quantity = cartMap[product.id] ?: 0
-                    binding.tvItemQuantity.text = quantity.toString()
-
-                    binding.btnRemoveItem.isEnabled = quantity > 0
-                }
-            }
+//            CartRepository.cartItems.observe(lifecycleOwner) { cartMap ->
+//                currentProduct?.let { product ->
+//                    val quantity = cartMap[product.id] ?: 0
+//                    binding.tvItemQuantity.text = quantity.toString()
+//
+//                    binding.btnRemoveItem.isEnabled = quantity > 0
+//                }
+//            }
         }
 
         @SuppressLint("DefaultLocale", "SetTextI18n")
         fun bind(product: Product) {
             currentProduct = product
             binding.tvProductName.text = product.name
-            binding.tvProductPrice.text = "R$ ${String.format("%.2f", product.price)}"
+//            binding.tvProductPrice.text = "R$ ${String.format("%.2f", product.price)}"
 
-            if (product.image != null) {
-                binding.ivProductImage.setImageResource(product.image)
-            } else {
+//            if (product.image != null) {
+//                binding.ivProductImage.setImageResource(product.image)
+//            } else {
                 binding.ivProductImage.setImageResource(R.drawable.img_acbr_azul_escuro)
-            }
+//            }
 
             val quantityInCart = CartRepository.getQuantity(product.id)
             binding.tvItemQuantity.text = quantityInCart.toString()
@@ -75,8 +75,8 @@ class ProductsAdapter(
         override fun areContentsTheSame(oldItem: Product, newItem: Product): Boolean {
             return oldItem.name == newItem.name &&
                     oldItem.price == newItem.price &&
-                    oldItem.image == newItem.image &&
-                    oldItem.category == newItem.category
+                    oldItem.imageUrl == newItem.imageUrl &&
+                    oldItem.categoryId == newItem.categoryId
         }
     }
 

@@ -34,18 +34,18 @@ class CartBottomSheetDialog : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        productsViewModel.cartTotalValue.observe(viewLifecycleOwner) { totalValue ->
-            binding.tvCartTotalValue.text = "R$ ${String.format("%.2f", totalValue)}"
-        }
+//        productsViewModel.cartTotalValue.observe(viewLifecycleOwner) { totalValue ->
+//            binding.tvCartTotalValue.text = "R$ ${String.format("%.2f", totalValue)}"
+//        }
 
 
-        productsViewModel.totalCartItemsCount.observe(viewLifecycleOwner) { count ->
-            if (count <= 0) {
-                if (isAdded) {
-                    dismissAllowingStateLoss()
-                }
-            }
-        }
+//        productsViewModel.totalCartItemsCount.observe(viewLifecycleOwner) { count ->
+//            if (count <= 0) {
+//                if (isAdded) {
+//                    dismissAllowingStateLoss()
+//                }
+//            }
+//        }
 
         binding.btnPayCart.setOnClickListener {
             startActivity(Intent(requireContext(), CheckoutActivity::class.java))

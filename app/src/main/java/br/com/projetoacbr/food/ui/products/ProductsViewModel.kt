@@ -1,79 +1,77 @@
 package br.com.projetoacbr.food.ui.products
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import br.com.projetoacbr.food.R
-import br.com.projetoacbr.food.domain.model.Product
+import androidx.lifecycle.viewModelScope
 import br.com.projetoacbr.food.data.repository.CartRepository
+import br.com.projetoacbr.food.domain.model.Product
+import br.com.projetoacbr.food.domain.repository.ProductsRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
-class ProductsViewModel : ViewModel() {
+class ProductsViewModel(private val productsRepository: ProductsRepository) : ViewModel() {
 
-    private val _allProducts = MutableLiveData<List<Product>>()
+    private val _uiState = MutableStateFlow(ProductsUiState())
+    val uiState: StateFlow<ProductsUiState> = _uiState.asStateFlow()
 
-    private val _filteredProducts = MutableLiveData<List<Product>>()
-    val filteredProducts: LiveData<List<Product>> get() = _filteredProducts
-
-    private var currentCategoryFilter: String = "Todos"
-    private var currentSearchQuery: String = ""
-
-    val totalCartItemsCount: LiveData<Int> = CartRepository.totalItemsInCart
-
-    val cartTotalValue: LiveData<Double> = CartRepository.cartTotalValue
-
-    init {
-        loadInitialProducts()
+    /** New
+     *
+     *
+     */
+    fun getCategories() {
+        viewModelScope.launch {
+            productsRepository.getCategories().collect { result ->
+                _uiState.update { currentState ->
+                    currentState.copy(categories = result)
+                }
+            }
+        }
     }
 
-    private fun loadInitialProducts() {
-        val products = mutableListOf<Product>()
-        products.add(Product("1", "Camiseta ACBr", 99.99, R.drawable.img_camiseta, "Vestuário"))
-        products.add(Product("2", "Boné ACBr", 49.99, R.drawable.img_cap, "Vestuário"))
-        products.add(Product("3", "Caneca ACBr", 34.99, R.drawable.img_caneca, "Acessórios"))
-        products.add(
-            Product(
-                "4",
-                "Garrafa 500ml ACBr",
-                49.99,
-                R.drawable.img_garrafa,
-                "Acessórios"
-            )
-        )
-        products.add(Product("5", "Mochila ACBr", 140.00, R.drawable.img_backpack, "Acessórios"))
-        products.add(Product("6", "Caderno ACBr", 25.00, R.drawable.img_book, "Papelaria"))
-
-
-        _allProducts.value = products
-        applyFilters()
+    fun getAllProducts() {
+        viewModelScope.launch {
+            productsRepository.getProducts().collect { result ->
+                _uiState.update { currentState ->
+                    currentState.copy(products = result)
+                }
+            }
+        }
     }
 
-    fun filterByCategory(category: String) {
-        currentCategoryFilter = category
+
+    /**
+     * End New
+     */
+
+    fun filterByCategory(category: Int) {
+//        currentCategoryFilter = category
         applyFilters()
     }
 
     fun filterBySearchQuery(query: String) {
-        currentSearchQuery = query
+//        currentSearchQuery = query
         applyFilters()
     }
 
     private fun applyFilters() {
-        val currentProducts = _allProducts.value ?: return
+//        val currentProducts = _allProducts.value ?: return
 
-        var filteredList = currentProducts
+//        var filteredList = currentProducts
 
-        if (currentCategoryFilter != "Todos" && currentCategoryFilter.isNotEmpty()) {
-            filteredList = filteredList.filter { it.category == currentCategoryFilter }
-        }
+//        if (currentCategoryFilter != "Todos" && currentCategoryFilter.isNotEmpty()) {
+//            filteredList = filteredList.filter { it.category == currentCategoryFilter }
+//        }
+//
+//        if (currentSearchQuery.isNotEmpty()) {
+//            filteredList = filteredList.filter { product ->
+//                product.name.contains(currentSearchQuery, ignoreCase = true) ||
+//                        product.category.contains(currentSearchQuery, ignoreCase = true)
+//            }
+//        }
 
-        if (currentSearchQuery.isNotEmpty()) {
-            filteredList = filteredList.filter { product ->
-                product.name.contains(currentSearchQuery, ignoreCase = true) ||
-                        product.category.contains(currentSearchQuery, ignoreCase = true)
-            }
-        }
-
-        _filteredProducts.value = filteredList
+//        _filteredProducts.value = filteredList
     }
 
     fun addItemToCart(product: Product) {

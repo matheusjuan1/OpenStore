@@ -29,12 +29,13 @@ import com.google.android.material.badge.BadgeUtils
 import com.google.android.material.badge.ExperimentalBadgeUtils
 import com.google.android.material.chip.Chip
 import com.google.android.material.navigation.NavigationView
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private lateinit var binding: ActivityHomeBinding
     private lateinit var productsAdapter: ProductsAdapter
-    private val productsViewModel: ProductsViewModel by viewModels()
+    private val productsViewModel: ProductsViewModel by viewModel()
 
     private var cartBadge: BadgeDrawable? = null
     private lateinit var drawerLayout: DrawerLayout
@@ -57,71 +58,72 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
 
     @SuppressLint("UnsafeOptInUsageError", "SetTextI18n")
     private fun initValues() {
-        productsAdapter = ProductsAdapter(
-            lifecycleOwner = this@ProductsActivity,
-            onAddItemClicked = { product -> productsViewModel.addItemToCart(product) },
-            onRemoveItemClicked = { product -> productsViewModel.removeItemFromCart(product) }
-        )
 
-        binding.recyclerViewProducts.layoutManager = GridLayoutManager(this, calculateNoOfColumns())
-        binding.recyclerViewProducts.adapter = productsAdapter
+//        productsAdapter = ProductsAdapter(
+//            lifecycleOwner = this@ProductsActivity,
+//            onAddItemClicked = { product -> productsViewModel.addItemToCart(product) },
+//            onRemoveItemClicked = { product -> productsViewModel.removeItemFromCart(product) }
+//        )
+
+//        binding.recyclerViewProducts.layoutManager = GridLayoutManager(this, calculateNoOfColumns())
+//        binding.recyclerViewProducts.adapter = productsAdapter
 
         binding.customDrawer.setItemActive(CustomDrawerContentView.ItemDrawer.HOME)
     }
 
     @OptIn(ExperimentalBadgeUtils::class)
     private fun initObservers() {
-        productsViewModel.filteredProducts.observe(this) { filteredProducts ->
-            productsAdapter.submitList(filteredProducts)
-        }
-
-        productsViewModel.totalCartItemsCount.observe(this) { count ->
-            if (count > 0) {
-                if (cartBadge == null) {
-                    cartBadge = BadgeDrawable.create(this).apply {
-                        isVisible = true
-                        backgroundColor = resources.getColor(R.color.red, theme)
-                        badgeTextColor = resources.getColor(R.color.white, theme)
-                        maxCharacterCount = 3
-                    }
-                    binding.customAppBar.ivCartIcon.post {
-                        cartBadge?.let { badge ->
-                            BadgeUtils.attachBadgeDrawable(
-                                badge,
-                                binding.customAppBar.ivCartIcon,
-                                binding.customAppBar.flCartIconContainer
-                            )
-                        }
-                    }
-                }
-                cartBadge?.number = count
-                cartBadge?.isVisible = true
-
-                if (binding.fabCart.isGone) {
-                    binding.fabCart.show()
-                }
-            } else {
-                cartBadge?.isVisible = false
-                binding.customAppBar.ivCartIcon.post {
-                    cartBadge?.let { badge ->
-                        BadgeUtils.detachBadgeDrawable(
-                            badge,
-                            binding.customAppBar.toolbar,
-                            binding.customAppBar.flCartIconContainer.id
-                        )
-                    }
-                }
-                cartBadge = null
-                if (binding.fabCart.isVisible) {
-                    binding.fabCart.hide()
-                }
-            }
-        }
+//        productsViewModel.filteredProducts.observe(this) { filteredProducts ->
+//            productsAdapter.submitList(filteredProducts)
+//        }
+//
+//        productsViewModel.totalCartItemsCount.observe(this) { count ->
+//            if (count > 0) {
+//                if (cartBadge == null) {
+//                    cartBadge = BadgeDrawable.create(this).apply {
+//                        isVisible = true
+//                        backgroundColor = resources.getColor(R.color.red, theme)
+//                        badgeTextColor = resources.getColor(R.color.white, theme)
+//                        maxCharacterCount = 3
+//                    }
+//                    binding.customAppBar.ivCartIcon.post {
+//                        cartBadge?.let { badge ->
+//                            BadgeUtils.attachBadgeDrawable(
+//                                badge,
+//                                binding.customAppBar.ivCartIcon,
+//                                binding.customAppBar.flCartIconContainer
+//                            )
+//                        }
+//                    }
+//                }
+//                cartBadge?.number = count
+//                cartBadge?.isVisible = true
+//
+//                if (binding.fabCart.isGone) {
+//                    binding.fabCart.show()
+//                }
+//            } else {
+//                cartBadge?.isVisible = false
+//                binding.customAppBar.ivCartIcon.post {
+//                    cartBadge?.let { badge ->
+//                        BadgeUtils.detachBadgeDrawable(
+//                            badge,
+//                            binding.customAppBar.toolbar,
+//                            binding.customAppBar.flCartIconContainer.id
+//                        )
+//                    }
+//                }
+//                cartBadge = null
+//                if (binding.fabCart.isVisible) {
+//                    binding.fabCart.hide()
+//                }
+//            }
+//        }
     }
 
     private fun initListeners() {
         binding.customAppBar.ivCartIcon.setOnClickListener {
-            val currentCartItemCount = productsViewModel.totalCartItemsCount.value ?: 0
+            val currentCartItemCount = 0
             if (currentCartItemCount > 0) {
                 showCartDialog()
             } else {
@@ -149,13 +151,13 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         })
 
         binding.chipGroupCategories.setOnCheckedStateChangeListener { group, checkedIds ->
-            if (checkedIds.isNotEmpty()) {
-                val selectedChipId = checkedIds[0]
-                val selectedChip = group.findViewById<Chip>(selectedChipId)
-                val selectedCategory = selectedChip.text.toString()
-
-                productsViewModel.filterByCategory(selectedCategory)
-            }
+//            if (checkedIds.isNotEmpty()) {
+//                val selectedChipId = checkedIds[0]
+//                val selectedChip = group.findViewById<Chip>(selectedChipId)
+//                val selectedCategory = selectedChip.text.toString()
+//
+//                productsViewModel.filterByCategory(selectedCategory)
+//            }
         }
 
         drawerLayout = binding.drawerLayout
