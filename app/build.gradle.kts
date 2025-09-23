@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "br.com.projetoacbr.food"
+    namespace = "com.mjtech.pos"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "br.com.projetoacbr.food"
+        applicationId = "com.mjtech.pos"
         minSdk = 24
         targetSdk = 36
         versionCode = 1
