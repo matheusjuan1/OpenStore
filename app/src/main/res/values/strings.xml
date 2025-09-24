@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Store Example</string>
+    <string name="app_name">OpenStore</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="menu">Menu</string>
     <string name="carrinho_de_compras">Carrinho de Compras</string>
