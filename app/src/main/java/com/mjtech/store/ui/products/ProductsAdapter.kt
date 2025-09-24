@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mjtech.store.R
 import com.mjtech.store.databinding.ItemProductCardBinding
 import com.mjtech.store.domain.model.Product
-import com.mjtech.store.data.repository.CartRepository
+import com.mjtech.store.data.repository.LocalCartRepository
 
 class ProductsAdapter(
     private val lifecycleOwner: LifecycleOwner,
@@ -61,7 +61,7 @@ class ProductsAdapter(
                 binding.ivProductImage.setImageResource(R.drawable.ic_launcher_foreground)
 //            }
 
-            val quantityInCart = CartRepository.getQuantity(product.id)
+            val quantityInCart = LocalCartRepository.getQuantity(product.id)
             binding.tvItemQuantity.text = quantityInCart.toString()
             binding.btnRemoveItem.isEnabled = quantityInCart > 0
         }

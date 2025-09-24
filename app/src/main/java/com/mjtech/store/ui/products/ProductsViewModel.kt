@@ -2,7 +2,7 @@ package com.mjtech.store.ui.products
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mjtech.store.data.repository.CartRepository
+import com.mjtech.store.data.repository.LocalCartRepository
 import com.mjtech.store.domain.model.Product
 import com.mjtech.store.domain.repository.ProductsRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -75,10 +75,10 @@ class ProductsViewModel(private val productsRepository: ProductsRepository) : Vi
     }
 
     fun addItemToCart(product: Product) {
-        CartRepository.addItem(product)
+        LocalCartRepository.addItem(product)
     }
 
     fun removeItemFromCart(product: Product) {
-        CartRepository.removeItem(product)
+        LocalCartRepository.removeItem(product)
     }
 }

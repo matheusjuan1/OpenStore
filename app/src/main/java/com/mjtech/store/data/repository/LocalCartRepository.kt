@@ -9,7 +9,7 @@ import com.mjtech.store.domain.model.Product
  * CartRepository é um Singleton que gerencia o estado global do carrinho de compras.
  * Ele mantém um mapa de produtos e suas quantidades, e expõe LiveData para observadores.
  */
-object CartRepository {
+object LocalCartRepository {
 
     private val _cartItems = MutableLiveData<MutableMap<String, Int>>(mutableMapOf())
 

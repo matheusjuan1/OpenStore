@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.mjtech.store.data.repository.CartRepository
+import com.mjtech.store.data.repository.LocalCartRepository
 
 class CheckoutViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -75,7 +75,7 @@ class CheckoutViewModel(application: Application) : AndroidViewModel(application
     }
 
     fun getTotal(): Double {
-        return CartRepository.cartTotalValue.value ?: 0.0
+        return LocalCartRepository.cartTotalValue.value ?: 0.0
     }
 
     fun getInstallmentValue(installment: Int): Double {
