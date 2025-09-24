@@ -58,7 +58,7 @@ class ProductsAdapter(
 //            if (product.image != null) {
 //                binding.ivProductImage.setImageResource(product.image)
 //            } else {
-                binding.ivProductImage.setImageResource(R.drawable.img_bag)
+                binding.ivProductImage.setImageResource(R.drawable.ic_launcher_foreground)
 //            }
 
             val quantityInCart = CartRepository.getQuantity(product.id)
