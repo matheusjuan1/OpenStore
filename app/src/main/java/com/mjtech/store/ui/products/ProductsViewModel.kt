@@ -16,6 +16,11 @@ class ProductsViewModel(private val productsRepository: ProductsRepository) : Vi
     private val _uiState = MutableStateFlow(ProductsUiState())
     val uiState: StateFlow<ProductsUiState> = _uiState.asStateFlow()
 
+    init {
+        getCategories()
+        getAllProducts()
+    }
+
     /** New
      *
      *
@@ -37,6 +42,18 @@ class ProductsViewModel(private val productsRepository: ProductsRepository) : Vi
                     currentState.copy(products = result)
                 }
             }
+        }
+    }
+
+    fun onCategorySelected(categoryId: Int) {
+        _uiState.update { currentState ->
+            currentState.copy(selectedCategoryId = categoryId)
+        }
+    }
+
+    fun onSearchQueryChanged(query: String) {
+        _uiState.update { currentState ->
+            currentState.copy(searchQuery = query)
         }
     }
 
@@ -72,13 +89,5 @@ class ProductsViewModel(private val productsRepository: ProductsRepository) : Vi
 //        }
 
 //        _filteredProducts.value = filteredList
-    }
-
-    fun addItemToCart(product: Product) {
-        LocalCartRepository.addItem(product)
-    }
-
-    fun removeItemFromCart(product: Product) {
-        LocalCartRepository.removeItem(product)
     }
 }
