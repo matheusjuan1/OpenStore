@@ -28,7 +28,7 @@
                 android:layout_gravity="center"
                 android:contentDescription="@string/imagem_do_produto"
                 android:scaleType="fitCenter"
-                tools:src="@drawable/img_acbr_azul_escuro" />
+                tools:src="@drawable/img_bag" />
 
         </com.google.android.material.card.MaterialCardView>
 

@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.mjtech.pos"
+    namespace = "com.mjtech.store"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.mjtech.pos"
+        applicationId = "com.mjtech.store"
         minSdk = 24
         targetSdk = 36
         versionCode = 1

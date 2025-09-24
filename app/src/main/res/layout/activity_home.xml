@@ -43,7 +43,7 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/search_text_input"
-                    style="@style/PosTextInputStyle"
+                    style="@style/StoreTextInput"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -91,7 +91,7 @@
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/chip_all"
-                        style="@style/PosChipStyle"
+                        style="@style/StoreChip"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
@@ -102,7 +102,7 @@
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/chip_clothing"
-                        style="@style/PosChipStyle"
+                        style="@style/StoreChip"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:checkable="true"
@@ -111,7 +111,7 @@
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/chip_accessories"
-                        style="@style/PosChipStyle"
+                        style="@style/StoreChip"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:checkable="true"
@@ -120,7 +120,7 @@
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/chip_stationery"
-                        style="@style/PosChipStyle"
+                        style="@style/StoreChip"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="16dp"
@@ -165,7 +165,7 @@
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-    <com.mjtech.pos.ui.common.components.CustomDrawerContentView
+    <com.mjtech.store.ui.common.components.CustomDrawerContentView
         android:id="@+id/custom_drawer"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"

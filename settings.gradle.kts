@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "open-pos"
+rootProject.name = "open-store"
 include(":app")
  
