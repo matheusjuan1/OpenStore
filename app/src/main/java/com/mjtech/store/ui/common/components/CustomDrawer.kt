@@ -17,7 +17,6 @@ class CustomDrawerContentView @JvmOverloads constructor(
 
     enum class ItemDrawer(val id: Int) {
         HOME(R.id.nav_home),
-        PRINT(R.id.nav_print),
         SETTINGS(R.id.nav_settings)
     }
 
@@ -25,16 +24,8 @@ class CustomDrawerContentView @JvmOverloads constructor(
         LayoutCustomDrawerBinding.inflate(LayoutInflater.from(context), this, true)
     private val navView: NavigationView = binding.navView
 
-    /**
-     * Define o listener para os cliques nos itens do menu de navegação.
-     */
     fun setNavigationListener(listener: OnNavigationItemSelectedListener) {
         navView.setNavigationItemSelectedListener(listener)
-    }
-
-    fun setAcquirerName(acquirerName: String) {
-        binding.navFooter.tvAcquirerInfo.text =
-            context.getString(R.string.acquirer_name, acquirerName)
     }
 
     fun setItemActive(itemDrawer: ItemDrawer) {
