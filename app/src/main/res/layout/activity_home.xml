@@ -43,7 +43,7 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/search_text_input"
-                    style="@style/AcbrTextInputStyle"
+                    style="@style/PosTextInputStyle"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -91,7 +91,7 @@
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/chip_all"
-                        style="@style/AcbrChipStyle"
+                        style="@style/PosChipStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
@@ -102,7 +102,7 @@
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/chip_clothing"
-                        style="@style/AcbrChipStyle"
+                        style="@style/PosChipStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:checkable="true"
@@ -111,7 +111,7 @@
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/chip_accessories"
-                        style="@style/AcbrChipStyle"
+                        style="@style/PosChipStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:checkable="true"
@@ -120,7 +120,7 @@
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/chip_stationery"
-                        style="@style/AcbrChipStyle"
+                        style="@style/PosChipStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="16dp"

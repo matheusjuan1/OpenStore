@@ -42,7 +42,7 @@ class InstallmentFragment : Fragment() {
          *  disponíves na ViewModel
          */
         installmentOptions.forEach { installment ->
-            val button = Button(context, null, 0, R.style.AcbrButtonInstallments).apply {
+            val button = Button(context, null, 0, R.style.PosButtonInstallments).apply {
                 text =
                     if (installment == 1) "À Vista: R$${
                         String.format(

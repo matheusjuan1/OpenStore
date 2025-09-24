@@ -38,7 +38,7 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_pay_cart"
-        style="@style/AcbrMainButton"
+        style="@style/PosMainButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/pagar"

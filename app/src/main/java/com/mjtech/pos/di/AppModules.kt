@@ -6,7 +6,7 @@ import com.mjtech.pos.ui.products.ProductsViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
-val acbrFoodModules = module {
+val posModules = module {
 
     single<ProductsRepository> { LocalProductsRepository(get()) }
 

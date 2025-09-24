@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "acbr-food"
+rootProject.name = "open-pos"
 include(":app")
  
