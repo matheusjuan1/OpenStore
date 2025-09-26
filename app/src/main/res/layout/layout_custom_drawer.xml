@@ -14,6 +14,7 @@
         android:layout_weight="1"
         app:headerLayout="@layout/nav_header"
         app:itemBackground="@drawable/nav_item_background_selector"
+        app:itemTextColor="@color/text_drawer_color"
         app:menu="@menu/nav_drawer_menu" />
 
 
