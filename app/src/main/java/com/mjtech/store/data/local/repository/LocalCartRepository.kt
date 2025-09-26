@@ -1,4 +1,4 @@
-package com.mjtech.store.data.repository
+package com.mjtech.store.data.local.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

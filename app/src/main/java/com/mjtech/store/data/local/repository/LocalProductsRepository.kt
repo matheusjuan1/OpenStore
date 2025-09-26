@@ -1,8 +1,10 @@
-package com.mjtech.store.data.repository
+package com.mjtech.store.data.local.repository
 
 import android.content.Context
 import android.util.Log
 import com.mjtech.store.data.common.AppJson
+import com.mjtech.store.data.local.model.CategoriesDto
+import com.mjtech.store.data.local.model.ProductsDto
 import com.mjtech.store.domain.common.DataResult
 import com.mjtech.store.domain.model.Category
 import com.mjtech.store.domain.model.Product
@@ -19,14 +21,14 @@ class LocalProductsRepository(private val context: Context) : ProductsRepository
         emit(DataResult.Loading)
         val fileName = "mock_categories.json"
 
-         try {
+        try {
             val jsonString = loadJsonFromAssets(fileName)
             if (jsonString == null) {
                 Log.e(TAG, "Arquivo mock não encontrado para: $fileName.")
                 emit(DataResult.Error("Erro ao carregar categorias."))
             } else {
-                val categories = AppJson.decodeFromString<List<Category>>(jsonString)
-                emit(DataResult.Success(categories))
+                val json = AppJson.decodeFromString<CategoriesDto>(jsonString)
+                emit(DataResult.Success(json.categories))
             }
         } catch (e: Exception) {
             Log.e(TAG, "Erro ao carregar categorias: ${e.localizedMessage}", e)
@@ -44,8 +46,8 @@ class LocalProductsRepository(private val context: Context) : ProductsRepository
                 Log.e(TAG, "Arquivo mock não encontrado para: $fileName. Retornando lista vazia.")
                 emit(DataResult.Error("Erro ao carregar produtos."))
             } else {
-                val products = AppJson.decodeFromString<List<Product>>(jsonString)
-                emit(DataResult.Success(products))
+                val json = AppJson.decodeFromString<ProductsDto>(jsonString)
+                emit(DataResult.Success(json.products))
             }
         } catch (e: Exception) {
             Log.e(TAG, "Erro ao carregar produtos: ${e.localizedMessage}", e)

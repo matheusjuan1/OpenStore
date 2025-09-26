@@ -5,6 +5,7 @@ import android.graphics.PorterDuff
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -16,13 +17,20 @@ import androidx.core.view.GravityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.mjtech.store.R
 import com.mjtech.store.databinding.ActivityHomeBinding
 import com.mjtech.store.ui.common.components.CustomDrawerContentView
 import com.mjtech.store.ui.common.components.CartBottomSheetDialog
 import com.google.android.material.badge.BadgeDrawable
 import com.google.android.material.badge.ExperimentalBadgeUtils
+import com.google.android.material.chip.Chip
 import com.google.android.material.navigation.NavigationView
+import com.mjtech.store.domain.common.DataResult
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -45,9 +53,15 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
             insets
         }
 
-        initValues()
+        initComponents()
         initObservers()
+        initValues()
         initListeners()
+    }
+
+    private fun initComponents() {
+        setupDrawer()
+        setupCategories()
     }
 
     @SuppressLint("UnsafeOptInUsageError", "SetTextI18n")
@@ -61,74 +75,56 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
 
 //        binding.recyclerViewProducts.layoutManager = GridLayoutManager(this, calculateNoOfColumns())
 //        binding.recyclerViewProducts.adapter = productsAdapter
-
-        binding.customDrawer.setItemActive(CustomDrawerContentView.ItemDrawer.HOME)
     }
 
-    @OptIn(ExperimentalBadgeUtils::class)
     private fun initObservers() {
-//        productsViewModel.filteredProducts.observe(this) { filteredProducts ->
-//            productsAdapter.submitList(filteredProducts)
-//        }
-//
-//        productsViewModel.totalCartItemsCount.observe(this) { count ->
-//            if (count > 0) {
-//                if (cartBadge == null) {
-//                    cartBadge = BadgeDrawable.create(this).apply {
-//                        isVisible = true
-//                        backgroundColor = resources.getColor(R.color.red, theme)
-//                        badgeTextColor = resources.getColor(R.color.white, theme)
-//                        maxCharacterCount = 3
-//                    }
-//                    binding.customAppBar.ivCartIcon.post {
-//                        cartBadge?.let { badge ->
-//                            BadgeUtils.attachBadgeDrawable(
-//                                badge,
-//                                binding.customAppBar.ivCartIcon,
-//                                binding.customAppBar.flCartIconContainer
-//                            )
-//                        }
-//                    }
-//                }
-//                cartBadge?.number = count
-//                cartBadge?.isVisible = true
-//
-//                if (binding.fabCart.isGone) {
-//                    binding.fabCart.show()
-//                }
-//            } else {
-//                cartBadge?.isVisible = false
-//                binding.customAppBar.ivCartIcon.post {
-//                    cartBadge?.let { badge ->
-//                        BadgeUtils.detachBadgeDrawable(
-//                            badge,
-//                            binding.customAppBar.toolbar,
-//                            binding.customAppBar.flCartIconContainer.id
-//                        )
-//                    }
-//                }
-//                cartBadge = null
-//                if (binding.fabCart.isVisible) {
-//                    binding.fabCart.hide()
-//                }
-//            }
-//        }
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                productsViewModel.uiState.collect { uiState ->
+                    when(uiState.categories) {
+                        is DataResult.Loading -> {
+                            Log.d("ProductsActivity", "Loading categories...")
+                        }
+                        is DataResult.Success -> {
+                            Log.d("ProductsActivity", "Categories loaded: ${uiState.categories.data.size} items")
+                        }
+                        is DataResult.Error -> {
+                            Log.e("ProductsActivity", "Error loading categories: ${uiState.categories.error}")
+                        }
+                    }
+
+                    when(uiState.products) {
+                        is DataResult.Loading -> {
+                            Log.d("ProductsActivity", "Loading products...")
+                        }
+                        is DataResult.Success -> {
+                            Log.d("ProductsActivity", "Products loaded: ${uiState.products.data.size} items")
+                        }
+                        is DataResult.Error -> {
+                            Log.e("ProductsActivity", "Error loading products: ${uiState.products.error}")
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private fun initListeners() {
-        binding.customAppBar.ivCartIcon.setOnClickListener {
-            val currentCartItemCount = 0
-            if (currentCartItemCount > 0) {
-                showCartDialog()
-            } else {
-                Toast.makeText(this, getString(R.string.empty_cart), Toast.LENGTH_SHORT)
-                    .show()
-            }
-        }
+//        binding.customAppBar.ivCartIcon.setOnClickListener {
+//            val currentCartItemCount = 0
+//            if (currentCartItemCount > 0) {
+//                showCartDialog()
+//            } else {
+//                Toast.makeText(this, getString(R.string.empty_cart), Toast.LENGTH_SHORT)
+//                    .show()
+//            }
+//        }
 
         binding.fabCart.setOnClickListener {
-            showCartDialog()
+//            showCartDialog()
         }
+
+        // Search
 
         binding.searchTextInput.setEndIconOnClickListener {
             binding.searchEditText.setText("")
@@ -143,17 +139,9 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
 
             override fun afterTextChanged(s: Editable?) {}
         })
+    }
 
-        binding.chipGroupCategories.setOnCheckedStateChangeListener { group, checkedIds ->
-//            if (checkedIds.isNotEmpty()) {
-//                val selectedChipId = checkedIds[0]
-//                val selectedChip = group.findViewById<Chip>(selectedChipId)
-//                val selectedCategory = selectedChip.text.toString()
-//
-//                productsViewModel.filterByCategory(selectedCategory)
-//            }
-        }
-
+    private fun setupDrawer() {
         drawerLayout = binding.drawerLayout
 
         val toggle = ActionBarDrawerToggle(
@@ -171,16 +159,31 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         drawable.setColorFilter(tintColor, PorterDuff.Mode.SRC_ATOP)
 
         binding.customDrawer.setNavigationListener(this)
+
+        binding.customDrawer.setItemActive(CustomDrawerContentView.ItemDrawer.HOME)
+    }
+
+    private fun setupBadge() {
+        // TODO
+    }
+
+    private fun setupCategories() {
+        binding.chipGroupCategories.setOnCheckedStateChangeListener { group, checkedIds ->
+            if (checkedIds.isNotEmpty()) {
+                val selectedChipId = checkedIds[0]
+                val selectedChip = group.findViewById<Chip>(selectedChipId)
+            }
+        }
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.nav_home -> {
-
+                // TODO
             }
 
             R.id.nav_settings -> {
-
+                // TODO
             }
         }
         drawerLayout.closeDrawer(GravityCompat.START)

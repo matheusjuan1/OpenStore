@@ -2,19 +2,16 @@ package com.mjtech.store.ui.products
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mjtech.store.data.repository.LocalCartRepository
-import com.mjtech.store.domain.model.Product
 import com.mjtech.store.domain.repository.ProductsRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class ProductsViewModel(private val productsRepository: ProductsRepository) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ProductsUiState())
-    val uiState: StateFlow<ProductsUiState> = _uiState.asStateFlow()
+    val uiState: StateFlow<ProductsUiState> = _uiState
 
     init {
         getCategories()
@@ -25,7 +22,7 @@ class ProductsViewModel(private val productsRepository: ProductsRepository) : Vi
      *
      *
      */
-    fun getCategories() {
+    private fun getCategories() {
         viewModelScope.launch {
             productsRepository.getCategories().collect { result ->
                 _uiState.update { currentState ->
@@ -35,7 +32,7 @@ class ProductsViewModel(private val productsRepository: ProductsRepository) : Vi
         }
     }
 
-    fun getAllProducts() {
+    private fun getAllProducts() {
         viewModelScope.launch {
             productsRepository.getProducts().collect { result ->
                 _uiState.update { currentState ->

@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.mjtech.store.data.repository.LocalCartRepository
+import com.mjtech.store.data.local.repository.LocalCartRepository
 
 class CheckoutViewModel(application: Application) : AndroidViewModel(application) {
 
