@@ -7,9 +7,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
-import androidx.annotation.OptIn
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -20,16 +18,14 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.mjtech.store.R
-import com.mjtech.store.databinding.ActivityHomeBinding
-import com.mjtech.store.ui.common.components.CustomDrawerContentView
-import com.mjtech.store.ui.common.components.CartBottomSheetDialog
 import com.google.android.material.badge.BadgeDrawable
-import com.google.android.material.badge.ExperimentalBadgeUtils
 import com.google.android.material.chip.Chip
 import com.google.android.material.navigation.NavigationView
+import com.mjtech.store.R
+import com.mjtech.store.databinding.ActivityHomeBinding
 import com.mjtech.store.domain.common.DataResult
-import kotlinx.coroutines.flow.collectLatest
+import com.mjtech.store.ui.common.components.CartBottomSheetDialog
+import com.mjtech.store.ui.common.components.AppBarDrawer
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -56,7 +52,6 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         initComponents()
         initObservers()
         initValues()
-        initListeners()
     }
 
     private fun initComponents() {
@@ -81,27 +76,43 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 productsViewModel.uiState.collect { uiState ->
-                    when(uiState.categories) {
+                    when (uiState.categories) {
                         is DataResult.Loading -> {
                             Log.d("ProductsActivity", "Loading categories...")
                         }
+
                         is DataResult.Success -> {
-                            Log.d("ProductsActivity", "Categories loaded: ${uiState.categories.data.size} items")
+                            Log.d(
+                                "ProductsActivity",
+                                "Categories loaded: ${uiState.categories.data.size} items"
+                            )
                         }
+
                         is DataResult.Error -> {
-                            Log.e("ProductsActivity", "Error loading categories: ${uiState.categories.error}")
+                            Log.e(
+                                "ProductsActivity",
+                                "Error loading categories: ${uiState.categories.error}"
+                            )
                         }
                     }
 
-                    when(uiState.products) {
+                    when (uiState.products) {
                         is DataResult.Loading -> {
                             Log.d("ProductsActivity", "Loading products...")
                         }
+
                         is DataResult.Success -> {
-                            Log.d("ProductsActivity", "Products loaded: ${uiState.products.data.size} items")
+                            Log.d(
+                                "ProductsActivity",
+                                "Products loaded: ${uiState.products.data.size} items"
+                            )
                         }
+
                         is DataResult.Error -> {
-                            Log.e("ProductsActivity", "Error loading products: ${uiState.products.error}")
+                            Log.e(
+                                "ProductsActivity",
+                                "Error loading products: ${uiState.products.error}"
+                            )
                         }
                     }
                 }
@@ -109,8 +120,30 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         }
     }
 
-    private fun initListeners() {
-//        binding.customAppBar.ivCartIcon.setOnClickListener {
+    private fun setupDrawer() {
+        drawerLayout = binding.drawerLayout
+
+        val toggle = ActionBarDrawerToggle(
+            this,
+            drawerLayout,
+            binding.appBar.toolbar,
+            R.string.navigation_drawer_open,
+            R.string.navigation_drawer_close
+        )
+        drawerLayout.addDrawerListener(toggle)
+        toggle.syncState()
+
+        val drawable = toggle.drawerArrowDrawable
+        val tintColor = ContextCompat.getColor(this, R.color.white)
+        drawable.setColorFilter(tintColor, PorterDuff.Mode.SRC_ATOP)
+
+        binding.appBarDrawer.setNavigationListener(this)
+
+        binding.appBarDrawer.setItemActive(AppBarDrawer.ItemDrawer.HOME)
+    }
+
+    private fun setupBadgeCart() {
+        //        binding.customAppBar.ivCartIcon.setOnClickListener {
 //            val currentCartItemCount = 0
 //            if (currentCartItemCount > 0) {
 //                showCartDialog()
@@ -119,13 +152,18 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
 //                    .show()
 //            }
 //        }
+    }
 
-        binding.fabCart.setOnClickListener {
-//            showCartDialog()
+    private fun setupCategories() {
+        binding.chipGroupCategories.setOnCheckedStateChangeListener { group, checkedIds ->
+            if (checkedIds.isNotEmpty()) {
+                val selectedChipId = checkedIds[0]
+                val selectedChip = group.findViewById<Chip>(selectedChipId)
+            }
         }
+    }
 
-        // Search
-
+    private fun setupSearch() {
         binding.searchTextInput.setEndIconOnClickListener {
             binding.searchEditText.setText("")
             productsViewModel.filterBySearchQuery("")
@@ -139,41 +177,6 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
 
             override fun afterTextChanged(s: Editable?) {}
         })
-    }
-
-    private fun setupDrawer() {
-        drawerLayout = binding.drawerLayout
-
-        val toggle = ActionBarDrawerToggle(
-            this,
-            drawerLayout,
-            binding.customAppBar.toolbar,
-            R.string.navigation_drawer_open,
-            R.string.navigation_drawer_close
-        )
-        drawerLayout.addDrawerListener(toggle)
-        toggle.syncState()
-
-        val drawable = toggle.drawerArrowDrawable
-        val tintColor = ContextCompat.getColor(this, R.color.white)
-        drawable.setColorFilter(tintColor, PorterDuff.Mode.SRC_ATOP)
-
-        binding.customDrawer.setNavigationListener(this)
-
-        binding.customDrawer.setItemActive(CustomDrawerContentView.ItemDrawer.HOME)
-    }
-
-    private fun setupBadge() {
-        // TODO
-    }
-
-    private fun setupCategories() {
-        binding.chipGroupCategories.setOnCheckedStateChangeListener { group, checkedIds ->
-            if (checkedIds.isNotEmpty()) {
-                val selectedChipId = checkedIds[0]
-                val selectedChip = group.findViewById<Chip>(selectedChipId)
-            }
-        }
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {

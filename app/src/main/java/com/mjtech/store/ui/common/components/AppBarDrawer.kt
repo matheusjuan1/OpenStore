@@ -5,11 +5,11 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.LinearLayout
 import com.mjtech.store.R
-import com.mjtech.store.databinding.LayoutCustomDrawerBinding
+import com.mjtech.store.databinding.LayoutDrawerBinding
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.navigation.NavigationView.OnNavigationItemSelectedListener
 
-class CustomDrawerContentView @JvmOverloads constructor(
+class AppBarDrawer @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
@@ -20,8 +20,8 @@ class CustomDrawerContentView @JvmOverloads constructor(
         SETTINGS(R.id.nav_settings)
     }
 
-    private val binding: LayoutCustomDrawerBinding =
-        LayoutCustomDrawerBinding.inflate(LayoutInflater.from(context), this, true)
+    private val binding: LayoutDrawerBinding =
+        LayoutDrawerBinding.inflate(LayoutInflater.from(context), this, true)
     private val navView: NavigationView = binding.navView
 
     fun setNavigationListener(listener: OnNavigationItemSelectedListener) {

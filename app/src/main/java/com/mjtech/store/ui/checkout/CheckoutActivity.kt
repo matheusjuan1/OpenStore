@@ -36,7 +36,7 @@ class CheckoutActivity : AppCompatActivity() {
     }
 
     private fun initViews() {
-        binding.customAppBar.flCartIconContainer.visibility = View.INVISIBLE
+        binding.appBar.flCartIconContainer.visibility = View.INVISIBLE
     }
 
     @SuppressLint("UnsafeOptInUsageError")

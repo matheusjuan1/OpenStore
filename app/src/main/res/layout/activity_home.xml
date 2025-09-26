@@ -20,7 +20,7 @@
             android:layout_height="wrap_content">
 
             <include
-                android:id="@+id/custom_app_bar"
+                android:id="@+id/app_bar"
                 layout="@layout/layout_app_bar" />
 
         </com.google.android.material.appbar.AppBarLayout>
@@ -69,7 +69,7 @@
                     android:contentDescription="@string/escanear_codigo_de_barras"
                     android:scaleType="fitCenter"
                     android:src="@drawable/ic_barcode_scanner"
-                    app:tint="@color/main_color" />
+                    app:tint="@color/gray" />
 
             </LinearLayout>
 
@@ -165,8 +165,8 @@
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-    <com.mjtech.store.ui.common.components.CustomDrawerContentView
-        android:id="@+id/custom_drawer"
+    <com.mjtech.store.ui.common.components.AppBarDrawer
+        android:id="@+id/app_bar_drawer"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start" />

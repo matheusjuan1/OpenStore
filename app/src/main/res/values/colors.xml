@@ -9,4 +9,6 @@
     <color name="card_color">#F5F0F6</color>
     <color name="red">#FF0000</color>
     <color name="green">#007f2f</color>
+    <color name="gray">#1A1F24</color>
+    <color name="light_gray">#CAC4D0</color>
 </resources>
