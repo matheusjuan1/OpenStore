@@ -7,6 +7,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -20,10 +21,13 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.badge.BadgeDrawable
 import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipDrawable
+import com.google.android.material.chip.ChipGroup
 import com.google.android.material.navigation.NavigationView
 import com.mjtech.store.R
 import com.mjtech.store.databinding.ActivityHomeBinding
 import com.mjtech.store.domain.common.DataResult
+import com.mjtech.store.domain.model.Category
 import com.mjtech.store.ui.common.components.AppBarDrawer
 import com.mjtech.store.ui.common.components.CartBottomSheetDialog
 import com.mjtech.store.ui.common.components.LoadingDialog
@@ -78,6 +82,7 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 productsViewModel.uiState.collect { uiState ->
+                    // Verifica se algum dado está carregando
                     val isAnythingLoading =
                         uiState.categories is DataResult.Loading ||
                                 uiState.products is DataResult.Loading
@@ -94,15 +99,17 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
 
                     when (uiState.categories) {
                         is DataResult.Success -> {
-                            Log.d(
-                                "ProductsActivity",
-                                "Categories loaded: ${uiState.categories.data.size} items"
-                            )
+                            createCategoriesChips(uiState.categories.data)
                         }
 
                         is DataResult.Error -> {
+                            Toast.makeText(
+                                this@ProductsActivity,
+                                getString(R.string.error_loading_categories),
+                                Toast.LENGTH_SHORT
+                            ).show()
                             Log.e(
-                                "ProductsActivity",
+                                TAG,
                                 "Error loading categories: ${uiState.categories.error}"
                             )
                         }
@@ -175,6 +182,36 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         }
     }
 
+    private fun createCategoriesChips(categories: List<Category>) {
+        val categories = listOf("Todos") + categories.map { it.name }
+        binding.chipGroupCategories.removeAllViews()
+
+        categories.forEach { category ->
+            val chip = Chip(this)
+
+            val chipStyle = ChipDrawable.createFromAttributes(this, null, 0, R.style.StoreChip)
+            chip.setChipDrawable(chipStyle)
+
+            chip.setTextAppearanceResource(R.style.StoreChip)
+
+            chip.text = category
+            chip.isCheckable = true
+            chip.isClickable = true
+
+            val layoutParams = ChipGroup.LayoutParams(
+                ChipGroup.LayoutParams.WRAP_CONTENT,
+                ChipGroup.LayoutParams.WRAP_CONTENT
+            )
+            chip.layoutParams = layoutParams
+
+            binding.chipGroupCategories.addView(chip)
+
+            if (category == "Todos") {
+                chip.isChecked = true
+            }
+        }
+    }
+
     private fun setupSearch() {
         binding.searchTextInput.setEndIconOnClickListener {
             binding.searchEditText.setText("")
@@ -221,5 +258,9 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         val dpWidth = displayMetrics.widthPixels / displayMetrics.density
         val noOfColumns = (dpWidth / 180).toInt()
         return if (noOfColumns < 2) 2 else noOfColumns
+    }
+
+    companion object {
+        const val TAG = "ProductsActivity"
     }
 }
