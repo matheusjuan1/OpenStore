@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.mjtech.store.R
 import com.mjtech.store.data.local.repository.LocalCartRepository
 import com.mjtech.store.databinding.ItemProductCardBinding
 import com.mjtech.store.domain.model.Product
@@ -34,7 +35,6 @@ class ProductsAdapter(
                     onRemoveItemClicked(product)
                 }
             }
-
         }
 
         @SuppressLint("DefaultLocale", "SetTextI18n")
@@ -43,11 +43,7 @@ class ProductsAdapter(
             binding.tvProductName.text = product.name
             binding.tvProductPrice.text = "R$ ${String.format("%.2f", product.price)}"
 
-//            if (product.image != null) {
-//                binding.ivProductImage.setImageResource(product.image)
-//            } else {
-//                binding.ivProductImage.setImageResource(R.drawable.ic_launcher_foreground)
-//            }
+            binding.ivProductImage.setImageResource(R.drawable.ic_launcher_foreground)
 
             val quantityInCart = LocalCartRepository.getQuantity(product.id)
             binding.tvItemQuantity.text = quantityInCart.toString()
