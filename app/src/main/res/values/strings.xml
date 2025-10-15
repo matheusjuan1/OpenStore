@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">OpenStore</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="menu">Menu</string>
     <string name="carrinho_de_compras">Carrinho de Compras</string>
     <string name="buscar">Buscar</string>

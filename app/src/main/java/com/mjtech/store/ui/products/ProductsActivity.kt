@@ -183,33 +183,34 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
     }
 
     private fun createCategoriesChips(categories: List<Category>) {
-        val categories = listOf("Todos") + categories.map { it.name }
+        val categories = listOf(Category(id = 0, name = "Todos")) + categories
         binding.chipGroupCategories.removeAllViews()
 
         categories.forEach { category ->
-            val chip = Chip(this)
-
-            val chipStyle = ChipDrawable.createFromAttributes(this, null, 0, R.style.StoreChip)
-            chip.setChipDrawable(chipStyle)
-
-            chip.setTextAppearanceResource(R.style.StoreChip)
-
-            chip.text = category
-            chip.isCheckable = true
-            chip.isClickable = true
-
-            val layoutParams = ChipGroup.LayoutParams(
-                ChipGroup.LayoutParams.WRAP_CONTENT,
-                ChipGroup.LayoutParams.WRAP_CONTENT
-            )
-            chip.layoutParams = layoutParams
-
-            binding.chipGroupCategories.addView(chip)
-
-            if (category == "Todos") {
-                chip.isChecked = true
-            }
+            binding.chipGroupCategories.addView(getCategoryChip(category))
         }
+    }
+
+    private fun getCategoryChip(category: Category): Chip {
+        val chip = Chip(this)
+
+        val chipStyle = ChipDrawable.createFromAttributes(this, null, 0, R.style.StoreChip)
+        chip.setChipDrawable(chipStyle)
+
+        chip.setTextAppearanceResource(R.style.StoreChip)
+
+        chip.id = category.id
+        chip.text = category.name
+        chip.isCheckable = true
+        chip.isClickable = true
+
+        val layoutParams = ChipGroup.LayoutParams(
+            ChipGroup.LayoutParams.WRAP_CONTENT,
+            ChipGroup.LayoutParams.WRAP_CONTENT
+        )
+        chip.layoutParams = layoutParams
+
+        return chip
     }
 
     private fun setupSearch() {
