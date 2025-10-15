@@ -17,7 +17,6 @@ class AppBarDrawer @JvmOverloads constructor(
 
     enum class ItemDrawer(val id: Int) {
         HOME(R.id.nav_home),
-        SETTINGS(R.id.nav_settings)
     }
 
     private val binding: LayoutDrawerBinding =

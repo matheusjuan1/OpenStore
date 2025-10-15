@@ -24,7 +24,6 @@
     <string name="navigation_drawer_open">Abrir menu de navegação</string>
     <string name="navigation_drawer_close">Fechar menu de navegação</string>
     <string name="store">Loja</string>
-    <string name="configuracoes">Configurações</string>
     <string name="empty_cart">Carrinho vazio! Adicione itens primeiro.</string>
     <string name="installment_options">Opções de parcelamento</string>
     <string name="installments_quantity">Escolha a quantidade de parcelas</string>

@@ -169,13 +169,7 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.nav_home -> {
-                // TODO
-            }
-
-            R.id.nav_settings -> {
-                // TODO
-            }
+            R.id.nav_home -> { }
         }
         drawerLayout.closeDrawer(GravityCompat.START)
         return true
