@@ -32,6 +32,8 @@ import com.mjtech.store.ui.common.components.AppBarDrawer
 import com.mjtech.store.ui.common.components.CartBottomSheetDialog
 import com.mjtech.store.ui.common.components.LoadingDialog
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -62,7 +64,6 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
 
     private fun initComponents() {
         setupDrawer()
-        setupCategories()
     }
 
     @SuppressLint("UnsafeOptInUsageError", "SetTextI18n")
@@ -81,6 +82,41 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
     private fun initObservers() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
+                productsViewModel.uiState
+                    .map { it.categories }
+                    .distinctUntilChanged()
+                    .collect { categoriesResult ->
+                        when (categoriesResult) {
+                            is DataResult.Success -> {
+                                createCategoriesChips(categoriesResult.data)
+                                setCategorySelectionListener()
+
+                                binding.chipGroupCategories.check(0)
+                                productsViewModel.onCategorySelected(0)
+                            }
+
+                            is DataResult.Error -> {
+                                Toast.makeText(
+                                    this@ProductsActivity,
+                                    getString(R.string.error_loading_categories),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                Log.e(
+                                    TAG,
+                                    "Error loading categories: ${categoriesResult.error}"
+                                )
+                            }
+
+                            is DataResult.Loading -> {}
+                        }
+                    }
+            }
+        }
+
+
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
                 productsViewModel.uiState.collect { uiState ->
                     // Verifica se algum dado está carregando
                     val isAnythingLoading =
@@ -94,27 +130,6 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
                             delay(50)
                             LoadingDialog.hide(supportFragmentManager)
                         }
-                    }
-
-
-                    when (uiState.categories) {
-                        is DataResult.Success -> {
-                            createCategoriesChips(uiState.categories.data)
-                        }
-
-                        is DataResult.Error -> {
-                            Toast.makeText(
-                                this@ProductsActivity,
-                                getString(R.string.error_loading_categories),
-                                Toast.LENGTH_SHORT
-                            ).show()
-                            Log.e(
-                                TAG,
-                                "Error loading categories: ${uiState.categories.error}"
-                            )
-                        }
-
-                        is DataResult.Loading -> {}
                     }
 
                     when (uiState.products) {
@@ -173,15 +188,6 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
 //        }
     }
 
-    private fun setupCategories() {
-        binding.chipGroupCategories.setOnCheckedStateChangeListener { group, checkedIds ->
-            if (checkedIds.isNotEmpty()) {
-                val selectedChipId = checkedIds[0]
-                val selectedChip = group.findViewById<Chip>(selectedChipId)
-            }
-        }
-    }
-
     private fun createCategoriesChips(categories: List<Category>) {
         val categories = listOf(Category(id = 0, name = "Todos")) + categories
         binding.chipGroupCategories.removeAllViews()
@@ -211,6 +217,15 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         chip.layoutParams = layoutParams
 
         return chip
+    }
+
+    private fun setCategorySelectionListener() {
+        binding.chipGroupCategories.setOnCheckedStateChangeListener { group, checkedIds ->
+            if (checkedIds.isNotEmpty()) {
+                val selectedCategoryId = checkedIds[0]
+                productsViewModel.onCategorySelected(selectedCategoryId)
+            }
+        }
     }
 
     private fun setupSearch() {

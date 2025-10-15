@@ -43,7 +43,7 @@ class LocalProductsRepository(private val context: Context) : ProductsRepository
         try {
             val jsonString = loadJsonFromAssets(fileName)
             if (jsonString == null) {
-                Log.e(TAG, "Arquivo mock não encontrado para: $fileName. Retornando lista vazia.")
+                Log.e(TAG, "Arquivo mock não encontrado para: $fileName.")
                 emit(DataResult.Error("Erro ao carregar produtos."))
             } else {
                 val json = AppJson.decodeFromString<ProductsDto>(jsonString)
