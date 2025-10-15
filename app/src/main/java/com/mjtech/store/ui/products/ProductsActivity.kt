@@ -24,8 +24,10 @@ import com.google.android.material.navigation.NavigationView
 import com.mjtech.store.R
 import com.mjtech.store.databinding.ActivityHomeBinding
 import com.mjtech.store.domain.common.DataResult
-import com.mjtech.store.ui.common.components.CartBottomSheetDialog
 import com.mjtech.store.ui.common.components.AppBarDrawer
+import com.mjtech.store.ui.common.components.CartBottomSheetDialog
+import com.mjtech.store.ui.common.components.LoadingDialog
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -76,11 +78,21 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 productsViewModel.uiState.collect { uiState ->
-                    when (uiState.categories) {
-                        is DataResult.Loading -> {
-                            Log.d("ProductsActivity", "Loading categories...")
-                        }
+                    val isAnythingLoading =
+                        uiState.categories is DataResult.Loading ||
+                                uiState.products is DataResult.Loading
 
+                    if (isAnythingLoading) {
+                        LoadingDialog.show(supportFragmentManager)
+                    } else {
+                        lifecycleScope.launch {
+                            delay(50)
+                            LoadingDialog.hide(supportFragmentManager)
+                        }
+                    }
+
+
+                    when (uiState.categories) {
                         is DataResult.Success -> {
                             Log.d(
                                 "ProductsActivity",
@@ -94,13 +106,11 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
                                 "Error loading categories: ${uiState.categories.error}"
                             )
                         }
+
+                        is DataResult.Loading -> {}
                     }
 
                     when (uiState.products) {
-                        is DataResult.Loading -> {
-                            Log.d("ProductsActivity", "Loading products...")
-                        }
-
                         is DataResult.Success -> {
                             Log.d(
                                 "ProductsActivity",
@@ -114,6 +124,8 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
                                 "Error loading products: ${uiState.products.error}"
                             )
                         }
+
+                        is DataResult.Loading -> {}
                     }
                 }
             }

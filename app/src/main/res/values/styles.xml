@@ -37,4 +37,9 @@
         <item name="android:textColor">@color/main_color</item>
         <item name="android:textSize">14sp</item>
     </style>
+
+    <style name="StoreTransparentDialog" parent="Theme.MaterialComponents.Light.Dialog.Alert">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:backgroundDimAmount">0.0</item>
+    </style>
 </resources>
