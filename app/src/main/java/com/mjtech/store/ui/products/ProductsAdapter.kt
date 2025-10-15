@@ -3,24 +3,20 @@ package com.mjtech.store.ui.products
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.mjtech.store.R
+import com.mjtech.store.data.local.repository.LocalCartRepository
 import com.mjtech.store.databinding.ItemProductCardBinding
 import com.mjtech.store.domain.model.Product
-import com.mjtech.store.data.local.repository.LocalCartRepository
 
 class ProductsAdapter(
-    private val lifecycleOwner: LifecycleOwner,
     private val onAddItemClicked: (Product) -> Unit,
     private val onRemoveItemClicked: (Product) -> Unit
 ) : ListAdapter<Product, ProductsAdapter.ProductViewHolder>(ProductDiffCallback()) {
 
     class ProductViewHolder(
         private val binding: ItemProductCardBinding,
-        lifecycleOwner: LifecycleOwner,
         private val onAddItemClicked: (Product) -> Unit,
         private val onRemoveItemClicked: (Product) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
@@ -39,21 +35,13 @@ class ProductsAdapter(
                 }
             }
 
-//            CartRepository.cartItems.observe(lifecycleOwner) { cartMap ->
-//                currentProduct?.let { product ->
-//                    val quantity = cartMap[product.id] ?: 0
-//                    binding.tvItemQuantity.text = quantity.toString()
-//
-//                    binding.btnRemoveItem.isEnabled = quantity > 0
-//                }
-//            }
         }
 
         @SuppressLint("DefaultLocale", "SetTextI18n")
         fun bind(product: Product) {
             currentProduct = product
-//            binding.tvProductName.text = product.name
-//            binding.tvProductPrice.text = "R$ ${String.format("%.2f", product.price)}"
+            binding.tvProductName.text = product.name
+            binding.tvProductPrice.text = "R$ ${String.format("%.2f", product.price)}"
 
 //            if (product.image != null) {
 //                binding.ivProductImage.setImageResource(product.image)
@@ -86,7 +74,7 @@ class ProductsAdapter(
             parent,
             false
         )
-        return ProductViewHolder(binding, lifecycleOwner, onAddItemClicked, onRemoveItemClicked)
+        return ProductViewHolder(binding, onAddItemClicked, onRemoveItemClicked)
     }
 
     override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {

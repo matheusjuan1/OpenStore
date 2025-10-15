@@ -18,10 +18,6 @@ class ProductsViewModel(private val productsRepository: ProductsRepository) : Vi
         getAllProducts()
     }
 
-    /** New
-     *
-     *
-     */
     private fun getCategories() {
         viewModelScope.launch {
             productsRepository.getCategories().collect { result ->
@@ -53,11 +49,6 @@ class ProductsViewModel(private val productsRepository: ProductsRepository) : Vi
             currentState.copy(searchQuery = query)
         }
     }
-
-
-    /**
-     * End New
-     */
 
     fun filterByCategory(category: Int) {
 //        currentCategoryFilter = category

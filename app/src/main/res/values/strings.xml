@@ -32,4 +32,6 @@
     <string name="app_logo">App Logo</string>
     <string name="aguarde">Aguarde</string>
     <string name="error_loading_categories">Error ao carregar categorias.</string>
+    <string name="error_loading_products">Error ao carregar produtos.</string>
+    <string name="currency_value">R$ %f</string>
 </resources>

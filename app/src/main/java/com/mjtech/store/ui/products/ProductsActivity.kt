@@ -1,6 +1,5 @@
 package com.mjtech.store.ui.products
 
-import android.annotation.SuppressLint
 import android.graphics.PorterDuff
 import android.os.Bundle
 import android.text.Editable
@@ -19,6 +18,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.badge.BadgeDrawable
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipDrawable
@@ -59,24 +59,11 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
 
         initComponents()
         initObservers()
-        initValues()
     }
 
     private fun initComponents() {
         setupDrawer()
-    }
-
-    @SuppressLint("UnsafeOptInUsageError", "SetTextI18n")
-    private fun initValues() {
-
-//        productsAdapter = ProductsAdapter(
-//            lifecycleOwner = this@ProductsActivity,
-//            onAddItemClicked = { product -> productsViewModel.addItemToCart(product) },
-//            onRemoveItemClicked = { product -> productsViewModel.removeItemFromCart(product) }
-//        )
-
-//        binding.recyclerViewProducts.layoutManager = GridLayoutManager(this, calculateNoOfColumns())
-//        binding.recyclerViewProducts.adapter = productsAdapter
+        createProductsList()
     }
 
     private fun initObservers() {
@@ -134,13 +121,15 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
 
                     when (uiState.products) {
                         is DataResult.Success -> {
-                            Log.d(
-                                "ProductsActivity",
-                                "Products loaded: ${uiState.products.data.size} items"
-                            )
+                            productsAdapter.submitList(uiState.products.data)
                         }
 
                         is DataResult.Error -> {
+                            Toast.makeText(
+                                this@ProductsActivity,
+                                getString(R.string.error_loading_products),
+                                Toast.LENGTH_SHORT
+                            ).show()
                             Log.e(
                                 "ProductsActivity",
                                 "Error loading products: ${uiState.products.error}"
@@ -153,6 +142,8 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
             }
         }
     }
+
+    // Navigation Drawer
 
     private fun setupDrawer() {
         drawerLayout = binding.drawerLayout
@@ -176,6 +167,30 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         binding.appBarDrawer.setItemActive(AppBarDrawer.ItemDrawer.HOME)
     }
 
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.nav_home -> {
+                // TODO
+            }
+
+            R.id.nav_settings -> {
+                // TODO
+            }
+        }
+        drawerLayout.closeDrawer(GravityCompat.START)
+        return true
+    }
+
+    private fun showCartDialog() {
+        val existingBottomSheet =
+            supportFragmentManager.findFragmentByTag(CartBottomSheetDialog.Companion.TAG) as? CartBottomSheetDialog
+
+        if (existingBottomSheet == null || !existingBottomSheet.isAdded) {
+            val newBottomSheet = CartBottomSheetDialog()
+            newBottomSheet.show(supportFragmentManager, CartBottomSheetDialog.Companion.TAG)
+        }
+    }
+
     private fun setupBadgeCart() {
         //        binding.customAppBar.ivCartIcon.setOnClickListener {
 //            val currentCartItemCount = 0
@@ -187,6 +202,24 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
 //            }
 //        }
     }
+
+    private fun setupSearch() {
+        binding.searchTextInput.setEndIconOnClickListener {
+            binding.searchEditText.setText("")
+            productsViewModel.filterBySearchQuery("")
+        }
+
+        binding.searchEditText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                productsViewModel.filterBySearchQuery(s.toString())
+            }
+
+            override fun afterTextChanged(s: Editable?) {}
+        })
+    }
+
+    // Categories Chips
 
     private fun createCategoriesChips(categories: List<Category>) {
         val categories = listOf(Category(id = 0, name = "Todos")) + categories
@@ -228,48 +261,23 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         }
     }
 
-    private fun setupSearch() {
-        binding.searchTextInput.setEndIconOnClickListener {
-            binding.searchEditText.setText("")
-            productsViewModel.filterBySearchQuery("")
-        }
+    // Products RecyclerView
 
-        binding.searchEditText.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                productsViewModel.filterBySearchQuery(s.toString())
+    private fun createProductsList() {
+        productsAdapter = ProductsAdapter(
+            onAddItemClicked = { product ->
+                //productsViewModel.addItemToCart(product)
+            },
+            onRemoveItemClicked = { product ->
+                // productsViewModel.removeItemFromCart(product)
             }
+        )
 
-            override fun afterTextChanged(s: Editable?) {}
-        })
+        binding.recyclerViewProducts.layoutManager = GridLayoutManager(this, calculateNoOfColumns())
+        binding.recyclerViewProducts.adapter = productsAdapter
     }
 
-    override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.nav_home -> {
-                // TODO
-            }
-
-            R.id.nav_settings -> {
-                // TODO
-            }
-        }
-        drawerLayout.closeDrawer(GravityCompat.START)
-        return true
-    }
-
-    private fun showCartDialog() {
-        val existingBottomSheet =
-            supportFragmentManager.findFragmentByTag(CartBottomSheetDialog.Companion.TAG) as? CartBottomSheetDialog
-
-        if (existingBottomSheet == null || !existingBottomSheet.isAdded) {
-            val newBottomSheet = CartBottomSheetDialog()
-            newBottomSheet.show(supportFragmentManager, CartBottomSheetDialog.Companion.TAG)
-        }
-    }
-
-
-    private fun calculateNoOfColumns(): Int {
+    fun calculateNoOfColumns(): Int {
         val displayMetrics = resources.displayMetrics
         val dpWidth = displayMetrics.widthPixels / displayMetrics.density
         val noOfColumns = (dpWidth / 180).toInt()
