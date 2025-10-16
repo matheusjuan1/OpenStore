@@ -2,6 +2,8 @@ package com.mjtech.store.ui.products
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mjtech.store.domain.common.DataResult
+import com.mjtech.store.domain.model.Product
 import com.mjtech.store.domain.repository.ProductsRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -12,6 +14,7 @@ class ProductsViewModel(private val productsRepository: ProductsRepository) : Vi
 
     private val _uiState = MutableStateFlow(ProductsUiState())
     val uiState: StateFlow<ProductsUiState> = _uiState
+    private val _allProducts = MutableStateFlow<DataResult<List<Product>>>(DataResult.Loading)
 
     init {
         getCategories()
@@ -31,9 +34,8 @@ class ProductsViewModel(private val productsRepository: ProductsRepository) : Vi
     private fun getAllProducts() {
         viewModelScope.launch {
             productsRepository.getProducts().collect { result ->
-                _uiState.update { currentState ->
-                    currentState.copy(products = result)
-                }
+                _allProducts.value = result
+                applyFilters()
             }
         }
     }
@@ -42,40 +44,41 @@ class ProductsViewModel(private val productsRepository: ProductsRepository) : Vi
         _uiState.update { currentState ->
             currentState.copy(selectedCategoryId = categoryId)
         }
+        applyFilters()
     }
 
     fun onSearchQueryChanged(query: String) {
         _uiState.update { currentState ->
             currentState.copy(searchQuery = query)
         }
-    }
-
-    fun filterByCategory(category: Int) {
-//        currentCategoryFilter = category
-        applyFilters()
-    }
-
-    fun filterBySearchQuery(query: String) {
-//        currentSearchQuery = query
         applyFilters()
     }
 
     private fun applyFilters() {
-//        val currentProducts = _allProducts.value ?: return
+        val allProducts = _allProducts.value
+        val categoryId = _uiState.value.selectedCategoryId
+        val searchQuery = _uiState.value.searchQuery
 
-//        var filteredList = currentProducts
+        if (allProducts is DataResult.Success) {
+            var filteredList = allProducts.data
 
-//        if (currentCategoryFilter != "Todos" && currentCategoryFilter.isNotEmpty()) {
-//            filteredList = filteredList.filter { it.category == currentCategoryFilter }
-//        }
-//
-//        if (currentSearchQuery.isNotEmpty()) {
-//            filteredList = filteredList.filter { product ->
-//                product.name.contains(currentSearchQuery, ignoreCase = true) ||
-//                        product.category.contains(currentSearchQuery, ignoreCase = true)
-//            }
-//        }
+            if (categoryId != 0) {
+                filteredList = filteredList.filter { it.categoryId == categoryId }
+            }
 
-//        _filteredProducts.value = filteredList
+            if (searchQuery.isNotEmpty()) {
+                filteredList = filteredList.filter { product ->
+                    product.name.contains(searchQuery, ignoreCase = true)
+                }
+            }
+
+            _uiState.update { currentState ->
+                currentState.copy(products = DataResult.Success(filteredList))
+            }
+        } else {
+            _uiState.update { currentState ->
+                currentState.copy(products = allProducts)
+            }
+        }
     }
 }

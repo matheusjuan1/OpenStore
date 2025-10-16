@@ -63,7 +63,8 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
 
     private fun initComponents() {
         setupDrawer()
-        createProductsList()
+        setupSearch()
+        setupProductsList()
     }
 
     private fun initObservers() {
@@ -175,15 +176,7 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         return true
     }
 
-    private fun showCartDialog() {
-        val existingBottomSheet =
-            supportFragmentManager.findFragmentByTag(CartBottomSheetDialog.Companion.TAG) as? CartBottomSheetDialog
-
-        if (existingBottomSheet == null || !existingBottomSheet.isAdded) {
-            val newBottomSheet = CartBottomSheetDialog()
-            newBottomSheet.show(supportFragmentManager, CartBottomSheetDialog.Companion.TAG)
-        }
-    }
+    // Cart
 
     private fun setupBadgeCart() {
         //        binding.customAppBar.ivCartIcon.setOnClickListener {
@@ -197,16 +190,28 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
 //        }
     }
 
+    private fun showCartDialog() {
+        val existingBottomSheet =
+            supportFragmentManager.findFragmentByTag(CartBottomSheetDialog.Companion.TAG) as? CartBottomSheetDialog
+
+        if (existingBottomSheet == null || !existingBottomSheet.isAdded) {
+            val newBottomSheet = CartBottomSheetDialog()
+            newBottomSheet.show(supportFragmentManager, CartBottomSheetDialog.Companion.TAG)
+        }
+    }
+
+    // Search
+
     private fun setupSearch() {
         binding.searchTextInput.setEndIconOnClickListener {
             binding.searchEditText.setText("")
-            productsViewModel.filterBySearchQuery("")
+            productsViewModel.onSearchQueryChanged("")
         }
 
         binding.searchEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                productsViewModel.filterBySearchQuery(s.toString())
+                productsViewModel.onSearchQueryChanged(s.toString())
             }
 
             override fun afterTextChanged(s: Editable?) {}
@@ -257,7 +262,7 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
 
     // Products RecyclerView
 
-    private fun createProductsList() {
+    private fun setupProductsList() {
         productsAdapter = ProductsAdapter(
             onAddItemClicked = { product ->
                 //productsViewModel.addItemToCart(product)
@@ -277,6 +282,8 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         val noOfColumns = (dpWidth / 180).toInt()
         return if (noOfColumns < 2) 2 else noOfColumns
     }
+
+    // Utils
 
     companion object {
         const val TAG = "ProductsActivity"
