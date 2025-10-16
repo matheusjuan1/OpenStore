@@ -17,7 +17,7 @@ class LocalProductsRepository(private val context: Context) : ProductsRepository
 
     private val TAG = "LocalProductsRepository"
 
-    override suspend fun getCategories(): Flow<DataResult<List<Category>>> = flow {
+    override fun getCategories(): Flow<DataResult<List<Category>>> = flow {
         emit(DataResult.Loading)
         val fileName = "mock_categories.json"
 
@@ -36,7 +36,7 @@ class LocalProductsRepository(private val context: Context) : ProductsRepository
         }
     }
 
-    override suspend fun getProducts(): Flow<DataResult<List<Product>>> = flow {
+    override fun getProducts(): Flow<DataResult<List<Product>>> = flow {
         emit(DataResult.Loading)
         val fileName = "mock_products.json"
 
