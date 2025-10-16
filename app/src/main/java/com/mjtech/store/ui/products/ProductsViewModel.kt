@@ -5,8 +5,13 @@ import androidx.lifecycle.viewModelScope
 import com.mjtech.store.domain.common.DataResult
 import com.mjtech.store.domain.model.Product
 import com.mjtech.store.domain.repository.ProductsRepository
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -14,11 +19,37 @@ class ProductsViewModel(private val productsRepository: ProductsRepository) : Vi
 
     private val _uiState = MutableStateFlow(ProductsUiState())
     val uiState: StateFlow<ProductsUiState> = _uiState
-    private val _allProducts = MutableStateFlow<DataResult<List<Product>>>(DataResult.Loading)
+
+    private val allProductsFlow: StateFlow<DataResult<List<Product>>>
+        get() = productsRepository.getProducts()
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.Eagerly,
+                initialValue = DataResult.Loading
+            )
 
     init {
         getCategories()
-        getAllProducts()
+        viewModelScope.launch {
+            getFilteredProductsFlow(allProductsFlow, _uiState)
+                .collectLatest { filteredListResult ->
+                    _uiState.update { currentState ->
+                        currentState.copy(products = filteredListResult)
+                    }
+                }
+        }
+    }
+
+    fun onCategorySelected(categoryId: Int) {
+        _uiState.update { currentState ->
+            currentState.copy(selectedCategoryId = categoryId)
+        }
+    }
+
+    fun onSearchQueryChanged(query: String) {
+        _uiState.update { currentState ->
+            currentState.copy(searchQuery = query)
+        }
     }
 
     private fun getCategories() {
@@ -31,54 +62,37 @@ class ProductsViewModel(private val productsRepository: ProductsRepository) : Vi
         }
     }
 
-    private fun getAllProducts() {
-        viewModelScope.launch {
-            productsRepository.getProducts().collect { result ->
-                _allProducts.value = result
-                applyFilters()
-            }
-        }
-    }
+    private fun getFilteredProductsFlow(
+        allProductsFlow: Flow<DataResult<List<Product>>>,
+        uiState: StateFlow<ProductsUiState>
+    ): StateFlow<DataResult<List<Product>>> {
+        // Filtra os produtos com base nos filtros
+        return allProductsFlow.combine(uiState) { productsResult, uiState ->
+            when (productsResult) {
+                is DataResult.Success -> {
+                    val selectedCategoryId = uiState.selectedCategoryId
+                    val searchQuery = uiState.searchQuery
 
-    fun onCategorySelected(categoryId: Int) {
-        _uiState.update { currentState ->
-            currentState.copy(selectedCategoryId = categoryId)
-        }
-        applyFilters()
-    }
+                    var filteredList = productsResult.data
 
-    fun onSearchQueryChanged(query: String) {
-        _uiState.update { currentState ->
-            currentState.copy(searchQuery = query)
-        }
-        applyFilters()
-    }
-
-    private fun applyFilters() {
-        val allProducts = _allProducts.value
-        val categoryId = _uiState.value.selectedCategoryId
-        val searchQuery = _uiState.value.searchQuery
-
-        if (allProducts is DataResult.Success) {
-            var filteredList = allProducts.data
-
-            if (categoryId != 0) {
-                filteredList = filteredList.filter { it.categoryId == categoryId }
-            }
-
-            if (searchQuery.isNotEmpty()) {
-                filteredList = filteredList.filter { product ->
-                    product.name.contains(searchQuery, ignoreCase = true)
+                    if (selectedCategoryId != 0) {
+                        filteredList = filteredList.filter { it.categoryId == selectedCategoryId }
+                    }
+                    if (searchQuery.isNotEmpty()) {
+                        filteredList = filteredList.filter { product ->
+                            product.name.contains(searchQuery, ignoreCase = true)
+                        }
+                    }
+                    DataResult.Success(filteredList)
                 }
-            }
 
-            _uiState.update { currentState ->
-                currentState.copy(products = DataResult.Success(filteredList))
-            }
-        } else {
-            _uiState.update { currentState ->
-                currentState.copy(products = allProducts)
+                else -> productsResult
             }
         }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.Eagerly,
+                initialValue = DataResult.Loading
+            )
     }
 }
