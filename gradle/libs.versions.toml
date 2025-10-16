@@ -1,5 +1,6 @@
 [versions]
 agp = "8.11.1"
+
 kotlin = "2.0.21"
 coreKtx = "1.17.0"
 junit = "4.13.2"
@@ -18,9 +19,12 @@ jetbrainsKotlinJvm = "1.9.0"
 recyclerview = "1.4.0"
 kotlinx-serialization = "1.7.3"
 koin = "3.5.0"
+coil = "3.0.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+coil = { group = "io.coil-kt.coil3", name = "coil", version.ref = "coil" }
+coil-network-okhttp = { group = "io.coil-kt.coil3", name = "coil-network-okhttp", version.ref = "coil" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
