@@ -63,6 +63,7 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
 
     private fun initComponents() {
         setupDrawer()
+        setupBadgeCart()
         setupSearch()
         setupProductsList()
     }
@@ -170,7 +171,7 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.nav_home -> { }
+            R.id.nav_home -> {}
         }
         drawerLayout.closeDrawer(GravityCompat.START)
         return true
@@ -179,15 +180,15 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
     // Cart
 
     private fun setupBadgeCart() {
-        //        binding.customAppBar.ivCartIcon.setOnClickListener {
-//            val currentCartItemCount = 0
-//            if (currentCartItemCount > 0) {
-//                showCartDialog()
-//            } else {
-//                Toast.makeText(this, getString(R.string.empty_cart), Toast.LENGTH_SHORT)
-//                    .show()
-//            }
-//        }
+        binding.appBar.ivCartIcon.setOnClickListener {
+            val currentCartItemCount = 0
+            if (currentCartItemCount > 0) {
+                showCartDialog()
+            } else {
+                Toast.makeText(this, getString(R.string.empty_cart), Toast.LENGTH_SHORT)
+                    .show()
+            }
+        }
     }
 
     private fun showCartDialog() {
@@ -276,7 +277,7 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         binding.recyclerViewProducts.adapter = productsAdapter
     }
 
-    fun calculateNoOfColumns(): Int {
+    private fun calculateNoOfColumns(): Int {
         val displayMetrics = resources.displayMetrics
         val dpWidth = displayMetrics.widthPixels / displayMetrics.density
         val noOfColumns = (dpWidth / 180).toInt()
