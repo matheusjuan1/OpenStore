@@ -28,7 +28,7 @@
                 android:layout_gravity="center"
                 android:contentDescription="@string/imagem_do_produto"
                 android:scaleType="fitCenter"
-                tools:src="@drawable/ic_launcher_foreground_base" />
+                tools:src="@drawable/img_placeholder" />
 
         </com.google.android.material.card.MaterialCardView>
 

@@ -6,6 +6,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import coil3.load
+import coil3.request.crossfade
+import coil3.request.error
+import coil3.request.placeholder
 import com.mjtech.store.R
 import com.mjtech.store.data.local.repository.LocalCartRepository
 import com.mjtech.store.databinding.ItemProductCardBinding
@@ -43,7 +47,11 @@ class ProductsAdapter(
             binding.tvProductName.text = product.name
             binding.tvProductPrice.text = "R$ ${String.format("%.2f", product.price)}"
 
-            binding.ivProductImage.setImageResource(R.drawable.ic_launcher_foreground)
+            binding.ivProductImage.load(product.imageUrl) {
+                crossfade(true)
+                placeholder(R.drawable.img_placeholder)
+                error(R.drawable.img_placeholder)
+            }
 
             val quantityInCart = LocalCartRepository.getQuantity(product.id)
             binding.tvItemQuantity.text = quantityInCart.toString()
