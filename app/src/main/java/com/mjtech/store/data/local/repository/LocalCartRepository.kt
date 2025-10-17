@@ -6,7 +6,10 @@ import com.mjtech.store.domain.model.Product
 import com.mjtech.store.domain.repository.CartRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 
 
 class LocalCartRepository : CartRepository {
@@ -69,7 +72,34 @@ class LocalCartRepository : CartRepository {
         }
     }
 
-    override fun getCartItems(): Flow<DataResult<List<Product>>> = flow {
+    override fun getCartItems(): Flow<DataResult<List<CartItem>>> = flow {
+        emit(DataResult.Loading)
+        _cartItemsFlow
+            .map { cartMap ->
+                DataResult.Success(cartMap.values.toList())
+            }
+            .catch { e ->
+                emit(DataResult.Error("Erro ao obter itens do carrinho: ${e.message}"))
+            }
+            .collectLatest {
+                emit(it)
+            }
+    }
 
+    override fun getTotalPrice(): Flow<DataResult<Double>> = flow {
+        emit(DataResult.Loading)
+        _cartItemsFlow
+            .map { cartMap ->
+                val totalPrice = cartMap.values.sumOf { item ->
+                    item.product.price * item.quantity
+                }
+                DataResult.Success(totalPrice)
+            }
+            .catch { e ->
+                emit(DataResult.Error("Erro ao calcular o preço total: ${e.message}"))
+            }
+            .collectLatest {
+                emit(it)
+            }
     }
 }
