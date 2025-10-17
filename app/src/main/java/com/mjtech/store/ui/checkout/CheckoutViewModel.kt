@@ -75,7 +75,8 @@ class CheckoutViewModel(application: Application) : AndroidViewModel(application
     }
 
     fun getTotal(): Double {
-        return LocalCartRepository.cartTotalValue.value ?: 0.0
+//        return LocalCartRepository.cartTotalValue.value ?: 0.0
+        return 0.0
     }
 
     fun getInstallmentValue(installment: Int): Double {

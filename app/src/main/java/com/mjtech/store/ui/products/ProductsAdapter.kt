@@ -53,7 +53,7 @@ class ProductsAdapter(
                 error(R.drawable.img_placeholder)
             }
 
-            val quantityInCart = LocalCartRepository.getQuantity(product.id)
+            val quantityInCart = 0
             binding.tvItemQuantity.text = quantityInCart.toString()
             binding.btnRemoveItem.isEnabled = quantityInCart > 0
         }

@@ -277,10 +277,10 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
     private fun setupProductsList() {
         productsAdapter = ProductsAdapter(
             onAddItemClicked = { product ->
-                //productsViewModel.addItemToCart(product)
+                productsViewModel.onAddProductToCart(product)
             },
             onRemoveItemClicked = { product ->
-                // productsViewModel.removeItemFromCart(product)
+                 productsViewModel.onRemoveProductFromCart(product)
             }
         )
 

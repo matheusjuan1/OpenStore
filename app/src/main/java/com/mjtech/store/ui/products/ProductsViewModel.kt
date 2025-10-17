@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mjtech.store.domain.common.DataResult
 import com.mjtech.store.domain.model.Product
+import com.mjtech.store.domain.repository.CartRepository
 import com.mjtech.store.domain.repository.ProductsRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,7 +16,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class ProductsViewModel(private val productsRepository: ProductsRepository) : ViewModel() {
+class ProductsViewModel(private val productsRepository: ProductsRepository, private val cartRepository: CartRepository) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ProductsUiState())
     val uiState: StateFlow<ProductsUiState> = _uiState
@@ -49,6 +50,18 @@ class ProductsViewModel(private val productsRepository: ProductsRepository) : Vi
     fun onSearchQueryChanged(query: String) {
         _uiState.update { currentState ->
             currentState.copy(searchQuery = query)
+        }
+    }
+
+    fun onAddProductToCart(product: Product) {
+        viewModelScope.launch {
+
+        }
+    }
+
+    fun onRemoveProductFromCart(product: Product) {
+        viewModelScope.launch {
+//            cartRepository.removeItem(product)
         }
     }
 

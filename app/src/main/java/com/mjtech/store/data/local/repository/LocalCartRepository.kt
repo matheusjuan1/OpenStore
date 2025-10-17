@@ -1,75 +1,67 @@
 package com.mjtech.store.data.local.repository
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.map
+import com.mjtech.store.domain.common.DataResult
+import com.mjtech.store.domain.model.CartItem
 import com.mjtech.store.domain.model.Product
+import com.mjtech.store.domain.repository.CartRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.flow
 
-/**
- * CartRepository é um Singleton que gerencia o estado global do carrinho de compras.
- * Ele mantém um mapa de produtos e suas quantidades, e expõe LiveData para observadores.
- */
-object LocalCartRepository {
 
-    private val _cartItems = MutableLiveData<MutableMap<String, Int>>(mutableMapOf())
+class LocalCartRepository : CartRepository {
 
-    val cartItems: MutableLiveData<MutableMap<String, Int>> get() = _cartItems
+    private val _cartItemsFlow = MutableStateFlow<MutableMap<String, CartItem>>(mutableMapOf())
 
-    val totalItemsInCart: LiveData<Int> = _cartItems.map { cartMap ->
-        cartMap.values.sum()
+    override fun addItem(product: Product): Flow<DataResult<Unit>> = flow {
+        emit(DataResult.Loading)
+        try {
+            val productId = product.id
+            val currentCart = _cartItemsFlow.value
+
+            if (currentCart.containsKey(productId)) {
+                val cartItem = currentCart.getValue(productId)
+
+                currentCart[productId] = cartItem.copy(quantity = cartItem.quantity + 1)
+            } else {
+                currentCart[productId] = CartItem(product = product, quantity = 1)
+            }
+            _cartItemsFlow.value = currentCart
+            emit(DataResult.Success(Unit))
+        } catch (e: Exception) {
+            emit(DataResult.Error("Erro ao adicionar item: ${e.message}"))
+        }
     }
 
-    val cartTotalValue: LiveData<Double> = _cartItems.map { cartMap ->
+    override fun removeItem(product: Product): Flow<DataResult<Unit>> = flow {
+        emit(DataResult.Loading)
+        try {
+            val productId = product.id
+            val currentCart = _cartItemsFlow.value
 
-        var total = 0.0
-//        cartMap.forEach { (productId, quantity) ->
-//            val product = ProductRepositoryMock.getProductById(productId)
-//            if (product != null) {
-//                total += product.price * quantity
-//            }
-//        }
-        total
+            if (currentCart.containsKey(productId)) {
+                val cartItem = currentCart.getValue(productId)
+
+                if (cartItem.quantity > 1) {
+                    currentCart[productId] = cartItem.copy(quantity = cartItem.quantity - 1)
+                } else {
+                    currentCart.remove(productId)
+                }
+                _cartItemsFlow.value = currentCart
+                emit(DataResult.Success(Unit))
+            } else {
+                emit(DataResult.Error("Item não encontrado no carrinho"))
+            }
+        } catch (e: Exception) {
+            emit(DataResult.Error("Erro ao remover item: ${e.message}"))
+        }
     }
 
+    override fun clearCart(): Flow<DataResult<Unit>> = flow {
 
-    fun addItem(product: Product) {
-        val currentCart = _cartItems.value ?: mutableMapOf()
-        val newCart = currentCart.toMutableMap()
-
-//        val currentQuantity = newCart[product.id] ?: 0
-//        newCart[product.id] = currentQuantity + 1
-
-        _cartItems.value = newCart
     }
 
-    fun removeItem(product: Product) {
-        val currentCart = _cartItems.value ?: return
-        val newCart = currentCart.toMutableMap()
+    override fun getCartItems(): Flow<DataResult<List<Product>>> = flow {
 
-//        val currentQuantity = newCart[product.id] ?: 0
-//        if (currentQuantity > 0) {
-//            val newQuantity = currentQuantity - 1
-//            if (newQuantity == 0) {
-//                newCart.remove(product.id)
-//            } else {
-//                newCart[product.id] = newQuantity
-//            }
-//        }
-
-        _cartItems.value = newCart
-    }
-
-    /**
-     * Obtém a quantidade atual de um produto específico no carrinho.
-     * @param productId O ID do produto.
-     * @return A quantidade do produto no carrinho, ou 0 se não estiver presente.
-     */
-    fun getQuantity(productId: Int): Int {
-        return _cartItems.value?.get(productId.toString()) ?: 0
-    }
-
-
-    fun clearCart() {
-        _cartItems.value = mutableMapOf()
     }
 }
