@@ -1,8 +1,8 @@
 {
   "products": [
     {
-      "id": 101,
-      "categoryId": 1,
+      "id": "101",
+      "categoryId": "1",
       "name": "X-Burger Clássico",
       "description": "Pão, hambúrguer de 150g, queijo cheddar e picles. O sabor inconfundível que todo mundo ama.",
       "price": 25.90,
@@ -10,8 +10,8 @@
       "isAvailable": true
     },
     {
-      "id": 102,
-      "categoryId": 1,
+      "id": "102",
+      "categoryId": "1",
       "name": "X-Salada Especial",
       "description": "Nosso X-Burger com um toque de frescor: alface crocante, tomate fresco e maionese especial.",
       "price": 28.50,
@@ -19,8 +19,8 @@
       "isAvailable": true
     },
     {
-      "id": 103,
-      "categoryId": 1,
+      "id": "103",
+      "categoryId": "1",
       "name": "Frango Grelhado no Pão",
       "description": "Uma opção mais leve. Filé de frango grelhado, queijo branco, alface e tomate no pão integral.",
       "price": 27.00,
@@ -28,8 +28,8 @@
       "isAvailable": true
     },
     {
-      "id": 104,
-      "categoryId": 1,
+      "id": "104",
+      "categoryId": "1",
       "name": "Sanduíche Vegetariano",
       "description": "Delicioso hambúrguer à base de plantas, com queijo, alface, tomate e molho especial.",
       "price": 29.90,
@@ -37,8 +37,8 @@
       "isAvailable": true
     },
     {
-      "id": 201,
-      "categoryId": 2,
+      "id": "201",
+      "categoryId": "2",
       "name": "Batatas Fritas (Média)",
       "description": "Crocantes por fora, macias por dentro. Acompanhamento perfeito para qualquer lanche.",
       "price": 12.00,
@@ -46,8 +46,8 @@
       "isAvailable": true
     },
     {
-      "id": 202,
-      "categoryId": 2,
+      "id": "202",
+      "categoryId": "2",
       "name": "Anéis de Cebola",
       "description": "Anéis de cebola empanados e fritos. Crocantes e deliciosos.",
       "price": 14.50,
@@ -55,8 +55,8 @@
       "isAvailable": true
     },
     {
-      "id": 301,
-      "categoryId": 3,
+      "id": "301",
+      "categoryId": "3",
       "name": "Coca-Cola",
       "description": "Lata 350ml, gelada e refrescante.",
       "price": 7.50,
@@ -64,8 +64,8 @@
       "isAvailable": true
     },
     {
-      "id": 302,
-      "categoryId": 3,
+      "id": "302",
+      "categoryId": "3",
       "name": "Guaraná Antarctica",
       "description": "Lata 350ml. O sabor original do Brasil.",
       "price": 7.50,
@@ -73,8 +73,8 @@
       "isAvailable": true
     },
     {
-      "id": 303,
-      "categoryId": 3,
+      "id": "303",
+      "categoryId": "3",
       "name": "Suco de Laranja Natural",
       "description": "Copo de 400ml, feito na hora com laranjas frescas.",
       "price": 9.00,
@@ -82,8 +82,8 @@
       "isAvailable": true
     },
     {
-      "id": 304,
-      "categoryId": 3,
+      "id": "304",
+      "categoryId": "3",
       "name": "Água Mineral sem Gás",
       "description": "Garrafa de 500ml.",
       "price": 5.00,
@@ -91,8 +91,8 @@
       "isAvailable": true
     },
     {
-      "id": 401,
-      "categoryId": 4,
+      "id": "401",
+      "categoryId": "4",
       "name": "Sundae de Chocolate",
       "description": "Sorvete de baunilha cremoso com calda de chocolate quente e castanhas.",
       "price": 11.00,
@@ -100,8 +100,8 @@
       "isAvailable": true
     },
     {
-      "id": 402,
-      "categoryId": 4,
+      "id": "402",
+      "categoryId": "4",
       "name": "Mousse de Maracujá",
       "description": "Leve, cremoso e com o azedinho na medida certa. Uma sobremesa tropical.",
       "price": 9.50,
@@ -109,8 +109,8 @@
       "isAvailable": true
     },
     {
-      "id": 501,
-      "categoryId": 5,
+      "id": "501",
+      "categoryId": "5",
       "name": "Maionese Temperada",
       "description": "Pote de 30g da nossa maionese secreta com ervas finas.",
       "price": 3.00,
