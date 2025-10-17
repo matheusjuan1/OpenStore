@@ -6,6 +6,8 @@ import com.mjtech.store.domain.common.DataResult
 import com.mjtech.store.domain.model.Product
 import com.mjtech.store.domain.repository.CartRepository
 import com.mjtech.store.domain.repository.ProductsRepository
+import com.mjtech.store.ui.products.state.CartUiState
+import com.mjtech.store.ui.products.state.ProductsUiState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -21,8 +23,11 @@ class ProductsViewModel(
     private val cartRepository: CartRepository
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(ProductsUiState())
-    val uiState: StateFlow<ProductsUiState> = _uiState
+    private val _productsUiState = MutableStateFlow(ProductsUiState())
+    val productsUiState: StateFlow<ProductsUiState> = _productsUiState
+
+    private val _cartUiState = MutableStateFlow(CartUiState())
+    val cartUiState: StateFlow<CartUiState> = _cartUiState
 
     private val allProductsFlow: StateFlow<DataResult<List<Product>>>
         get() = productsRepository.getProducts()
@@ -35,9 +40,9 @@ class ProductsViewModel(
     init {
         getCategories()
         viewModelScope.launch {
-            getFilteredProductsFlow(allProductsFlow, _uiState)
+            getFilteredProductsFlow(allProductsFlow, _productsUiState)
                 .collectLatest { filteredListResult ->
-                    _uiState.update { currentState ->
+                    _productsUiState.update { currentState ->
                         currentState.copy(products = filteredListResult)
                     }
                 }
@@ -45,13 +50,13 @@ class ProductsViewModel(
     }
 
     fun onCategorySelected(categoryId: String) {
-        _uiState.update { currentState ->
+        _productsUiState.update { currentState ->
             currentState.copy(selectedCategoryId = categoryId)
         }
     }
 
     fun onSearchQueryChanged(query: String) {
-        _uiState.update { currentState ->
+        _productsUiState.update { currentState ->
             currentState.copy(searchQuery = query)
         }
     }
@@ -59,7 +64,7 @@ class ProductsViewModel(
     fun onAddProductToCart(product: Product) {
         viewModelScope.launch {
             cartRepository.addItem(product).collect { result ->
-                _uiState.update { currentState ->
+                _cartUiState.update { currentState ->
                     currentState.copy(addItemState = result)
                 }
             }
@@ -69,7 +74,7 @@ class ProductsViewModel(
     fun onRemoveProductFromCart(product: Product) {
         viewModelScope.launch {
             cartRepository.removeItem(product).collect { result ->
-                _uiState.update { currentState ->
+                _cartUiState.update { currentState ->
                     currentState.copy(removeItemState = result)
                 }
             }
@@ -77,13 +82,13 @@ class ProductsViewModel(
     }
 
     fun resetAddItemState() {
-        _uiState.update { currentState ->
+        _cartUiState.update { currentState ->
             currentState.copy(addItemState = DataResult.Success(Unit))
         }
     }
 
     fun resetRemoveItemState() {
-        _uiState.update { currentState ->
+        _cartUiState.update { currentState ->
             currentState.copy(removeItemState = DataResult.Success(Unit))
         }
     }
@@ -91,7 +96,7 @@ class ProductsViewModel(
     private fun getCategories() {
         viewModelScope.launch {
             productsRepository.getCategories().collect { result ->
-                _uiState.update { currentState ->
+                _productsUiState.update { currentState ->
                     currentState.copy(categories = result)
                 }
             }

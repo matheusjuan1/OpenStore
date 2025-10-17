@@ -72,7 +72,7 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
     private fun initObservers() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                productsViewModel.uiState
+                productsViewModel.productsUiState
                     .map { it.categories }
                     .distinctUntilChanged()
                     .collect { categoriesResult ->
@@ -102,7 +102,7 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                productsViewModel.uiState
+                productsViewModel.cartUiState
                     .map { it.addItemState }
                     .distinctUntilChanged()
                     .collect { state ->
@@ -129,7 +129,7 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                productsViewModel.uiState
+                productsViewModel.cartUiState
                     .map { it.removeItemState }
                     .distinctUntilChanged()
                     .collect { state ->
@@ -157,7 +157,7 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                productsViewModel.uiState.collect { uiState ->
+                productsViewModel.productsUiState.collect { uiState ->
                     // Verifica se algum dado está carregando
                     val isAnythingLoading =
                         uiState.categories is DataResult.Loading ||
