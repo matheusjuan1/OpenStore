@@ -58,7 +58,15 @@ class LocalCartRepository : CartRepository {
     }
 
     override fun clearCart(): Flow<DataResult<Unit>> = flow {
+        emit(DataResult.Loading)
+        try {
+            _cartItemsFlow.value.clear()
 
+            _cartItemsFlow.value = mutableMapOf()
+            emit(DataResult.Success(Unit))
+        } catch (e: Exception) {
+            emit(DataResult.Error("Erro ao limpar o carrinho: ${e.message}"))
+        }
     }
 
     override fun getCartItems(): Flow<DataResult<List<Product>>> = flow {
