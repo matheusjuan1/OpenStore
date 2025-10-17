@@ -7,6 +7,6 @@ import com.mjtech.store.domain.model.Product
 data class ProductsUiState(
     val categories: DataResult<List<Category>> = DataResult.Loading,
     val products: DataResult<List<Product>> = DataResult.Loading,
-    val selectedCategoryId: Int = 0,
+    val selectedCategoryId: String = "0",
     val searchQuery: String = ""
 )

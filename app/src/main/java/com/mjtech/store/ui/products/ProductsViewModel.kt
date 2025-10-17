@@ -40,7 +40,7 @@ class ProductsViewModel(private val productsRepository: ProductsRepository) : Vi
         }
     }
 
-    fun onCategorySelected(categoryId: Int) {
+    fun onCategorySelected(categoryId: String) {
         _uiState.update { currentState ->
             currentState.copy(selectedCategoryId = categoryId)
         }
@@ -75,7 +75,7 @@ class ProductsViewModel(private val productsRepository: ProductsRepository) : Vi
 
                     var filteredList = productsResult.data
 
-                    if (selectedCategoryId != 0) {
+                    if (selectedCategoryId != "0") {
                         filteredList = filteredList.filter { it.categoryId == selectedCategoryId }
                     }
                     if (searchQuery.isNotEmpty()) {

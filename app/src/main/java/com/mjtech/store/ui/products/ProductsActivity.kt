@@ -6,6 +6,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -79,9 +80,6 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
                             is DataResult.Success -> {
                                 createCategoriesChips(categoriesResult.data)
                                 setCategorySelectionListener()
-
-                                binding.chipGroupCategories.check(0)
-                                productsViewModel.onCategorySelected(0)
                             }
 
                             is DataResult.Error -> {
@@ -222,11 +220,21 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
     // Categories Chips
 
     private fun createCategoriesChips(categories: List<Category>) {
-        val categories = listOf(Category(id = 0, name = "Todos")) + categories
+        val categories = listOf(Category(id = "0", name = "Todos")) + categories
         binding.chipGroupCategories.removeAllViews()
 
-        categories.forEach { category ->
-            binding.chipGroupCategories.addView(getCategoryChip(category))
+        var firstChipId = -1
+
+        categories.forEachIndexed { index, category ->
+            val chip = getCategoryChip(category)
+            binding.chipGroupCategories.addView(chip)
+            if (index == 0) {
+                firstChipId = chip.id
+            }
+        }
+
+        if (firstChipId != -1) {
+            binding.chipGroupCategories.check(firstChipId)
         }
     }
 
@@ -238,7 +246,8 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
 
         chip.setTextAppearanceResource(R.style.StoreChip)
 
-        chip.id = category.id
+        chip.id = View.generateViewId()
+        chip.tag = category.id
         chip.text = category.name
         chip.isCheckable = true
         chip.isClickable = true
@@ -255,8 +264,10 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
     private fun setCategorySelectionListener() {
         binding.chipGroupCategories.setOnCheckedStateChangeListener { group, checkedIds ->
             if (checkedIds.isNotEmpty()) {
-                val selectedCategoryId = checkedIds[0]
-                productsViewModel.onCategorySelected(selectedCategoryId)
+                val selectedCategoryIdChip = checkedIds[0]
+                val selectedCategoryTagChip =
+                    group.findViewById<Chip>(selectedCategoryIdChip).tag.toString()
+                productsViewModel.onCategorySelected(selectedCategoryTagChip)
             }
         }
     }
