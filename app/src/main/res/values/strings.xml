@@ -33,4 +33,6 @@
     <string name="error_loading_categories">Error ao carregar categorias.</string>
     <string name="error_loading_products">Error ao carregar produtos.</string>
     <string name="currency_value">R$ %f</string>
+    <string name="error_remove_cart_item">Erro ao remover item do carrinho</string>
+    <string name="error_add_cart_item">Erro ao adicionar item do carrinho</string>
 </resources>

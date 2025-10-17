@@ -16,7 +16,10 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class ProductsViewModel(private val productsRepository: ProductsRepository, private val cartRepository: CartRepository) : ViewModel() {
+class ProductsViewModel(
+    private val productsRepository: ProductsRepository,
+    private val cartRepository: CartRepository
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ProductsUiState())
     val uiState: StateFlow<ProductsUiState> = _uiState
@@ -55,13 +58,33 @@ class ProductsViewModel(private val productsRepository: ProductsRepository, priv
 
     fun onAddProductToCart(product: Product) {
         viewModelScope.launch {
-
+            cartRepository.addItem(product).collect { result ->
+                _uiState.update { currentState ->
+                    currentState.copy(addItemState = result)
+                }
+            }
         }
     }
 
     fun onRemoveProductFromCart(product: Product) {
         viewModelScope.launch {
-//            cartRepository.removeItem(product)
+            cartRepository.removeItem(product).collect { result ->
+                _uiState.update { currentState ->
+                    currentState.copy(removeItemState = result)
+                }
+            }
+        }
+    }
+
+    fun resetAddItemState() {
+        _uiState.update { currentState ->
+            currentState.copy(addItemState = DataResult.Success(Unit))
+        }
+    }
+
+    fun resetRemoveItemState() {
+        _uiState.update { currentState ->
+            currentState.copy(removeItemState = DataResult.Success(Unit))
         }
     }
 

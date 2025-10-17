@@ -90,7 +90,7 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
                                 ).show()
                                 Log.e(
                                     TAG,
-                                    "Error loading categories: ${categoriesResult.error}"
+                                    categoriesResult.error
                                 )
                             }
 
@@ -100,6 +100,59 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
             }
         }
 
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                productsViewModel.uiState
+                    .map { it.addItemState }
+                    .distinctUntilChanged()
+                    .collect { state ->
+                        when (state) {
+                            is DataResult.Error -> {
+                                Toast.makeText(
+                                    this@ProductsActivity,
+                                    getString(R.string.error_add_cart_item),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                Log.e(
+                                    TAG,
+                                    state.error
+                                )
+                                productsViewModel.resetAddItemState()
+                            }
+
+                            is DataResult.Loading -> {}
+                            is DataResult.Success -> {}
+                        }
+                    }
+            }
+        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                productsViewModel.uiState
+                    .map { it.removeItemState }
+                    .distinctUntilChanged()
+                    .collect { state ->
+                        when (state) {
+                            is DataResult.Error -> {
+                                Toast.makeText(
+                                    this@ProductsActivity,
+                                    getString(R.string.error_remove_cart_item),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                Log.e(
+                                    TAG,
+                                    state.error
+                                )
+                                productsViewModel.resetRemoveItemState()
+                            }
+
+                            is DataResult.Loading -> {}
+                            is DataResult.Success -> {}
+                        }
+                    }
+            }
+        }
 
 
         lifecycleScope.launch {
@@ -132,7 +185,7 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
                             ).show()
                             Log.e(
                                 "ProductsActivity",
-                                "Error loading products: ${uiState.products.error}"
+                                uiState.products.error
                             )
                         }
 
@@ -280,7 +333,7 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
                 productsViewModel.onAddProductToCart(product)
             },
             onRemoveItemClicked = { product ->
-                 productsViewModel.onRemoveProductFromCart(product)
+                productsViewModel.onRemoveProductFromCart(product)
             }
         )
 

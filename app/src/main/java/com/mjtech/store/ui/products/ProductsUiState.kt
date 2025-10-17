@@ -8,5 +8,7 @@ data class ProductsUiState(
     val categories: DataResult<List<Category>> = DataResult.Loading,
     val products: DataResult<List<Product>> = DataResult.Loading,
     val selectedCategoryId: String = "0",
-    val searchQuery: String = ""
+    val searchQuery: String = "",
+    val addItemState: DataResult<Unit> = DataResult.Success(Unit),
+    val removeItemState: DataResult<Unit> = DataResult.Success(Unit)
 )
