@@ -32,10 +32,6 @@ object LocalCartRepository {
     }
 
 
-    /**
-     * Adiciona um item ao carrinho ou incrementa sua quantidade.
-     * @param product O produto a ser adicionado.
-     */
     fun addItem(product: Product) {
         val currentCart = _cartItems.value ?: mutableMapOf()
         val newCart = currentCart.toMutableMap()
@@ -46,11 +42,6 @@ object LocalCartRepository {
         _cartItems.value = newCart
     }
 
-    /**
-     * Remove um item do carrinho ou decrementa sua quantidade.
-     * Se a quantidade chegar a zero, o item é removido do carrinho.
-     * @param product O produto a ser removido.
-     */
     fun removeItem(product: Product) {
         val currentCart = _cartItems.value ?: return
         val newCart = currentCart.toMutableMap()
@@ -77,9 +68,7 @@ object LocalCartRepository {
         return _cartItems.value?.get(productId.toString()) ?: 0
     }
 
-    /**
-     * Limpa completamente o carrinho.
-     */
+
     fun clearCart() {
         _cartItems.value = mutableMapOf()
     }
