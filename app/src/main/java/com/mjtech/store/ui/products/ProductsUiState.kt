@@ -1,4 +1,4 @@
-package com.mjtech.store.ui.products.state
+package com.mjtech.store.ui.products
 
 import com.mjtech.store.domain.common.DataResult
 import com.mjtech.store.domain.model.Category

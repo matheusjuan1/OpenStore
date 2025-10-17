@@ -29,6 +29,7 @@ import com.mjtech.store.R
 import com.mjtech.store.databinding.ActivityHomeBinding
 import com.mjtech.store.domain.common.DataResult
 import com.mjtech.store.domain.model.Category
+import com.mjtech.store.ui.cart.CartViewModel
 import com.mjtech.store.ui.common.components.AppBarDrawer
 import com.mjtech.store.ui.common.components.CartBottomSheetDialog
 import com.mjtech.store.ui.common.components.LoadingDialog
@@ -43,6 +44,7 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
     private lateinit var binding: ActivityHomeBinding
     private lateinit var productsAdapter: ProductsAdapter
     private val productsViewModel: ProductsViewModel by viewModel()
+    private val cartViewModel: CartViewModel by viewModel()
 
     private var cartBadge: BadgeDrawable? = null
     private lateinit var drawerLayout: DrawerLayout
@@ -102,7 +104,7 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                productsViewModel.cartUiState
+                cartViewModel.cartUiState
                     .map { it.addItemState }
                     .distinctUntilChanged()
                     .collect { state ->
@@ -117,7 +119,7 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
                                     TAG,
                                     state.error
                                 )
-                                productsViewModel.resetAddItemState()
+                                cartViewModel.resetAddItemState()
                             }
 
                             is DataResult.Loading -> {}
@@ -129,7 +131,7 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                productsViewModel.cartUiState
+                cartViewModel.cartUiState
                     .map { it.removeItemState }
                     .distinctUntilChanged()
                     .collect { state ->
@@ -144,7 +146,7 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
                                     TAG,
                                     state.error
                                 )
-                                productsViewModel.resetRemoveItemState()
+                                cartViewModel.resetRemoveItemState()
                             }
 
                             is DataResult.Loading -> {}
@@ -330,10 +332,10 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
     private fun setupProductsList() {
         productsAdapter = ProductsAdapter(
             onAddItemClicked = { product ->
-                productsViewModel.onAddProductToCart(product)
+                cartViewModel.onAddProductToCart(product)
             },
             onRemoveItemClicked = { product ->
-                productsViewModel.onRemoveProductFromCart(product)
+                cartViewModel.onRemoveProductFromCart(product)
             }
         )
 
