@@ -1,6 +1,5 @@
 package com.mjtech.store.ui.cart
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -35,7 +34,6 @@ class CartSummaryDialog : BottomSheetDialogFragment() {
         return binding.root
     }
 
-    @SuppressLint("DefaultLocale", "SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
