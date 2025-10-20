@@ -41,6 +41,8 @@ android {
 
 dependencies {
 
+    implementation(project(":domain"))
+
     implementation(libs.coil)
     implementation(libs.coil.network.okhttp)
 
