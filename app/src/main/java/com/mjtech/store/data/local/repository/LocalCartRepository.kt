@@ -7,7 +7,6 @@ import com.mjtech.store.domain.repository.CartRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 
@@ -20,16 +19,18 @@ class LocalCartRepository : CartRepository {
         emit(DataResult.Loading)
         try {
             val productId = product.id
-            val currentCart = _cartItemsFlow.value
 
-            if (currentCart.containsKey(productId)) {
-                val cartItem = currentCart.getValue(productId)
+            val updatedCart = _cartItemsFlow.value.toMutableMap()
 
-                currentCart[productId] = cartItem.copy(quantity = cartItem.quantity + 1)
+            if (updatedCart.containsKey(productId)) {
+                val cartItem = updatedCart.getValue(productId)
+                updatedCart[productId] = cartItem.copy(quantity = cartItem.quantity + 1)
             } else {
-                currentCart[productId] = CartItem(product = product, quantity = 1)
+                updatedCart[productId] = CartItem(product = product, quantity = 1)
             }
-            _cartItemsFlow.value = currentCart
+
+            _cartItemsFlow.value = updatedCart
+
             emit(DataResult.Success(Unit))
         } catch (e: Exception) {
             emit(DataResult.Error("Erro ao adicionar item: ${e.message}"))
@@ -40,17 +41,19 @@ class LocalCartRepository : CartRepository {
         emit(DataResult.Loading)
         try {
             val productId = product.id
-            val currentCart = _cartItemsFlow.value
 
-            if (currentCart.containsKey(productId)) {
-                val cartItem = currentCart.getValue(productId)
+            val updatedCart = _cartItemsFlow.value.toMutableMap()
+
+            if (updatedCart.containsKey(productId)) {
+                val cartItem = updatedCart.getValue(productId)
 
                 if (cartItem.quantity > 1) {
-                    currentCart[productId] = cartItem.copy(quantity = cartItem.quantity - 1)
+                    updatedCart[productId] = cartItem.copy(quantity = cartItem.quantity - 1)
                 } else {
-                    currentCart.remove(productId)
+                    updatedCart.remove(productId)
                 }
-                _cartItemsFlow.value = currentCart
+
+                _cartItemsFlow.value = updatedCart
                 emit(DataResult.Success(Unit))
             } else {
                 emit(DataResult.Error("Item não encontrado no carrinho"))
@@ -72,34 +75,24 @@ class LocalCartRepository : CartRepository {
         }
     }
 
-    override fun getCartItems(): Flow<DataResult<List<CartItem>>> = flow {
-        emit(DataResult.Loading)
+    override fun getCartItems(): Flow<DataResult<List<CartItem>>> =
         _cartItemsFlow
             .map { cartMap ->
-                DataResult.Success(cartMap.values.toList())
+                DataResult.Success(cartMap.values.toList()) as DataResult<List<CartItem>>
             }
             .catch { e ->
                 emit(DataResult.Error("Erro ao obter itens do carrinho: ${e.message}"))
             }
-            .collectLatest {
-                emit(it)
-            }
-    }
 
-    override fun getTotalPrice(): Flow<DataResult<Double>> = flow {
-        emit(DataResult.Loading)
+    override fun getTotalPrice(): Flow<DataResult<Double>> =
         _cartItemsFlow
             .map { cartMap ->
                 val totalPrice = cartMap.values.sumOf { item ->
                     item.product.price * item.quantity
                 }
-                DataResult.Success(totalPrice)
+                DataResult.Success(totalPrice) as DataResult<Double>
             }
             .catch { e ->
                 emit(DataResult.Error("Erro ao calcular o preço total: ${e.message}"))
             }
-            .collectLatest {
-                emit(it)
-            }
-    }
 }

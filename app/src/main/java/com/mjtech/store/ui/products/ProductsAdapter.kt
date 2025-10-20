@@ -1,6 +1,7 @@
 package com.mjtech.store.ui.products
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -11,13 +12,13 @@ import coil3.request.crossfade
 import coil3.request.error
 import coil3.request.placeholder
 import com.mjtech.store.R
-import com.mjtech.store.data.local.repository.LocalCartRepository
 import com.mjtech.store.databinding.ItemProductCardBinding
 import com.mjtech.store.domain.model.Product
 
 class ProductsAdapter(
     private val onAddItemClicked: (Product) -> Unit,
-    private val onRemoveItemClicked: (Product) -> Unit
+    private val onRemoveItemClicked: (Product) -> Unit,
+    private var quantitiesProducts: Map<String, Int> = emptyMap()
 ) : ListAdapter<Product, ProductsAdapter.ProductViewHolder>(ProductDiffCallback()) {
 
     class ProductViewHolder(
@@ -42,7 +43,7 @@ class ProductsAdapter(
         }
 
         @SuppressLint("DefaultLocale", "SetTextI18n")
-        fun bind(product: Product) {
+        fun bind(product: Product, quantityInCart: Int) {
             currentProduct = product
             binding.tvProductName.text = product.name
             binding.tvProductPrice.text = "R$ ${String.format("%.2f", product.price)}"
@@ -53,9 +54,28 @@ class ProductsAdapter(
                 error(R.drawable.img_placeholder)
             }
 
-            val quantityInCart = 0
             binding.tvItemQuantity.text = quantityInCart.toString()
+
+            Log.d("ProductsAdapter", "Binding product ${product.id} with quantity $quantityInCart")
             binding.btnRemoveItem.isEnabled = quantityInCart > 0
+        }
+    }
+
+    fun updateQuantities(newQuantities: Map<String, Int>) {
+        val oldQuantities = quantitiesProducts
+        quantitiesProducts = newQuantities
+
+        val allProductIds = oldQuantities.keys + newQuantities.keys
+
+        val changedProductIds = allProductIds.filter { id ->
+            oldQuantities[id] != newQuantities[id]
+        }
+
+        changedProductIds.forEach { productId ->
+            val index = currentList.indexOfFirst { it.id == productId }
+            if (index != -1) {
+                notifyItemChanged(index)
+            }
         }
     }
 
@@ -82,6 +102,8 @@ class ProductsAdapter(
     }
 
     override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        val product = getItem(position)
+        val quantityInCart = quantitiesProducts[product.id] ?: 0
+        holder.bind(product, quantityInCart)
     }
 }

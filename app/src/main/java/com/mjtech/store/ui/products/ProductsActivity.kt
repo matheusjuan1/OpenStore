@@ -156,6 +156,16 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
             }
         }
 
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                cartViewModel.cartUiState
+                    .map { it.quantitiesProducts }
+                    .collect { quantitiesMap ->
+                        productsAdapter.updateQuantities(quantitiesMap)
+                    }
+            }
+        }
+
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
