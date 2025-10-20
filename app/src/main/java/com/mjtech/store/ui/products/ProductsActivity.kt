@@ -32,9 +32,9 @@ import com.mjtech.store.R
 import com.mjtech.store.databinding.ActivityHomeBinding
 import com.mjtech.store.domain.common.DataResult
 import com.mjtech.store.domain.model.Category
+import com.mjtech.store.ui.cart.CartSummaryDialog
 import com.mjtech.store.ui.cart.CartViewModel
 import com.mjtech.store.ui.common.components.AppBarDrawer
-import com.mjtech.store.ui.cart.CartSummaryDialog
 import com.mjtech.store.ui.common.components.LoadingDialog
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -201,6 +201,7 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
 
                     when (uiState.products) {
                         is DataResult.Success -> {
+                            checkProductsEmpty(uiState.products.data.size)
                             productsAdapter.submitList(uiState.products.data)
                         }
 
@@ -211,7 +212,7 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
                                 Toast.LENGTH_SHORT
                             ).show()
                             Log.e(
-                                "ProductsActivity",
+                                TAG,
                                 uiState.products.error
                             )
                         }
@@ -409,6 +410,17 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         val dpWidth = displayMetrics.widthPixels / displayMetrics.density
         val noOfColumns = (dpWidth / 180).toInt()
         return if (noOfColumns < 2) 2 else noOfColumns
+    }
+
+    private fun checkProductsEmpty(totalProducts: Int) {
+        if (totalProducts > 0) {
+            binding.tvNoProductsFound.visibility = View.GONE
+            binding.recyclerViewProducts.visibility = View.VISIBLE
+        } else {
+            binding.tvNoProductsFound.visibility = View.VISIBLE
+            binding.recyclerViewProducts.visibility = View.GONE
+        }
+
     }
 
     // Utils
