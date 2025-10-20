@@ -9,6 +9,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.OptIn
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -21,6 +22,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.badge.BadgeDrawable
+import com.google.android.material.badge.BadgeUtils
+import com.google.android.material.badge.ExperimentalBadgeUtils
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipDrawable
 import com.google.android.material.chip.ChipGroup
@@ -39,6 +42,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
+@OptIn(ExperimentalBadgeUtils::class)
 class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private lateinit var binding: ActivityHomeBinding
@@ -160,8 +164,20 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 cartViewModel.cartUiState
                     .map { it.quantitiesProducts }
+                    .distinctUntilChanged()
                     .collect { quantitiesMap ->
                         productsAdapter.updateQuantities(quantitiesMap)
+                    }
+            }
+        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                cartViewModel.cartUiState
+                    .map { it.totalItemsCount }
+                    .distinctUntilChanged()
+                    .collect { count ->
+                        updateCartBadge(count)
                     }
             }
         }
@@ -243,13 +259,49 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
     // Cart
 
     private fun setupBadgeCart() {
-        binding.appBar.ivCartIcon.setOnClickListener {
-            val currentCartItemCount = 0
-            if (currentCartItemCount > 0) {
+        binding.appBar.flCartIconContainer.setOnClickListener {
+            val currentCount = cartViewModel.cartUiState.value.totalItemsCount
+            if (currentCount > 0) {
                 showCartDialog()
             } else {
-                Toast.makeText(this, getString(R.string.empty_cart), Toast.LENGTH_SHORT)
-                    .show()
+                Toast.makeText(this, getString(R.string.empty_cart), Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun updateCartBadge(count: Int) {
+        if (count > 0) {
+            if (cartBadge == null) {
+                cartBadge = BadgeDrawable.create(this@ProductsActivity).apply {
+                    isVisible = true
+                    backgroundColor = ContextCompat.getColor(this@ProductsActivity, R.color.red)
+                    badgeTextColor = ContextCompat.getColor(this@ProductsActivity, R.color.white)
+                    maxCharacterCount = 3
+                }
+                binding.appBar.flCartIconContainer.post {
+                    cartBadge?.let { badge ->
+                        BadgeUtils.attachBadgeDrawable(
+                            badge,
+                            binding.appBar.ivCartIcon,
+                            binding.appBar.flCartIconContainer
+                        )
+                    }
+                }
+            }
+            cartBadge?.number = count
+            cartBadge?.isVisible = true
+
+        } else {
+            cartBadge?.isVisible = false
+            binding.appBar.flCartIconContainer.post {
+                cartBadge?.let { badge ->
+                    BadgeUtils.detachBadgeDrawable(
+                        badge,
+                        binding.appBar.toolbar,
+                        binding.appBar.flCartIconContainer.id
+                    )
+                }
+                cartBadge = null
             }
         }
     }
