@@ -11,10 +11,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.mjtech.store.R
 import com.mjtech.store.databinding.FragmentInstallmentBinding
+import com.mjtech.store.ui.common.currencyFormat
 
-/**
- * Fragmento responsável por exibir e gerenciar a seleção de parcelamento.
- */
 class InstallmentFragment : Fragment() {
 
     private val checkoutViewModel: CheckoutViewModel by activityViewModels()
@@ -38,23 +36,14 @@ class InstallmentFragment : Fragment() {
     private fun configView() {
         val installmentOptions = checkoutViewModel.installmentOptions
 
-        /* Cria os botões de parcelamento dinâmicamente de acordo com os tipos de parcelamento
-         *  disponíves na ViewModel
-         */
         installmentOptions.forEach { installment ->
             val button = Button(context, null, 0, R.style.StoreButtonInstallments).apply {
                 text =
-                    if (installment == 1) "À Vista: R$${
-                        String.format(
-                            "%.2f",
-                            checkoutViewModel.getTotal()
-                        )
+                    if (installment == 1) "À Vista: ${
+                        checkoutViewModel.getTotal().currencyFormat()
                     }"
-                    else "${installment}x de R$${
-                        String.format(
-                            "%.2f",
-                            checkoutViewModel.getInstallmentValue(installment)
-                        )
+                    else "${installment}x de ${
+                        checkoutViewModel.getInstallmentValue(installment).currencyFormat()
                     }"
                 layoutParams = LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,

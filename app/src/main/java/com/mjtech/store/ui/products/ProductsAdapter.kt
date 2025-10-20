@@ -13,6 +13,7 @@ import coil3.request.placeholder
 import com.mjtech.store.R
 import com.mjtech.store.databinding.ItemProductCardBinding
 import com.mjtech.store.domain.model.Product
+import com.mjtech.store.ui.common.currencyFormat
 
 class ProductsAdapter(
     private val onAddItemClicked: (Product) -> Unit,
@@ -41,11 +42,10 @@ class ProductsAdapter(
             }
         }
 
-        @SuppressLint("DefaultLocale", "SetTextI18n")
         fun bind(product: Product, quantityInCart: Int) {
             currentProduct = product
             binding.tvProductName.text = product.name
-            binding.tvProductPrice.text = "R$ ${String.format("%.2f", product.price)}"
+            binding.tvProductPrice.text = product.price.currencyFormat()
 
             binding.ivProductImage.load(product.imageUrl) {
                 crossfade(true)

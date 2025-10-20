@@ -13,10 +13,9 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.mjtech.store.databinding.DialogCartSummaryBinding
 import com.mjtech.store.ui.checkout.CheckoutActivity
+import com.mjtech.store.ui.common.currencyFormat
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import java.text.NumberFormat
-import java.util.Locale
 
 class CartSummaryDialog : BottomSheetDialogFragment() {
 
@@ -61,9 +60,6 @@ class CartSummaryDialog : BottomSheetDialogFragment() {
     }
 
     private fun updateTotalPrice(price: Double) {
-        val formattedPrice = NumberFormat.getCurrencyInstance(Locale("pt", "BR"))
-            .format(price)
-
-        binding.tvCartTotalValue.text = formattedPrice
+        binding.tvCartTotalValue.text = price.currencyFormat()
     }
 }
