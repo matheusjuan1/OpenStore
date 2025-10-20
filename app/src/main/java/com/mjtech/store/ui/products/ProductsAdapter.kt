@@ -1,7 +1,6 @@
 package com.mjtech.store.ui.products
 
 import android.annotation.SuppressLint
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -55,8 +54,6 @@ class ProductsAdapter(
             }
 
             binding.tvItemQuantity.text = quantityInCart.toString()
-
-            Log.d("ProductsAdapter", "Binding product ${product.id} with quantity $quantityInCart")
             binding.btnRemoveItem.isEnabled = quantityInCart > 0
         }
     }

@@ -78,14 +78,11 @@ class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
         totalPriceFlow.combine(itemsMapFlow) { price, quantitiesMap ->
             val totalItemsCount = quantitiesMap.values.sum()
 
-            // Quantity per product
-            val quantitiesProducts = quantitiesMap.mapKeys { it.key }
-
             _cartUiState.update { currentState ->
                 currentState.copy(
                     totalPrice = price,
                     totalItemsCount = totalItemsCount,
-                    quantitiesProducts = quantitiesProducts
+                    quantitiesProducts = quantitiesMap
                 )
             }
         }.launchIn(viewModelScope)

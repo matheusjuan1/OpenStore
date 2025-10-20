@@ -95,4 +95,14 @@ class LocalCartRepository : CartRepository {
             .catch { e ->
                 emit(DataResult.Error("Erro ao calcular o preço total: ${e.message}"))
             }
+
+    override fun getQuantityForProduct(productId: String): Flow<DataResult<Int>> =
+        _cartItemsFlow
+            .map { cartMap ->
+                val quantity = cartMap[productId]?.quantity ?: 0
+                DataResult.Success(quantity) as DataResult<Int>
+            }
+            .catch { e ->
+                emit(DataResult.Error("Erro ao obter quantidade do produto: ${e.message}"))
+            }
 }
