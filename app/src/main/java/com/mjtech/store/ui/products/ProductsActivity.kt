@@ -34,7 +34,7 @@ import com.mjtech.store.domain.common.DataResult
 import com.mjtech.store.domain.model.Category
 import com.mjtech.store.ui.cart.CartViewModel
 import com.mjtech.store.ui.common.components.AppBarDrawer
-import com.mjtech.store.ui.common.components.CartBottomSheetDialog
+import com.mjtech.store.ui.cart.CartSummaryDialog
 import com.mjtech.store.ui.common.components.LoadingDialog
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -49,7 +49,6 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
     private lateinit var productsAdapter: ProductsAdapter
     private val productsViewModel: ProductsViewModel by viewModel()
     private val cartViewModel: CartViewModel by viewModel()
-
     private var cartBadge: BadgeDrawable? = null
     private lateinit var drawerLayout: DrawerLayout
 
@@ -308,11 +307,11 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
 
     private fun showCartDialog() {
         val existingBottomSheet =
-            supportFragmentManager.findFragmentByTag(CartBottomSheetDialog.Companion.TAG) as? CartBottomSheetDialog
+            supportFragmentManager.findFragmentByTag(CartSummaryDialog.Companion.TAG) as? CartSummaryDialog
 
         if (existingBottomSheet == null || !existingBottomSheet.isAdded) {
-            val newBottomSheet = CartBottomSheetDialog()
-            newBottomSheet.show(supportFragmentManager, CartBottomSheetDialog.Companion.TAG)
+            val newBottomSheet = CartSummaryDialog()
+            newBottomSheet.show(supportFragmentManager, CartSummaryDialog.Companion.TAG)
         }
     }
 
