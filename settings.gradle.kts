@@ -21,4 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "open-store"
 include(":app")
- 
+include(":domain")
