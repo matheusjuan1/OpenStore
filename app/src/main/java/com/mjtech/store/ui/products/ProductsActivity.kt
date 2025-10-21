@@ -1,12 +1,15 @@
 package com.mjtech.store.ui.products
 
-import android.graphics.PorterDuff
+import android.graphics.Rect
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.MenuItem
+import android.view.MotionEvent
 import android.view.View
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.OptIn
@@ -29,7 +32,7 @@ import com.google.android.material.chip.ChipDrawable
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.navigation.NavigationView
 import com.mjtech.store.R
-import com.mjtech.store.databinding.ActivityHomeBinding
+import com.mjtech.store.databinding.ActivityProductsBinding
 import com.mjtech.store.domain.common.DataResult
 import com.mjtech.store.domain.model.Category
 import com.mjtech.store.ui.cart.CartSummaryDialog
@@ -45,7 +48,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 @OptIn(ExperimentalBadgeUtils::class)
 class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
-    private lateinit var binding: ActivityHomeBinding
+    private lateinit var binding: ActivityProductsBinding
     private lateinit var productsAdapter: ProductsAdapter
     private val productsViewModel: ProductsViewModel by viewModel()
     private val cartViewModel: CartViewModel by viewModel()
@@ -54,7 +57,7 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityHomeBinding.inflate(layoutInflater)
+        binding = ActivityProductsBinding.inflate(layoutInflater)
         setContentView(binding.root)
         enableEdgeToEdge()
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
@@ -241,7 +244,7 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
 
         val drawable = toggle.drawerArrowDrawable
         val tintColor = ContextCompat.getColor(this, R.color.white)
-        drawable.setColorFilter(tintColor, PorterDuff.Mode.SRC_ATOP)
+        drawable.setTint(tintColor)
 
         binding.appBarDrawer.setNavigationListener(this)
 
@@ -424,6 +427,23 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
     }
 
     // Utils
+
+    override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
+        if (ev?.action == MotionEvent.ACTION_DOWN) {
+            val v = currentFocus
+            if (v is EditText) {
+                val outRect = Rect()
+                v.getGlobalVisibleRect(outRect)
+                if (!outRect.contains(ev.rawX.toInt(), ev.rawY.toInt())) {
+                    v.clearFocus()
+                    val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+                    imm.hideSoftInputFromWindow(v.windowToken, 0)
+                    binding.root.requestFocus()
+                }
+            }
+        }
+        return super.dispatchTouchEvent(ev)
+    }
 
     companion object {
         const val TAG = "ProductsActivity"

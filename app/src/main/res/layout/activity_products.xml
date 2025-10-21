@@ -10,10 +10,13 @@
     tools:openDrawer="start">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/main_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
-        android:fitsSystemWindows="true">
+        android:fitsSystemWindows="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true">
 
         <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"

@@ -2,7 +2,6 @@ package com.mjtech.store.ui.common.components
 
 import android.app.Dialog
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,12 +31,11 @@ class LoadingDialog : DialogFragment() {
     }
 
     companion object {
-        const val TAG = "LoadingDialogFragment"
+        const val TAG = "LoadingDialog"
 
         fun show(manager: FragmentManager) {
             val existingFragment = manager.findFragmentByTag(TAG)
             if (existingFragment == null) {
-                Log.d("LoadingDialog", "Showing loading dialog")
                 LoadingDialog().show(manager, TAG)
             }
         }
@@ -45,7 +43,6 @@ class LoadingDialog : DialogFragment() {
         fun hide(manager: FragmentManager) {
             val existingFragment = manager.findFragmentByTag(TAG)
             if (existingFragment is DialogFragment) {
-                Log.d("LoadingDialog", "Attempting to hide dialog via dismissAllowingStateLoss")
                 existingFragment.dismissAllowingStateLoss()
             }
         }
