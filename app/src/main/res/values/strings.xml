@@ -23,7 +23,6 @@
     <string name="cancel">Cancelar</string>
     <string name="navigation_drawer_open">Abrir menu de navegação</string>
     <string name="navigation_drawer_close">Fechar menu de navegação</string>
-    <string name="store">Loja</string>
     <string name="empty_cart">Carrinho vazio! Adicione itens primeiro.</string>
     <string name="installment_options">Opções de parcelamento</string>
     <string name="installments_quantity">Escolha a quantidade de parcelas</string>
@@ -35,4 +34,5 @@
     <string name="error_remove_cart_item">Erro ao remover item do carrinho</string>
     <string name="error_add_cart_item">Erro ao adicionar item do carrinho</string>
     <string name="no_products_found">Nenhum produto encontrado</string>
+    <string name="products">Produtos</string>
 </resources>
