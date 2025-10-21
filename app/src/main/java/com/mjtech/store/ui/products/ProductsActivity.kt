@@ -244,7 +244,8 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
 
         val drawable = toggle.drawerArrowDrawable
         val tintColor = ContextCompat.getColor(this, R.color.white)
-        drawable.setTint(tintColor)
+        @Suppress("DEPRECATION")
+        drawable.setColorFilter(tintColor, android.graphics.PorterDuff.Mode.SRC_IN)
 
         binding.appBarDrawer.setNavigationListener(this)
 
