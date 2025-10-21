@@ -438,8 +438,10 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
     }
 
     private fun showFabButton(cartProducts: Int) {
-        if(cartProducts > 0) {
-            binding.fabCart.show()
+        if (cartProducts > 0) {
+            if (!binding.fabCart.isShown) {
+                binding.fabCart.show()
+            }
         } else {
             binding.fabCart.hide()
         }
