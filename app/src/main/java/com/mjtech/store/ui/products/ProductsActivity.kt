@@ -75,6 +75,7 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         setupBadgeCart()
         setupSearch()
         setupProductsList()
+        setupFabButton()
     }
 
     private fun initObservers() {
@@ -180,6 +181,7 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
                     .distinctUntilChanged()
                     .collect { count ->
                         updateCartBadge(count)
+                        showFabButton(count)
                     }
             }
         }
@@ -425,6 +427,22 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
             binding.recyclerViewProducts.visibility = View.GONE
         }
 
+    }
+
+    // FAB
+
+    private fun setupFabButton() {
+        binding.fabCart.setOnClickListener {
+            showCartDialog()
+        }
+    }
+
+    private fun showFabButton(cartProducts: Int) {
+        if(cartProducts > 0) {
+            binding.fabCart.show()
+        } else {
+            binding.fabCart.hide()
+        }
     }
 
     // Utils
