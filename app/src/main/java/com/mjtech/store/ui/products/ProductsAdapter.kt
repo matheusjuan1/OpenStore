@@ -27,14 +27,26 @@ class ProductsAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
 
         private var currentProduct: Product? = null
+        private var lastClickTime = 0L
+        private val clickThreshold = 300L
 
         init {
             binding.btnAddItem.setOnClickListener {
+                if (System.currentTimeMillis() - lastClickTime < clickThreshold) {
+                    return@setOnClickListener
+                }
+                lastClickTime = System.currentTimeMillis()
+
                 currentProduct?.let { product ->
                     onAddItemClicked(product)
                 }
             }
             binding.btnRemoveItem.setOnClickListener {
+                if (System.currentTimeMillis() - lastClickTime < clickThreshold) {
+                    return@setOnClickListener
+                }
+                lastClickTime = System.currentTimeMillis()
+
                 currentProduct?.let { product ->
                     onRemoveItemClicked(product)
                 }
