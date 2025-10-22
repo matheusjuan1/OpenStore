@@ -38,6 +38,7 @@
                 android:id="@+id/ll_search_section"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:baselineAligned="false"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:paddingHorizontal="16dp"
@@ -63,16 +64,6 @@
                         android:paddingBottom="7dp" />
 
                 </com.google.android.material.textfield.TextInputLayout>
-
-                <ImageButton
-                    android:layout_width="34dp"
-                    android:layout_height="34dp"
-                    android:layout_marginStart="20dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="@string/escanear_codigo_de_barras"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/ic_barcode_scanner"
-                    app:tint="@color/gray" />
 
             </LinearLayout>
 
