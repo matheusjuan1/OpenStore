@@ -7,14 +7,14 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import com.mjtech.store.R
 import com.mjtech.store.databinding.FragmentInstallmentBinding
 import com.mjtech.store.ui.common.currencyFormat
+import org.koin.androidx.viewmodel.ext.android.activityViewModel
 
 class InstallmentFragment : Fragment() {
 
-    private val checkoutViewModel: CheckoutViewModel by activityViewModels()
+    private val checkoutViewModel: CheckoutViewModel by activityViewModel()
     private lateinit var binding: FragmentInstallmentBinding
 
     override fun onCreateView(
@@ -32,13 +32,17 @@ class InstallmentFragment : Fragment() {
     }
 
     private fun configView() {
-        val installmentOptions = checkoutViewModel.installmentOptions
+        val installmentOptions = checkoutViewModel.uiState.value.installmentOptions
+
+        binding.lytInstallmentButtons.removeAllViews()
 
         installmentOptions.forEach { installment ->
             val button = Button(context, null, 0, R.style.StoreButtonInstallments).apply {
+
+                val transactionAmount = checkoutViewModel.uiState.value.transactionAmount
                 text =
                     if (installment == 1) "À Vista: ${
-                        checkoutViewModel.getTotal().currencyFormat()
+                        transactionAmount.currencyFormat()
                     }"
                     else "${installment}x de ${
                         checkoutViewModel.getInstallmentValue(installment).currencyFormat()
@@ -51,10 +55,14 @@ class InstallmentFragment : Fragment() {
                 }
                 setOnClickListener {
                     checkoutViewModel.onInstallmentSelected(installment)
-                    parentFragmentManager.popBackStack()
+                    checkoutViewModel.processPayment()
                 }
             }
             binding.lytInstallmentButtons.addView(button)
+        }
+
+        binding.btnCancel.setOnClickListener {
+            parentFragmentManager.popBackStack()
         }
     }
 }

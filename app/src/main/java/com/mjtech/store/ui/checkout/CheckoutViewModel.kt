@@ -1,101 +1,148 @@
 package com.mjtech.store.ui.checkout
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import com.mjtech.store.data.local.repository.LocalCartRepository
+import android.util.Log
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.mjtech.store.domain.payment.entities.InstallmentDetails
+import com.mjtech.store.domain.payment.entities.InstallmentType
+import com.mjtech.store.domain.payment.entities.Payment
+import com.mjtech.store.domain.payment.entities.PaymentType
+import com.mjtech.store.domain.payment.usecases.PaymentCallback
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
-class CheckoutViewModel(application: Application) : AndroidViewModel(application) {
+class CheckoutViewModel() : ViewModel() {
 
-//    private val acquirerSdk = AcquirerSdkProvider.get()
-//    private val paymentProcessor: PaymentProcessor = acquirerSdk.paymentProcessor
+    private val _uiState = MutableStateFlow(CheckoutUiState())
+    val uiState: StateFlow<CheckoutUiState> = _uiState.asStateFlow()
 
-//    private val _payment = MutableLiveData<Payment>()
-//    val payment: LiveData<Payment> get() = _payment
+    private val paymentCallback = object : PaymentCallback {
+        override fun onSuccess(transactionId: String, message: String?) {
+            _uiState.update {
+                it.copy(
+                    paymentStatusMessage = "$transactionId - ${message ?: "Pagamento realizado com sucesso!"}",
+                    navigateBack = true,
+                    isLoading = false
+                )
+            }
+        }
 
-    private val _paymentStatus = MutableLiveData<String>()
-    val paymentStatus: LiveData<String> get() = _paymentStatus
+        override fun onFailure(errorCode: String, errorMessage: String) {
+            _uiState.update {
+                it.copy(
+                    paymentStatusMessage = "Erro: $errorCode - $errorMessage",
+                    isLoading = false
+                )
+            }
+        }
 
-    private val _navigateBack = MutableLiveData<Boolean>()
-    val navigateBack: LiveData<Boolean> get() = _navigateBack
+        override fun onCancelled(message: String?) {
+            _uiState.update {
+                it.copy(
+                    paymentStatusMessage = message ?: "Pagamento cancelado pelo usuário.",
+                    isLoading = false
+                )
+            }
+        }
+    }
 
-    val installmentOptions = listOf(1, 2, 3, 4, 5, 6)
+    fun setTransactionAmount(amount: Double) {
+        _uiState.update { it.copy(transactionAmount = amount) }
+        getPaymentOptions(amount)
+    }
 
-//    private val paymentCallback = object : PaymentCallback {
-//        override fun onSuccess(transactionId: String, message: String?) {
-//            _paymentStatus.value =
-//                "$transactionId - ${message ?: "Pagamento realizado com sucesso!"}"
-//            CartRepository.clearCart()
-//            _navigateBack.value = true
-//        }
-//
-//        override fun onFailure(errorCode: String, errorMessage: String) {
-//            _paymentStatus.value = "Erro: $errorCode - $errorMessage"
-//        }
-//
-//        override fun onCancelled(message: String?) {
-//            _paymentStatus.value = message ?: ""
-//        }
-//    }
+    fun startNewTransaction(paymentType: PaymentType) {
+        val orderId = System.currentTimeMillis()
 
-//    fun startNewPayment(paymentType: PaymentType) {
-//        val orderId = System.currentTimeMillis()
-//
-//        _payment.value = Payment(
-//            id = orderId,
-//            amount = amountInCents(getTotal()),
-//            type = paymentType,
-//            installmentDetails = null
-//        )
-//    }
+        _uiState.update {
+            it.copy(
+                payment = Payment(
+                    id = orderId,
+                    amount = _uiState.value.transactionAmount,
+                    type = paymentType,
+                    installmentDetails = null
+                )
+            )
+        }
+    }
 
     fun onInstallmentSelected(installments: Int) {
-//        _payment.value = _payment.value?.copy(
-//            installmentDetails = InstallmentDetails(
-//                installments = installments,
-//                installmentType = InstallmentType.MERCHANT
-//            )
-//        )
+        _uiState.update {
+            it.copy(
+                payment = it.payment?.copy(
+                    installmentDetails = InstallmentDetails(
+                        installments = installments,
+                        installmentType = InstallmentType.MERCHANT
+                    )
+                )
+            )
+        }
     }
 
     fun processPayment() {
-//        if (getTotal() <= 0) {
-//            _paymentStatus.value = "Carrinho vazio! Adicione itens para pagar."
-//            return
-//        }
-//
-//        val currentPayment = _payment.value
-//        if (currentPayment == null) {
-//            _paymentStatus.value = "Ocorreu um erro ao processar o pagamento."
-//            return
-//        }
-//
-//        paymentProcessor.processPayment(currentPayment, paymentCallback)
+        _uiState.value.apply {
+            if (transactionAmount <= 0) {
+                _uiState.update {
+                    it.copy(
+                        paymentStatusMessage = "Carrinho vazio! Adicione itens para pagar."
+                    )
+                }
+                return
+            }
+
+            val currentPayment = payment
+            if (currentPayment == null) {
+                _uiState.update {
+                    it.copy(
+                        paymentStatusMessage = "Ocorreu um erro ao processar o pagamento."
+                    )
+                }
+                return
+            }
+
+            Log.d("CheckoutViewModel", "Processing payment: $currentPayment")
+//            paymentProcessor.processPayment(currentPayment, paymentCallback)
+        }
     }
 
-    fun getTotal(): Double {
-//        return LocalCartRepository.cartTotalValue.value ?: 0.0
-        return 0.0
+    fun resetPaymentStatus() {
+        _uiState.update { it.copy(paymentStatusMessage = null) }
+    }
+
+    fun resetNavigation() {
+        _uiState.update { it.copy(navigateBack = false) }
+    }
+
+    fun isInstallmentAvailable(): Boolean {
+        return _uiState.value.installmentOptions.size > 1
     }
 
     fun getInstallmentValue(installment: Int): Double {
-        return getTotal() / installment
+        return _uiState.value.transactionAmount / installment
     }
 
-    /**
-     * Função que retorna se o parcelamento está disponível.
-     */
-    fun isInstallmentAvailable(): Boolean {
-        return getTotal() > 100.00
-    }
+    private fun getPaymentOptions(amount: Double) {
+        viewModelScope.launch {
+            _uiState.update {
+                it.copy(
+                    isLoading = true
+                )
+            }
 
-    /**
-     * Método auxiliar para converter o valor em reais para centavos.
-     * @param amount Valor em reais.
-     * @return Valor em centavos.
-     */
-    private fun amountInCents(amount: Double): Int {
-        return (amount * 100).toInt()
+            val installmentOptions = if (amount >= 100.0) {
+                listOf(1, 2, 3, 4, 5, 6)
+            } else {
+                listOf(1)
+            }
+            _uiState.update {
+                it.copy(
+                    installmentOptions = installmentOptions,
+                    isLoading = false
+                )
+            }
+        }
     }
 }
