@@ -1,6 +1,5 @@
 package com.mjtech.store.ui.checkout
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mjtech.store.domain.payment.entities.InstallmentDetails
@@ -8,13 +7,14 @@ import com.mjtech.store.domain.payment.entities.InstallmentType
 import com.mjtech.store.domain.payment.entities.Payment
 import com.mjtech.store.domain.payment.entities.PaymentType
 import com.mjtech.store.domain.payment.usecases.PaymentCallback
+import com.mjtech.store.domain.payment.usecases.PaymentProcessor
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class CheckoutViewModel() : ViewModel() {
+class CheckoutViewModel(private val paymentProcessor: PaymentProcessor) : ViewModel() {
 
     private val _uiState = MutableStateFlow(CheckoutUiState())
     val uiState: StateFlow<CheckoutUiState> = _uiState.asStateFlow()
@@ -103,8 +103,7 @@ class CheckoutViewModel() : ViewModel() {
                 return
             }
 
-            Log.d("CheckoutViewModel", "Processing payment: $currentPayment")
-//            paymentProcessor.processPayment(currentPayment, paymentCallback)
+            paymentProcessor.processPayment(currentPayment, paymentCallback)
         }
     }
 
