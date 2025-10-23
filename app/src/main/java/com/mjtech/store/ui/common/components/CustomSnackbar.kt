@@ -43,7 +43,7 @@ fun showSnackbar(
 
     backgroundDrawable.setColor(bgColor)
 
-    val customTextView = customLayout.findViewById<TextView>(R.id.toast_text)
+    val customTextView = customLayout.findViewById<TextView>(R.id.snackbar_text)
     customTextView.text = message
     customTextView.setTextColor(textColor)
 

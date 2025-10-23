@@ -10,7 +10,6 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.OptIn
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -39,6 +38,8 @@ import com.mjtech.store.ui.cart.CartSummaryDialog
 import com.mjtech.store.ui.cart.CartViewModel
 import com.mjtech.store.ui.common.components.AppBarDrawer
 import com.mjtech.store.ui.common.components.LoadingDialog
+import com.mjtech.store.ui.common.components.SnackbarType
+import com.mjtech.store.ui.common.components.showSnackbar
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
@@ -93,11 +94,11 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
                             }
 
                             is DataResult.Error -> {
-                                Toast.makeText(
-                                    this@ProductsActivity,
+                                showSnackbar(
+                                    binding.root,
                                     getString(R.string.error_loading_categories),
-                                    Toast.LENGTH_SHORT
-                                ).show()
+                                    SnackbarType.ERROR
+                                )
                                 Log.e(
                                     TAG,
                                     categoriesResult.error
@@ -118,11 +119,11 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
                     .collect { state ->
                         when (state) {
                             is DataResult.Error -> {
-                                Toast.makeText(
-                                    this@ProductsActivity,
+                                showSnackbar(
+                                    binding.root,
                                     getString(R.string.error_add_cart_item),
-                                    Toast.LENGTH_SHORT
-                                ).show()
+                                    SnackbarType.ERROR
+                                )
                                 Log.e(
                                     TAG,
                                     state.error
@@ -145,11 +146,11 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
                     .collect { state ->
                         when (state) {
                             is DataResult.Error -> {
-                                Toast.makeText(
-                                    this@ProductsActivity,
+                                showSnackbar(
+                                    binding.root,
                                     getString(R.string.error_remove_cart_item),
-                                    Toast.LENGTH_SHORT
-                                ).show()
+                                    SnackbarType.ERROR
+                                )
                                 Log.e(
                                     TAG,
                                     state.error
@@ -212,11 +213,11 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
                         }
 
                         is DataResult.Error -> {
-                            Toast.makeText(
-                                this@ProductsActivity,
+                            showSnackbar(
+                                binding.root,
                                 getString(R.string.error_loading_products),
-                                Toast.LENGTH_SHORT
-                            ).show()
+                                SnackbarType.ERROR
+                            )
                             Log.e(
                                 TAG,
                                 uiState.products.error
@@ -271,7 +272,11 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
             if (currentCount > 0) {
                 showCartDialog()
             } else {
-                Toast.makeText(this, getString(R.string.empty_cart), Toast.LENGTH_SHORT).show()
+                showSnackbar(
+                    binding.root,
+                    getString(R.string.empty_cart),
+                    SnackbarType.INFO
+                )
             }
         }
     }
