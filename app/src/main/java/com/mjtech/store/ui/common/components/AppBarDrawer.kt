@@ -4,10 +4,10 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.LinearLayout
-import com.mjtech.store.R
-import com.mjtech.store.databinding.LayoutDrawerBinding
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.navigation.NavigationView.OnNavigationItemSelectedListener
+import com.mjtech.store.R
+import com.mjtech.store.databinding.LayoutDrawerBinding
 
 class AppBarDrawer @JvmOverloads constructor(
     context: Context,
