@@ -6,7 +6,7 @@
       "name": "X-Burger Clássico",
       "description": "Pão, hambúrguer de 150g, queijo cheddar e picles. O sabor inconfundível que todo mundo ama.",
       "price": 25.90,
-      "imageUrl": "https://placehold.co/400x300/F44336/FFFFFF?text=X-Burger",
+      "imageUrl": "https://images.unsplash.com/photo-1547584370-2cc98b8b8dc8?q=80&h=300&fit=crop",
       "isAvailable": true
     },
     {
@@ -15,7 +15,7 @@
       "name": "X-Salada Especial",
       "description": "Nosso X-Burger com um toque de frescor: alface crocante, tomate fresco e maionese especial.",
       "price": 28.50,
-      "imageUrl": "https://placehold.co/400x300/4CAF50/FFFFFF?text=X-Salada",
+      "imageUrl": "https://images.unsplash.com/photo-1571091718767-18b5b1457add?q=80&h=300&fit=crop",
       "isAvailable": true
     },
     {
@@ -24,7 +24,7 @@
       "name": "Frango Grelhado no Pão",
       "description": "Uma opção mais leve. Filé de frango grelhado, queijo branco, alface e tomate no pão integral.",
       "price": 27.00,
-      "imageUrl": "https://placehold.co/400x300/FFEB3B/000000?text=Frango+Grelhado",
+      "imageUrl": "https://images.unsplash.com/photo-1716834092510-3be5db563920?q=80&h=300&fit=crop",
       "isAvailable": true
     },
     {
@@ -33,7 +33,7 @@
       "name": "Sanduíche Vegetariano",
       "description": "Delicioso hambúrguer à base de plantas, com queijo, alface, tomate e molho especial.",
       "price": 29.90,
-      "imageUrl": "https://placehold.co/400x300/8BC34A/FFFFFF?text=Vegetariano",
+      "imageUrl": "https://images.unsplash.com/photo-1592415499556-74fcb9f18667?q=80&h=300&fit=crop",
       "isAvailable": true
     },
     {
@@ -42,7 +42,7 @@
       "name": "Batatas Fritas (Média)",
       "description": "Crocantes por fora, macias por dentro. Acompanhamento perfeito para qualquer lanche.",
       "price": 12.00,
-      "imageUrl": "https://placehold.co/400x300/FFC107/000000?text=Batatas+Fritas",
+      "imageUrl": "https://images.unsplash.com/photo-1541592106381-b31e9677c0e5?q=80&h=300&fit=crop",
       "isAvailable": true
     },
     {
@@ -51,7 +51,7 @@
       "name": "Anéis de Cebola",
       "description": "Anéis de cebola empanados e fritos. Crocantes e deliciosos.",
       "price": 14.50,
-      "imageUrl": "https://placehold.co/400x300/CDDC39/000000?text=Onion+Rings",
+      "imageUrl": "https://images.unsplash.com/photo-1625938146369-adc83368bda7?q=80&h=300&fit=crop",
       "isAvailable": true
     },
     {
@@ -60,16 +60,16 @@
       "name": "Coca-Cola",
       "description": "Lata 350ml, gelada e refrescante.",
       "price": 7.50,
-      "imageUrl": "https://placehold.co/400x300/F44336/FFFFFF?text=Coca-Cola",
+      "imageUrl": "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?q=80&h=300&fit=crop",
       "isAvailable": true
     },
     {
       "id": "302",
       "categoryId": "3",
-      "name": "Guaraná Antarctica",
-      "description": "Lata 350ml. O sabor original do Brasil.",
+      "name": "Pepsi",
+      "description": "Lata 350ml.",
       "price": 7.50,
-      "imageUrl": "https://placehold.co/400x300/4CAF50/FFFFFF?text=Guaraná",
+      "imageUrl": "https://images.unsplash.com/photo-1629203851122-3726ecdf080e?q=80&h=300&fit=crop",
       "isAvailable": true
     },
     {
@@ -78,7 +78,7 @@
       "name": "Suco de Laranja Natural",
       "description": "Copo de 400ml, feito na hora com laranjas frescas.",
       "price": 9.00,
-      "imageUrl": "https://placehold.co/400x300/FF9800/FFFFFF?text=Suco",
+      "imageUrl": "https://images.unsplash.com/photo-1641659735894-45046caad624?q=80&h=300&fit=crop",
       "isAvailable": true
     },
     {
@@ -87,7 +87,7 @@
       "name": "Água Mineral sem Gás",
       "description": "Garrafa de 500ml.",
       "price": 5.00,
-      "imageUrl": "https://placehold.co/400x300/03A9F4/FFFFFF?text=Água",
+      "imageUrl": "https://images.unsplash.com/photo-1741518516096-e97558f07693?q=80&h=300&fit=crop",
       "isAvailable": true
     },
     {
@@ -96,16 +96,16 @@
       "name": "Sundae de Chocolate",
       "description": "Sorvete de baunilha cremoso com calda de chocolate quente e castanhas.",
       "price": 11.00,
-      "imageUrl": "https://placehold.co/400x300/795548/FFFFFF?text=Sundae",
+      "imageUrl": "https://images.unsplash.com/photo-1447195047884-0f014b0d9288?q=80&h=300&fit=crop",
       "isAvailable": true
     },
     {
       "id": "402",
       "categoryId": "4",
-      "name": "Mousse de Maracujá",
-      "description": "Leve, cremoso e com o azedinho na medida certa. Uma sobremesa tropical.",
+      "name": "Sorvete",
+      "description": "Sorvete de creme com cobertura de morango.",
       "price": 9.50,
-      "imageUrl": "https://placehold.co/400x300/FFEB3B/000000?text=Mousse",
+      "imageUrl": "https://images.unsplash.com/photo-1570197788417-0e82375c9371",
       "isAvailable": true
     },
     {
@@ -114,7 +114,7 @@
       "name": "Maionese Temperada",
       "description": "Pote de 30g da nossa maionese secreta com ervas finas.",
       "price": 3.00,
-      "imageUrl": "https://placehold.co/400x300/9E9E9E/000000?text=Maionese",
+      "imageUrl": "https://images.unsplash.com/photo-1622268349641-4c814e2cc806?q=80&h=300&fit=crop",
       "isAvailable": true
     }
   ]
