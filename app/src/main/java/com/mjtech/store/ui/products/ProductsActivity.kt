@@ -390,6 +390,12 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
                 val selectedCategoryTagChip =
                     group.findViewById<Chip>(selectedCategoryIdChip).tag.toString()
                 productsViewModel.onCategorySelected(selectedCategoryTagChip)
+            } else {
+                val chipTodos = group.findViewWithTag<Chip>("0")
+
+                if (chipTodos != null) {
+                    group.check(chipTodos.id)
+                }
             }
         }
     }
