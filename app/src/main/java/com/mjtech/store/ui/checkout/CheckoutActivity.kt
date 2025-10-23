@@ -1,8 +1,8 @@
 package com.mjtech.store.ui.checkout
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -16,6 +16,8 @@ import com.mjtech.store.databinding.ActivityCheckoutBinding
 import com.mjtech.store.domain.payment.entities.PaymentType
 import com.mjtech.store.ui.cart.CartViewModel
 import com.mjtech.store.ui.common.components.LoadingDialog
+import com.mjtech.store.ui.common.components.SnackbarType
+import com.mjtech.store.ui.common.components.showSnackbar
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -75,21 +77,8 @@ class CheckoutActivity : AppCompatActivity() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 checkoutViewModel.uiState
-                    .map { it.paymentStatusMessage to it.navigateBack }
-                    .collect { (paymentStatusMessage, navigateBack) ->
-                        if (paymentStatusMessage != null) {
-                            Toast.makeText(
-                                this@CheckoutActivity,
-                                paymentStatusMessage,
-                                Toast.LENGTH_LONG
-                            ).show()
-                            checkoutViewModel.resetPaymentStatus()
-                        }
-
-                        if (navigateBack) {
-                            finish()
-                            checkoutViewModel.resetNavigation()
-                        }
+                    .collect { state ->
+                        handlePaymentResult(state.paymentResult, state.errorMessage)
                     }
             }
         }
@@ -123,11 +112,46 @@ class CheckoutActivity : AppCompatActivity() {
         }
     }
 
+    private fun handlePaymentResult(resultCode: Int?, errorMessage: String? = null) {
+        when (resultCode) {
+            RESULT_SUCCESS -> {
+                val intent = Intent()
+                intent.putExtra(CHECKOUT_RESULT_KEY, RESULT_SUCCESS)
+                setResult(RESULT_OK, intent)
+                finish()
+            }
+
+            RESULT_FAILURE -> {
+                val intent = Intent()
+                intent.putExtra(CHECKOUT_RESULT_KEY, RESULT_FAILURE)
+                setResult(RESULT_CANCELED, intent)
+                finish()
+            }
+
+            RESULT_RETRY -> {
+                showSnackbar(
+                    anchorView = binding.root,
+                    message = errorMessage
+                        ?: getString(R.string.error_process_payment_retry),
+                    type = SnackbarType.ERROR
+                )
+                checkoutViewModel.resetPaymentResult()
+            }
+        }
+    }
+
     private fun showInstallmentFragment() {
         supportFragmentManager.commit {
             setReorderingAllowed(true)
             add(R.id.fragment_container_view, InstallmentFragment())
             addToBackStack("installment_selection")
         }
+    }
+
+    companion object {
+        const val CHECKOUT_RESULT_KEY = "checkout_result_key"
+        const val RESULT_SUCCESS = 1
+        const val RESULT_FAILURE = 2
+        const val RESULT_RETRY = 3
     }
 }

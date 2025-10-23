@@ -1,7 +1,7 @@
 package com.mjtech.store.ui.cart
 
-import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.mjtech.store.databinding.DialogCartSummaryBinding
-import com.mjtech.store.ui.checkout.CheckoutActivity
+import com.mjtech.store.ui.checkout.CheckoutLauncher
 import com.mjtech.store.ui.common.currencyFormat
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -36,8 +36,11 @@ class CartSummaryDialog : BottomSheetDialogFragment() {
         initObservers()
 
         binding.btnPayCart.setOnClickListener {
-            startActivity(Intent(requireContext(), CheckoutActivity::class.java))
-            dismissAllowingStateLoss()
+            if (activity is CheckoutLauncher) {
+                (activity as CheckoutLauncher).launchCheckout()
+            } else {
+                Log.e(TAG, "Activity must implement CheckoutLauncher")
+            }
         }
     }
 

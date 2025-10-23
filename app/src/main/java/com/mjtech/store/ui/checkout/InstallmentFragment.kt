@@ -56,6 +56,7 @@ class InstallmentFragment : Fragment() {
                 setOnClickListener {
                     checkoutViewModel.onInstallmentSelected(installment)
                     checkoutViewModel.processPayment()
+                    parentFragmentManager.popBackStack()
                 }
             }
             binding.lytInstallmentButtons.addView(button)

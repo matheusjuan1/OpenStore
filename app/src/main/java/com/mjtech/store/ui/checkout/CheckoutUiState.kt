@@ -6,7 +6,7 @@ data class CheckoutUiState(
     val transactionAmount: Double = 0.0,
     val payment: Payment? = null,
     val installmentOptions: List<Int> = emptyList(),
-    val paymentStatusMessage: String? = null,
-    val navigateBack: Boolean = false,
+    val paymentResult: Int? = null,
+    val errorMessage: String? = null,
     val isLoading: Boolean = true
 )

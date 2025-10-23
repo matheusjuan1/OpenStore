@@ -1,5 +1,6 @@
 package com.mjtech.store.ui.products
 
+import android.content.Intent
 import android.graphics.Rect
 import android.os.Bundle
 import android.text.Editable
@@ -11,6 +12,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.OptIn
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -36,6 +38,8 @@ import com.mjtech.store.domain.common.DataResult
 import com.mjtech.store.domain.model.Category
 import com.mjtech.store.ui.cart.CartSummaryDialog
 import com.mjtech.store.ui.cart.CartViewModel
+import com.mjtech.store.ui.checkout.CheckoutActivity
+import com.mjtech.store.ui.checkout.CheckoutLauncher
 import com.mjtech.store.ui.common.components.AppBarDrawer
 import com.mjtech.store.ui.common.components.LoadingDialog
 import com.mjtech.store.ui.common.components.SnackbarType
@@ -47,7 +51,8 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 @OptIn(ExperimentalBadgeUtils::class)
-class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,
+    CheckoutLauncher {
 
     private lateinit var binding: ActivityProductsBinding
     private lateinit var productsAdapter: ProductsAdapter
@@ -56,6 +61,32 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
     private var cartBadge: BadgeDrawable? = null
     private lateinit var drawerLayout: DrawerLayout
     private var lastCheckedChipId: Int = 0
+
+    private val checkoutResultLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.data != null) {
+            val checkoutStatus = result.data?.getIntExtra(CheckoutActivity.CHECKOUT_RESULT_KEY, 0)
+
+            when (checkoutStatus) {
+                CheckoutActivity.RESULT_SUCCESS -> {
+                    showSnackbar(
+                        anchorView = binding.root,
+                        message = getString(R.string.success_message_buy),
+                        type = SnackbarType.SUCCESS
+                    )
+                }
+
+                CheckoutActivity.RESULT_FAILURE -> {
+                    showSnackbar(
+                        anchorView = binding.root,
+                        message = getString(R.string.error_process_payment),
+                        type = SnackbarType.ERROR
+                    )
+                }
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -458,7 +489,7 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         }
     }
 
-    // Utils
+    // Implementations
 
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
         if (ev?.action == MotionEvent.ACTION_DOWN) {
@@ -475,6 +506,15 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
             }
         }
         return super.dispatchTouchEvent(ev)
+    }
+
+    override fun launchCheckout() {
+        val dialog =
+            supportFragmentManager.findFragmentByTag(CartSummaryDialog.TAG) as? CartSummaryDialog
+        dialog?.dismiss()
+
+        val checkoutIntent = Intent(this, CheckoutActivity::class.java)
+        checkoutResultLauncher.launch(checkoutIntent)
     }
 
     companion object {

@@ -34,8 +34,7 @@ class CheckoutViewModel(
                             is DataResult.Success -> {
                                 _uiState.update {
                                     it.copy(
-                                        paymentStatusMessage = "$transactionId - ${message ?: "Pagamento realizado com sucesso!"}",
-                                        navigateBack = true,
+                                        paymentResult = CheckoutActivity.RESULT_SUCCESS,
                                         isLoading = false
                                     )
                                 }
@@ -48,8 +47,7 @@ class CheckoutViewModel(
                                 )
                                 _uiState.update {
                                     it.copy(
-                                        paymentStatusMessage = "$transactionId - ${message ?: "Pagamento realizado com sucesso!"}",
-                                        navigateBack = true,
+                                        paymentResult = CheckoutActivity.RESULT_SUCCESS,
                                         isLoading = false
                                     )
                                 }
@@ -64,7 +62,8 @@ class CheckoutViewModel(
         override fun onFailure(errorCode: String, errorMessage: String) {
             _uiState.update {
                 it.copy(
-                    paymentStatusMessage = "Erro: $errorCode - $errorMessage",
+                    paymentResult = CheckoutActivity.RESULT_RETRY,
+                    errorMessage = "$errorCode: $errorMessage",
                     isLoading = false
                 )
             }
@@ -73,7 +72,8 @@ class CheckoutViewModel(
         override fun onCancelled(message: String?) {
             _uiState.update {
                 it.copy(
-                    paymentStatusMessage = message ?: "Pagamento cancelado pelo usuário.",
+                    paymentResult = CheckoutActivity.RESULT_RETRY,
+                    errorMessage = message,
                     isLoading = false
                 )
             }
@@ -118,7 +118,8 @@ class CheckoutViewModel(
             if (transactionAmount <= 0) {
                 _uiState.update {
                     it.copy(
-                        paymentStatusMessage = "Carrinho vazio! Adicione itens para pagar."
+                        paymentResult = CheckoutActivity.RESULT_FAILURE,
+                        errorMessage = "Invalid transaction amount"
                     )
                 }
                 return
@@ -128,7 +129,8 @@ class CheckoutViewModel(
             if (currentPayment == null) {
                 _uiState.update {
                     it.copy(
-                        paymentStatusMessage = "Ocorreu um erro ao processar o pagamento."
+                        paymentResult = CheckoutActivity.RESULT_FAILURE,
+                        errorMessage = "Payment information is missing"
                     )
                 }
                 return
@@ -138,12 +140,8 @@ class CheckoutViewModel(
         }
     }
 
-    fun resetPaymentStatus() {
-        _uiState.update { it.copy(paymentStatusMessage = null) }
-    }
-
-    fun resetNavigation() {
-        _uiState.update { it.copy(navigateBack = false) }
+    fun resetPaymentResult() {
+        _uiState.update { it.copy(paymentResult = null, errorMessage = null) }
     }
 
     fun isInstallmentAvailable(): Boolean {

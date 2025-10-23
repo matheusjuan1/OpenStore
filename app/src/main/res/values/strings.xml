@@ -34,4 +34,7 @@
     <string name="error_add_cart_item">Erro ao adicionar item do carrinho</string>
     <string name="no_products_found">Nenhum produto encontrado</string>
     <string name="products">Produtos</string>
+    <string name="success_message_buy">Compra realizada com sucesso!</string>
+    <string name="error_process_payment">Erro ao processar o pagamento.</string>
+    <string name="error_process_payment_retry">Ocorreu um erro na transação. Tente novamente.</string>
 </resources>
