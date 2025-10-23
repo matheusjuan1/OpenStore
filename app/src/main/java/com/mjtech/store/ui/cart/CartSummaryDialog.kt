@@ -18,10 +18,6 @@ import kotlinx.coroutines.launch
 
 class CartSummaryDialog : BottomSheetDialogFragment() {
 
-    companion object {
-        const val TAG = "CartSummaryDialog"
-    }
-
     private lateinit var binding: DialogCartSummaryBinding
     private val cartViewModel: CartViewModel by activityViewModels()
 
@@ -59,5 +55,9 @@ class CartSummaryDialog : BottomSheetDialogFragment() {
 
     private fun updateTotalPrice(price: Double) {
         binding.tvCartTotalValue.text = price.currencyFormat()
+    }
+
+    companion object {
+        const val TAG = "CartSummaryDialog"
     }
 }

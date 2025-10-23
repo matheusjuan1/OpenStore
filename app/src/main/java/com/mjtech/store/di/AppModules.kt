@@ -24,5 +24,5 @@ val storeModules = module {
 
     viewModel { CartViewModel(get()) }
 
-    viewModel { CheckoutViewModel(get()) }
+    viewModel { CheckoutViewModel(get(), get()) }
 }

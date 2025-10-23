@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.update
 
 
 class LocalCartRepository : CartRepository {
@@ -66,9 +67,7 @@ class LocalCartRepository : CartRepository {
     override fun clearCart(): Flow<DataResult<Unit>> = flow {
         emit(DataResult.Loading)
         try {
-            _cartItemsFlow.value.clear()
-
-            _cartItemsFlow.value = mutableMapOf()
+            _cartItemsFlow.update { mutableMapOf() }
             emit(DataResult.Success(Unit))
         } catch (e: Exception) {
             emit(DataResult.Error("Erro ao limpar o carrinho: ${e.message}"))

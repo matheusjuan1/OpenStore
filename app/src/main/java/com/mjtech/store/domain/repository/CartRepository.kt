@@ -12,6 +12,5 @@ interface CartRepository {
     fun clearCart(): Flow<DataResult<Unit>>
     fun getCartItems(): Flow<DataResult<List<CartItem>>>
     fun getTotalPrice(): Flow<DataResult<Double>>
-
     fun getQuantityForProduct(productId: String): Flow<DataResult<Int>>
 }

@@ -1,32 +1,63 @@
 package com.mjtech.store.ui.checkout
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mjtech.store.domain.common.DataResult
 import com.mjtech.store.domain.payment.entities.InstallmentDetails
 import com.mjtech.store.domain.payment.entities.InstallmentType
 import com.mjtech.store.domain.payment.entities.Payment
 import com.mjtech.store.domain.payment.entities.PaymentType
 import com.mjtech.store.domain.payment.usecases.PaymentCallback
 import com.mjtech.store.domain.payment.usecases.PaymentProcessor
+import com.mjtech.store.domain.repository.CartRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class CheckoutViewModel(private val paymentProcessor: PaymentProcessor) : ViewModel() {
+class CheckoutViewModel(
+    private val paymentProcessor: PaymentProcessor,
+    private val cartRepository: CartRepository
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(CheckoutUiState())
     val uiState: StateFlow<CheckoutUiState> = _uiState.asStateFlow()
 
     private val paymentCallback = object : PaymentCallback {
         override fun onSuccess(transactionId: String, message: String?) {
-            _uiState.update {
-                it.copy(
-                    paymentStatusMessage = "$transactionId - ${message ?: "Pagamento realizado com sucesso!"}",
-                    navigateBack = true,
-                    isLoading = false
-                )
+            viewModelScope.launch {
+                cartRepository.clearCart()
+                    .collect { dataResult ->
+                        when (dataResult) {
+                            is DataResult.Success -> {
+                                _uiState.update {
+                                    it.copy(
+                                        paymentStatusMessage = "$transactionId - ${message ?: "Pagamento realizado com sucesso!"}",
+                                        navigateBack = true,
+                                        isLoading = false
+                                    )
+                                }
+                            }
+
+                            is DataResult.Error -> {
+                                Log.e(
+                                    TAG,
+                                    "Failed to clear cart after payment success: ${dataResult.error}"
+                                )
+                                _uiState.update {
+                                    it.copy(
+                                        paymentStatusMessage = "$transactionId - ${message ?: "Pagamento realizado com sucesso!"}",
+                                        navigateBack = true,
+                                        isLoading = false
+                                    )
+                                }
+                            }
+
+                            is DataResult.Loading -> {}
+                        }
+                    }
             }
         }
 
@@ -143,5 +174,9 @@ class CheckoutViewModel(private val paymentProcessor: PaymentProcessor) : ViewMo
                 )
             }
         }
+    }
+
+    companion object {
+        private const val TAG = "CheckoutViewModel"
     }
 }

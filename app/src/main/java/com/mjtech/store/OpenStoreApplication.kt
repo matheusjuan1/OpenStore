@@ -7,9 +7,6 @@ import org.koin.core.context.startKoin
 
 class OpenStoreApplication : Application() {
 
-    companion object {
-    }
-
     override fun onCreate() {
         super.onCreate()
         startKoin {

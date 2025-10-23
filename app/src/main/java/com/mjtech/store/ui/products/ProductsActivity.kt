@@ -303,8 +303,7 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
                 cartBadge?.let { badge ->
                     BadgeUtils.detachBadgeDrawable(
                         badge,
-                        binding.appBar.toolbar,
-                        binding.appBar.flCartIconContainer.id
+                        binding.appBar.ivCartIcon
                     )
                 }
                 cartBadge = null
