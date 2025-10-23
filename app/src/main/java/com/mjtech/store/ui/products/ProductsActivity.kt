@@ -54,6 +54,7 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
     private val cartViewModel: CartViewModel by viewModel()
     private var cartBadge: BadgeDrawable? = null
     private lateinit var drawerLayout: DrawerLayout
+    private var lastCheckedChipId: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -357,6 +358,7 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
 
         if (firstChipId != -1) {
             binding.chipGroupCategories.check(firstChipId)
+            lastCheckedChipId = firstChipId
         }
     }
 
@@ -385,18 +387,17 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
 
     private fun setCategorySelectionListener() {
         binding.chipGroupCategories.setOnCheckedStateChangeListener { group, checkedIds ->
-            if (checkedIds.isNotEmpty()) {
-                val selectedCategoryIdChip = checkedIds[0]
-                val selectedCategoryTagChip =
-                    group.findViewById<Chip>(selectedCategoryIdChip).tag.toString()
-                productsViewModel.onCategorySelected(selectedCategoryTagChip)
-            } else {
-                val chipTodos = group.findViewWithTag<Chip>("0")
-
-                if (chipTodos != null) {
-                    group.check(chipTodos.id)
+            if (checkedIds.isEmpty()) {
+                group.post {
+                    group.check(lastCheckedChipId)
                 }
+                return@setOnCheckedStateChangeListener
             }
+            val currentCheckedId = checkedIds[0]
+            lastCheckedChipId = currentCheckedId
+            val selectedCategoryTagChip = group.findViewById<Chip>(currentCheckedId).tag.toString()
+
+            productsViewModel.onCategorySelected(selectedCategoryTagChip)
         }
     }
 
