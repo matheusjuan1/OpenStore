@@ -379,7 +379,7 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
     // Categories Chips
 
     private fun createCategoriesChips(categories: List<Category>) {
-        val categories = listOf(Category(id = "0", name = "Todos")) + categories
+        val categories = listOf(Category(id = "0", name = getString(R.string.todos))) + categories
         binding.chipGroupCategories.removeAllViews()
 
         var firstChipId = -1
