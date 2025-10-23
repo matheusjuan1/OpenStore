@@ -11,12 +11,12 @@ class SimulatePaymentProcessor : PaymentProcessor {
     ) {
         if (payment.amount <= 100) {
             callback.onSuccess(
-                "SIMULATE_PAYMENT_SUCCESS_TXN_ID",
+                "ID",
                 "Simulated payment successful for amount: ${payment.amount}"
             )
         } else {
             callback.onFailure(
-                "SIMULATE_PAYMENT_FAILED",
+                "001",
                 "Simulated payment failure for amount: ${payment.amount}"
             )
         }
