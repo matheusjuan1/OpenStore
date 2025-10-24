@@ -42,4 +42,13 @@
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:backgroundDimAmount">0.0</item>
     </style>
+
+    <style name="StoreMainCard">
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="cardCornerRadius">12dp</item>
+        <item name="cardElevation">4dp</item>
+        <item name="strokeWidth">3dp</item>
+        <item name="strokeColor">@color/main_color</item>
+    </style>
 </resources>

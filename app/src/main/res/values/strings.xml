@@ -33,4 +33,9 @@
     <string name="success_message_buy">Compra realizada com sucesso!</string>
     <string name="error_process_payment">Erro ao processar o pagamento.</string>
     <string name="error_process_payment_retry">Ocorreu um erro na transação. Tente novamente.</string>
+    <string name="welcome_message">Bem-vindo(a)! O que você deseja para hoje?</string>
+    <string name="weigh_dish">Pesar Prato</string>
+    <string name="pratos_e_adicionais">Pratos e\nAdicionais</string>
+    <string name="ct_food">Imagem de pratos e adicionais</string>
+    <string name="ct_scale">Imagem de balança</string>
 </resources>
