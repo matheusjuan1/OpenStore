@@ -38,4 +38,5 @@
     <string name="pratos_e_adicionais">Pratos e\nAdicionais</string>
     <string name="ct_food">Imagem de pratos e adicionais</string>
     <string name="ct_scale">Imagem de balança</string>
+    <string name="voltar">Voltar</string>
 </resources>

@@ -477,6 +477,10 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         binding.fabCart.setOnClickListener {
             showCartDialog()
         }
+
+        binding.fabBack.setOnClickListener {
+            finish()
+        }
     }
 
     private fun showFabButton(cartProducts: Int) {
