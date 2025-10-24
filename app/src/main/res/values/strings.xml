@@ -39,4 +39,9 @@
     <string name="ct_food">Imagem de pratos e adicionais</string>
     <string name="ct_scale">Imagem de balança</string>
     <string name="voltar">Voltar</string>
+    <string name="instruction_weighing">Por favor, coloque o prato na balança antes de começar.</string>
+    <string name="calculate_price">Calcular Valor do Prato</string>
+    <string name="finalizar">Finalizar</string>
+    <string name="valor_do_prato">Valor do Prato:</string>
+    <string name="peso_liquido">Peso Líquido:</string>
 </resources>
