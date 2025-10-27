@@ -2,9 +2,9 @@ package com.mjtech.store.ui.products
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mjtech.store.domain.common.DataResult
-import com.mjtech.store.domain.model.Product
-import com.mjtech.store.domain.repository.ProductsRepository
+import com.mjtech.store.domain.common.Result
+import com.mjtech.store.domain.products.model.Product
+import com.mjtech.store.domain.products.repository.ProductsRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -22,12 +22,12 @@ class ProductsViewModel(
     private val _productsUiState = MutableStateFlow(ProductsUiState())
     val productsUiState: StateFlow<ProductsUiState> = _productsUiState
 
-    private val allProductsFlow: StateFlow<DataResult<List<Product>>>
+    private val allProductsFlow: StateFlow<Result<List<Product>>>
         get() = productsRepository.getProducts()
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.Eagerly,
-                initialValue = DataResult.Loading
+                initialValue = Result.Loading
             )
 
     init {
@@ -65,13 +65,13 @@ class ProductsViewModel(
     }
 
     private fun getFilteredProductsFlow(
-        allProductsFlow: Flow<DataResult<List<Product>>>,
+        allProductsFlow: Flow<Result<List<Product>>>,
         uiState: StateFlow<ProductsUiState>
-    ): StateFlow<DataResult<List<Product>>> {
+    ): StateFlow<Result<List<Product>>> {
         // Filtra os produtos com base nos filtros
         return allProductsFlow.combine(uiState) { productsResult, uiState ->
             when (productsResult) {
-                is DataResult.Success -> {
+                is Result.Success -> {
                     val selectedCategoryId = uiState.selectedCategoryId
                     val searchQuery = uiState.searchQuery
 
@@ -85,7 +85,7 @@ class ProductsViewModel(
                             product.name.contains(searchQuery, ignoreCase = true)
                         }
                     }
-                    DataResult.Success(filteredList)
+                    Result.Success(filteredList)
                 }
 
                 else -> productsResult
@@ -94,7 +94,7 @@ class ProductsViewModel(
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.Eagerly,
-                initialValue = DataResult.Loading
+                initialValue = Result.Loading
             )
     }
 }

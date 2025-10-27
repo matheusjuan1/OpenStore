@@ -3,14 +3,14 @@ package com.mjtech.store.ui.checkout
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mjtech.store.domain.common.DataResult
+import com.mjtech.store.domain.cart.repostitory.CartRepository
+import com.mjtech.store.domain.common.Result
 import com.mjtech.store.domain.payment.entities.InstallmentDetails
 import com.mjtech.store.domain.payment.entities.InstallmentType
 import com.mjtech.store.domain.payment.entities.Payment
 import com.mjtech.store.domain.payment.entities.PaymentType
 import com.mjtech.store.domain.payment.usecases.PaymentCallback
 import com.mjtech.store.domain.payment.usecases.PaymentProcessor
-import com.mjtech.store.domain.repository.CartRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -29,9 +29,9 @@ class CheckoutViewModel(
         override fun onSuccess(transactionId: String, message: String?) {
             viewModelScope.launch {
                 cartRepository.clearCart()
-                    .collect { dataResult ->
-                        when (dataResult) {
-                            is DataResult.Success -> {
+                    .collect { result ->
+                        when (result) {
+                            is Result.Success -> {
                                 _uiState.update {
                                     it.copy(
                                         paymentResult = CheckoutActivity.RESULT_SUCCESS,
@@ -40,10 +40,10 @@ class CheckoutViewModel(
                                 }
                             }
 
-                            is DataResult.Error -> {
+                            is Result.Error -> {
                                 Log.e(
                                     TAG,
-                                    "Failed to clear cart after payment success: ${dataResult.error}"
+                                    "Failed to clear cart after payment success: ${result.error}"
                                 )
                                 _uiState.update {
                                     it.copy(
@@ -53,7 +53,7 @@ class CheckoutViewModel(
                                 }
                             }
 
-                            is DataResult.Loading -> {}
+                            is Result.Loading -> {}
                         }
                     }
             }
