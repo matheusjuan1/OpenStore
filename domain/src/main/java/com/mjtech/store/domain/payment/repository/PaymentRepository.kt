@@ -1,8 +1,8 @@
-package com.mjtech.store.domain.payment.usecases
+package com.mjtech.store.domain.payment.repository
 
-import com.mjtech.store.domain.payment.entities.Payment
+import com.mjtech.store.domain.payment.model.Payment
 
-interface PaymentProcessor {
+interface PaymentRepository {
 
     /**
      * @param payment O objeto Payment contendo os detalhes do pagamento.

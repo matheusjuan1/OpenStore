@@ -13,7 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.mjtech.store.R
 import com.mjtech.store.databinding.ActivityCheckoutBinding
-import com.mjtech.store.domain.payment.entities.PaymentType
+import com.mjtech.store.domain.payment.model.PaymentType
 import com.mjtech.store.ui.cart.CartViewModel
 import com.mjtech.store.ui.common.components.LoadingDialog
 import com.mjtech.store.ui.common.components.SnackbarType

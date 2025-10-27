@@ -1,4 +1,4 @@
-package com.mjtech.store.domain.payment.usecases
+package com.mjtech.store.domain.payment.repository
 
 /**
  * Interface que define os métodos de callback para o processamento de pagamentos.

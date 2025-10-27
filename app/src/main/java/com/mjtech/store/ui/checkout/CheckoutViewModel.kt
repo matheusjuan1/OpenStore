@@ -5,12 +5,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mjtech.store.domain.cart.repostitory.CartRepository
 import com.mjtech.store.domain.common.Result
-import com.mjtech.store.domain.payment.entities.InstallmentDetails
-import com.mjtech.store.domain.payment.entities.InstallmentType
-import com.mjtech.store.domain.payment.entities.Payment
-import com.mjtech.store.domain.payment.entities.PaymentType
-import com.mjtech.store.domain.payment.usecases.PaymentCallback
-import com.mjtech.store.domain.payment.usecases.PaymentProcessor
+import com.mjtech.store.domain.payment.model.InstallmentDetails
+import com.mjtech.store.domain.payment.model.InstallmentType
+import com.mjtech.store.domain.payment.model.Payment
+import com.mjtech.store.domain.payment.model.PaymentType
+import com.mjtech.store.domain.payment.repository.PaymentCallback
+import com.mjtech.store.domain.payment.repository.PaymentRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -18,7 +18,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class CheckoutViewModel(
-    private val paymentProcessor: PaymentProcessor,
+    private val paymentRepository: PaymentRepository,
     private val cartRepository: CartRepository
 ) : ViewModel() {
 
@@ -136,7 +136,7 @@ class CheckoutViewModel(
                 return
             }
 
-            paymentProcessor.processPayment(currentPayment, paymentCallback)
+            paymentRepository.processPayment(currentPayment, paymentCallback)
         }
     }
 
