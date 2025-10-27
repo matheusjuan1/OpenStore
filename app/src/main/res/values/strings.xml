@@ -44,4 +44,5 @@
     <string name="finalizar">Finalizar</string>
     <string name="valor_do_prato">Valor do Prato:</string>
     <string name="peso_liquido">Peso Líquido:</string>
+    <string name="ct_scale_instruction">Ilustração do Passo Atual</string>
 </resources>
