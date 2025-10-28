@@ -1,13 +1,14 @@
 package com.mjtech.store.di
 
 import com.mjtech.store.data.device.scale.AcbrLibBalRepository
-import com.mjtech.store.data.local.scale.MockPricingRepository
 import com.mjtech.store.data.mock.cart.repository.MockCartRepository
 import com.mjtech.store.data.mock.products.repository.MockProductsRepository
+import com.mjtech.store.data.mock.scale.repository.MockPricingRepository
 import com.mjtech.store.domain.cart.repostitory.CartRepository
 import com.mjtech.store.domain.payment.repository.PaymentProcessor
 import com.mjtech.store.domain.products.repository.ProductsRepository
 import com.mjtech.store.domain.scale.repository.PricingRepository
+import com.mjtech.store.domain.scale.repository.ScaleRepository
 import com.mjtech.store.simulate.payment.SimulatePaymentProcessor
 import com.mjtech.store.ui.cart.CartViewModel
 import com.mjtech.store.ui.checkout.CheckoutViewModel
@@ -18,6 +19,8 @@ import org.koin.dsl.module
 
 val storeModules = module {
 
+    // Repositories
+
     single<ProductsRepository> { MockProductsRepository(get()) }
 
     single<CartRepository> { MockCartRepository() }
@@ -26,7 +29,9 @@ val storeModules = module {
 
     single<PricingRepository> { MockPricingRepository() }
 
-    single<AcbrLibBalRepository> { AcbrLibBalRepository(100.0) }
+    single<ScaleRepository> { AcbrLibBalRepository(100.0) }
+
+    // ViewModels
 
     viewModel { ProductsViewModel(get()) }
 

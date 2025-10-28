@@ -1,4 +1,4 @@
-package com.mjtech.store.data.local.scale
+package com.mjtech.store.data.mock.scale.repository
 
 import com.mjtech.store.domain.common.Result
 import com.mjtech.store.domain.scale.model.PriceSetting
