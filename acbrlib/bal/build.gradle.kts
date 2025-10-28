@@ -43,4 +43,6 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    implementation(files("./libs/ACBrLibBal-release.aar"))
+    implementation("net.java.dev.jna:jna:5.17.0@aar")
 }

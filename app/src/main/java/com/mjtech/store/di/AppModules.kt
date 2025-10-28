@@ -1,6 +1,5 @@
 package com.mjtech.store.di
 
-import com.mjtech.acbrlib.bal.data.BalRepository
 import com.mjtech.store.data.mock.cart.repository.MockCartRepository
 import com.mjtech.store.data.mock.products.repository.MockProductsRepository
 import com.mjtech.store.data.mock.scale.repository.MockPricingRepository
@@ -8,7 +7,6 @@ import com.mjtech.store.domain.cart.repostitory.CartRepository
 import com.mjtech.store.domain.payment.repository.PaymentProcessor
 import com.mjtech.store.domain.products.repository.ProductsRepository
 import com.mjtech.store.domain.scale.repository.PricingRepository
-import com.mjtech.store.domain.scale.repository.ScaleRepository
 import com.mjtech.store.simulate.payment.SimulatePaymentProcessor
 import com.mjtech.store.ui.cart.CartViewModel
 import com.mjtech.store.ui.checkout.CheckoutViewModel
@@ -28,8 +26,6 @@ val storeModules = module {
     single<PaymentProcessor> { SimulatePaymentProcessor() }
 
     single<PricingRepository> { MockPricingRepository() }
-
-    single<ScaleRepository> { BalRepository(100.0) }
 
     // ViewModels
 
