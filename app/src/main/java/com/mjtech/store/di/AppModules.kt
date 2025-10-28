@@ -1,6 +1,6 @@
 package com.mjtech.store.di
 
-import com.mjtech.store.data.device.scale.AcbrLibBalRepository
+import com.mjtech.acbrlib.bal.data.BalRepository
 import com.mjtech.store.data.mock.cart.repository.MockCartRepository
 import com.mjtech.store.data.mock.products.repository.MockProductsRepository
 import com.mjtech.store.data.mock.scale.repository.MockPricingRepository
@@ -29,7 +29,7 @@ val storeModules = module {
 
     single<PricingRepository> { MockPricingRepository() }
 
-    single<ScaleRepository> { AcbrLibBalRepository(100.0) }
+    single<ScaleRepository> { BalRepository(100.0) }
 
     // ViewModels
 

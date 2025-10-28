@@ -1,12 +1,13 @@
-package com.mjtech.store.data.device.scale
+package com.mjtech.acbrlib.bal.data
 
 import com.mjtech.store.domain.common.Result
 import com.mjtech.store.domain.scale.repository.ScaleRepository
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class AcbrLibBalRepository(private val acbrLibBal: Double): ScaleRepository {
+class BalRepository(private val acbrLibBal: Double): ScaleRepository {
 
-    override fun getWeight() = flow {
+    override fun getWeight(): Flow<Result<Double>> = flow {
         emit(Result.Loading)
         try {
             val weight = acbrLibBal
