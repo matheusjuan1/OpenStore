@@ -10,7 +10,7 @@ import com.mjtech.store.domain.payment.model.InstallmentType
 import com.mjtech.store.domain.payment.model.Payment
 import com.mjtech.store.domain.payment.model.PaymentType
 import com.mjtech.store.domain.payment.repository.PaymentCallback
-import com.mjtech.store.domain.payment.repository.PaymentRepository
+import com.mjtech.store.domain.payment.repository.PaymentProcessor
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -18,7 +18,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class CheckoutViewModel(
-    private val paymentRepository: PaymentRepository,
+    private val paymentProcessor: PaymentProcessor,
     private val cartRepository: CartRepository
 ) : ViewModel() {
 
@@ -136,7 +136,7 @@ class CheckoutViewModel(
                 return
             }
 
-            paymentRepository.processPayment(currentPayment, paymentCallback)
+            paymentProcessor.processPayment(currentPayment, paymentCallback)
         }
     }
 

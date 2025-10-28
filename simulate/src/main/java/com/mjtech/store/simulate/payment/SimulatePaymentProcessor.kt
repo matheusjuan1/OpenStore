@@ -2,9 +2,10 @@ package com.mjtech.store.simulate.payment
 
 import com.mjtech.store.domain.payment.model.Payment
 import com.mjtech.store.domain.payment.repository.PaymentCallback
-import com.mjtech.store.domain.payment.repository.PaymentRepository
+import com.mjtech.store.domain.payment.repository.PaymentProcessor
 
-class SimulatePaymentRepository : PaymentRepository {
+class SimulatePaymentProcessor : PaymentProcessor {
+
     override fun processPayment(
         payment: Payment,
         callback: PaymentCallback
