@@ -1,4 +1,4 @@
-package com.mjtech.store.domain.payment.entities
+package com.mjtech.store.domain.payment.model
 
 import kotlinx.serialization.Serializable
 

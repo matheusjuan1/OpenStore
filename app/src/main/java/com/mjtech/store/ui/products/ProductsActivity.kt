@@ -34,8 +34,8 @@ import com.google.android.material.chip.ChipGroup
 import com.google.android.material.navigation.NavigationView
 import com.mjtech.store.R
 import com.mjtech.store.databinding.ActivityProductsBinding
-import com.mjtech.store.domain.common.DataResult
-import com.mjtech.store.domain.model.Category
+import com.mjtech.store.domain.common.Result
+import com.mjtech.store.domain.products.model.Category
 import com.mjtech.store.ui.cart.CartSummaryDialog
 import com.mjtech.store.ui.cart.CartViewModel
 import com.mjtech.store.ui.checkout.CheckoutActivity
@@ -119,12 +119,12 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
                     .distinctUntilChanged()
                     .collect { categoriesResult ->
                         when (categoriesResult) {
-                            is DataResult.Success -> {
+                            is Result.Success -> {
                                 createCategoriesChips(categoriesResult.data)
                                 setCategorySelectionListener()
                             }
 
-                            is DataResult.Error -> {
+                            is Result.Error -> {
                                 showSnackbar(
                                     binding.root,
                                     getString(R.string.error_loading_categories),
@@ -136,7 +136,7 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
                                 )
                             }
 
-                            is DataResult.Loading -> {}
+                            is Result.Loading -> {}
                         }
                     }
             }
@@ -149,7 +149,7 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
                     .distinctUntilChanged()
                     .collect { state ->
                         when (state) {
-                            is DataResult.Error -> {
+                            is Result.Error -> {
                                 showSnackbar(
                                     binding.root,
                                     getString(R.string.error_add_cart_item),
@@ -162,8 +162,8 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
                                 cartViewModel.resetAddItemState()
                             }
 
-                            is DataResult.Loading -> {}
-                            is DataResult.Success -> {}
+                            is Result.Loading -> {}
+                            is Result.Success -> {}
                         }
                     }
             }
@@ -176,7 +176,7 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
                     .distinctUntilChanged()
                     .collect { state ->
                         when (state) {
-                            is DataResult.Error -> {
+                            is Result.Error -> {
                                 showSnackbar(
                                     binding.root,
                                     getString(R.string.error_remove_cart_item),
@@ -189,8 +189,8 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
                                 cartViewModel.resetRemoveItemState()
                             }
 
-                            is DataResult.Loading -> {}
-                            is DataResult.Success -> {}
+                            is Result.Loading -> {}
+                            is Result.Success -> {}
                         }
                     }
             }
@@ -225,8 +225,8 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
                 productsViewModel.productsUiState.collect { uiState ->
                     // Verifica se algum dado está carregando
                     val isAnythingLoading =
-                        uiState.categories is DataResult.Loading ||
-                                uiState.products is DataResult.Loading
+                        uiState.categories is Result.Loading ||
+                                uiState.products is Result.Loading
 
                     if (isAnythingLoading) {
                         LoadingDialog.show(supportFragmentManager)
@@ -238,12 +238,12 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
                     }
 
                     when (uiState.products) {
-                        is DataResult.Success -> {
+                        is Result.Success -> {
                             checkProductsEmpty(uiState.products.data.size)
                             productsAdapter.submitList(uiState.products.data)
                         }
 
-                        is DataResult.Error -> {
+                        is Result.Error -> {
                             showSnackbar(
                                 binding.root,
                                 getString(R.string.error_loading_products),
@@ -255,7 +255,7 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
                             )
                         }
 
-                        is DataResult.Loading -> {}
+                        is Result.Loading -> {}
                     }
                 }
             }

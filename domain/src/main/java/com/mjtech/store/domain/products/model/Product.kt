@@ -1,4 +1,4 @@
-package com.mjtech.store.domain.model
+package com.mjtech.store.domain.products.model
 
 import kotlinx.serialization.Serializable
 

@@ -1,6 +1,6 @@
 package com.mjtech.store.ui.checkout
 
-import com.mjtech.store.domain.payment.entities.Payment
+import com.mjtech.store.domain.payment.model.Payment
 
 data class CheckoutUiState(
     val transactionAmount: Double = 0.0,
