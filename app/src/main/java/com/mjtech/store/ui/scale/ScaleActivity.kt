@@ -78,6 +78,43 @@ class ScaleActivity : AppCompatActivity() {
                     }
             }
         }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                scaleViewModel.uiState
+                    .map { it.weight }
+                    .collect { state ->
+                        when (state) {
+                            is Result.Loading -> {
+//                                LoadingDialog.show(supportFragmentManager)
+                            }
+
+                            is Result.Error -> {
+//                                lifecycleScope.launch {
+//                                    delay(50)
+//                                    LoadingDialog.hide(supportFragmentManager)
+//                                }
+                                showSnackbar(
+                                    binding.root, "Não foi possível obter o peso.",
+                                    SnackbarType.ERROR
+                                )
+                            }
+
+                            is Result.Success -> {
+//                                lifecycleScope.launch {
+//                                    delay(50)
+//                                    LoadingDialog.hide(supportFragmentManager)
+//                                }
+                                showSnackbar(
+                                    binding.root,
+                                    "Peso obtido com sucesso!\nPeso: ${state.data} kg",
+                                    SnackbarType.SUCCESS
+                                )
+                            }
+                        }
+                    }
+            }
+        }
     }
 
     private fun initListeners() {
@@ -86,9 +123,7 @@ class ScaleActivity : AppCompatActivity() {
         }
 
         binding.btnCalculate.setOnClickListener {
-            // Lógica para calcular o preço baseado no peso
-            // Chamar repository para obter o preço e atualizar a UI
-            // Mostrar container de finalização da compra
+            scaleViewModel.getWeight()
         }
 
         binding.btnAddToCart.setOnClickListener {
