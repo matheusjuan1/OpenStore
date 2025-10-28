@@ -2,9 +2,9 @@ package com.mjtech.store.ui.cart
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mjtech.store.domain.common.DataResult
-import com.mjtech.store.domain.model.Product
-import com.mjtech.store.domain.repository.CartRepository
+import com.mjtech.store.domain.cart.repostitory.CartRepository
+import com.mjtech.store.domain.common.Result
+import com.mjtech.store.domain.products.model.Product
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
@@ -45,13 +45,13 @@ class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
 
     fun resetAddItemState() {
         _cartUiState.update { currentState ->
-            currentState.copy(addItemState = DataResult.Success(Unit))
+            currentState.copy(addItemState = Result.Success(Unit))
         }
     }
 
     fun resetRemoveItemState() {
         _cartUiState.update { currentState ->
-            currentState.copy(removeItemState = DataResult.Success(Unit))
+            currentState.copy(removeItemState = Result.Success(Unit))
         }
     }
 
@@ -59,14 +59,14 @@ class CartViewModel(private val cartRepository: CartRepository) : ViewModel() {
         // Total Price
         val totalPriceFlow = cartRepository.getTotalPrice()
             .map { result ->
-                if (result is DataResult.Success) result.data else 0.0
+                if (result is Result.Success) result.data else 0.0
             }
             .catch { emit(0.0) }
 
         // Total items count
         val itemsMapFlow = cartRepository.getCartItems()
             .map { result ->
-                if (result is DataResult.Success) {
+                if (result is Result.Success) {
                     result.data.associate { it.product.id to it.quantity }
                 } else {
                     emptyMap()

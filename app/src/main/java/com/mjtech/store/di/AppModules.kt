@@ -1,10 +1,10 @@
 package com.mjtech.store.di
 
-import com.mjtech.store.data.local.repository.LocalCartRepository
-import com.mjtech.store.data.local.repository.LocalProductsRepository
-import com.mjtech.store.domain.payment.usecases.PaymentProcessor
-import com.mjtech.store.domain.repository.CartRepository
-import com.mjtech.store.domain.repository.ProductsRepository
+import com.mjtech.store.data.mock.cart.repository.MockCartRepository
+import com.mjtech.store.data.mock.products.repository.MockProductsRepository
+import com.mjtech.store.domain.payment.repository.PaymentProcessor
+import com.mjtech.store.domain.cart.repostitory.CartRepository
+import com.mjtech.store.domain.products.repository.ProductsRepository
 import com.mjtech.store.simulate.payment.SimulatePaymentProcessor
 import com.mjtech.store.ui.cart.CartViewModel
 import com.mjtech.store.ui.checkout.CheckoutViewModel
@@ -14,9 +14,9 @@ import org.koin.dsl.module
 
 val storeModules = module {
 
-    single<ProductsRepository> { LocalProductsRepository(get()) }
+    single<ProductsRepository> { MockProductsRepository(get()) }
 
-    single<CartRepository> { LocalCartRepository() }
+    single<CartRepository> { MockCartRepository() }
 
     single<PaymentProcessor> { SimulatePaymentProcessor() }
 

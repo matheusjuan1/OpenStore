@@ -11,7 +11,7 @@ import coil3.request.error
 import coil3.request.placeholder
 import com.mjtech.store.R
 import com.mjtech.store.databinding.ItemProductCardBinding
-import com.mjtech.store.domain.model.Product
+import com.mjtech.store.domain.products.model.Product
 import com.mjtech.store.ui.common.currencyFormat
 
 class ProductsAdapter(

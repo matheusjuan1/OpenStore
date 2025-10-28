@@ -1,9 +1,9 @@
-package com.mjtech.store.data.local.repository
+package com.mjtech.store.data.mock.cart.repository
 
-import com.mjtech.store.domain.common.DataResult
-import com.mjtech.store.domain.model.CartItem
-import com.mjtech.store.domain.model.Product
-import com.mjtech.store.domain.repository.CartRepository
+import com.mjtech.store.domain.cart.model.CartItem
+import com.mjtech.store.domain.cart.repostitory.CartRepository
+import com.mjtech.store.domain.common.Result
+import com.mjtech.store.domain.products.model.Product
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.catch
@@ -11,13 +11,12 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 
-
-class LocalCartRepository : CartRepository {
+class MockCartRepository : CartRepository {
 
     private val _cartItemsFlow = MutableStateFlow<MutableMap<String, CartItem>>(mutableMapOf())
 
-    override fun addItem(product: Product): Flow<DataResult<Unit>> = flow {
-        emit(DataResult.Loading)
+    override fun addItem(product: Product): Flow<Result<Unit>> = flow {
+        emit(Result.Loading)
         try {
             val productId = product.id
 
@@ -32,14 +31,14 @@ class LocalCartRepository : CartRepository {
 
             _cartItemsFlow.value = updatedCart
 
-            emit(DataResult.Success(Unit))
+            emit(Result.Success(Unit))
         } catch (e: Exception) {
-            emit(DataResult.Error("Erro ao adicionar item: ${e.message}"))
+            emit(Result.Error("Erro ao adicionar item: ${e.message}"))
         }
     }
 
-    override fun removeItem(product: Product): Flow<DataResult<Unit>> = flow {
-        emit(DataResult.Loading)
+    override fun removeItem(product: Product): Flow<Result<Unit>> = flow {
+        emit(Result.Loading)
         try {
             val productId = product.id
 
@@ -55,53 +54,53 @@ class LocalCartRepository : CartRepository {
                 }
 
                 _cartItemsFlow.value = updatedCart
-                emit(DataResult.Success(Unit))
+                emit(Result.Success(Unit))
             } else {
-                emit(DataResult.Error("Item não encontrado no carrinho"))
+                emit(Result.Error("Item não encontrado no carrinho"))
             }
         } catch (e: Exception) {
-            emit(DataResult.Error("Erro ao remover item: ${e.message}"))
+            emit(Result.Error("Erro ao remover item: ${e.message}"))
         }
     }
 
-    override fun clearCart(): Flow<DataResult<Unit>> = flow {
-        emit(DataResult.Loading)
+    override fun clearCart(): Flow<Result<Unit>> = flow {
+        emit(Result.Loading)
         try {
             _cartItemsFlow.update { mutableMapOf() }
-            emit(DataResult.Success(Unit))
+            emit(Result.Success(Unit))
         } catch (e: Exception) {
-            emit(DataResult.Error("Erro ao limpar o carrinho: ${e.message}"))
+            emit(Result.Error("Erro ao limpar o carrinho: ${e.message}"))
         }
     }
 
-    override fun getCartItems(): Flow<DataResult<List<CartItem>>> =
+    override fun getCartItems(): Flow<Result<List<CartItem>>> =
         _cartItemsFlow
             .map { cartMap ->
-                DataResult.Success(cartMap.values.toList()) as DataResult<List<CartItem>>
+                Result.Success(cartMap.values.toList()) as Result<List<CartItem>>
             }
             .catch { e ->
-                emit(DataResult.Error("Erro ao obter itens do carrinho: ${e.message}"))
+                emit(Result.Error("Erro ao obter itens do carrinho: ${e.message}"))
             }
 
-    override fun getTotalPrice(): Flow<DataResult<Double>> =
+    override fun getTotalPrice(): Flow<Result<Double>> =
         _cartItemsFlow
             .map { cartMap ->
                 val totalPrice = cartMap.values.sumOf { item ->
                     item.product.price * item.quantity
                 }
-                DataResult.Success(totalPrice) as DataResult<Double>
+                Result.Success(totalPrice) as Result<Double>
             }
             .catch { e ->
-                emit(DataResult.Error("Erro ao calcular o preço total: ${e.message}"))
+                emit(Result.Error("Erro ao calcular o preço total: ${e.message}"))
             }
 
-    override fun getQuantityForProduct(productId: String): Flow<DataResult<Int>> =
+    override fun getQuantityForProduct(productId: String): Flow<Result<Int>> =
         _cartItemsFlow
             .map { cartMap ->
                 val quantity = cartMap[productId]?.quantity ?: 0
-                DataResult.Success(quantity) as DataResult<Int>
+                Result.Success(quantity) as Result<Int>
             }
             .catch { e ->
-                emit(DataResult.Error("Erro ao obter quantidade do produto: ${e.message}"))
+                emit(Result.Error("Erro ao obter quantidade do produto: ${e.message}"))
             }
 }
