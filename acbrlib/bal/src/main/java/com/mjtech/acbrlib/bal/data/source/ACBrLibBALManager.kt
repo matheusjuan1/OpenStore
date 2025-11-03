@@ -2,12 +2,16 @@ package com.mjtech.acbrlib.bal.data.source
 
 import br.com.acbr.lib.bal.ACBrLibBAL
 
-class ACBrLibBALManager private constructor() {
+class ACBrLibBALManager private constructor(
+    private val appDir: String
+) {
 
+    private val ARQCONFIG_PADRAO = "ACBrLib.ini"
     private val acbrLibInstance: ACBrLibBAL
 
     init {
-        acbrLibInstance = ACBrLibBAL("", "")
+        val arqConfigPath = "$appDir/$ARQCONFIG_PADRAO"
+        acbrLibInstance = ACBrLibBAL(arqConfigPath, "")
     }
 
     fun getLib(): ACBrLibBAL {
@@ -18,9 +22,9 @@ class ACBrLibBALManager private constructor() {
         @Volatile
         private var INSTANCE: ACBrLibBALManager? = null
 
-        fun getInstance(): ACBrLibBALManager =
+        fun getInstance(appDir: String): ACBrLibBALManager =
             INSTANCE ?: synchronized(this) {
-                INSTANCE ?: ACBrLibBALManager().also { INSTANCE = it }
+                INSTANCE ?: ACBrLibBALManager(appDir).also { INSTANCE = it }
             }
     }
 }

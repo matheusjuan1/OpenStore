@@ -35,5 +35,5 @@ val storeModules = module {
 
     viewModel { CheckoutViewModel(get(), get()) }
 
-    viewModel { ScaleViewModel(get(), get()) }
+    viewModel { ScaleViewModel(get(), get(), get()) }
 }

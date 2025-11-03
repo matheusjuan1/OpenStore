@@ -6,9 +6,9 @@ import com.mjtech.acbrlib.bal.data.source.ACBrLibBALManager
 import com.mjtech.store.domain.scale.repository.ScaleRepository
 import org.koin.dsl.module
 
-val balModule = module {
+fun balModule(appDir: String) = module {
 
-    single<ACBrLibBALManager> { ACBrLibBALManager.getInstance() }
+    single<ACBrLibBALManager> { ACBrLibBALManager.getInstance(appDir) }
 
     single<BalConfigRepository> { BalRepository(acbrLibBal = get()) }
 
