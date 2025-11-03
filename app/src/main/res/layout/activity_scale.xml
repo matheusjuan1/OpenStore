@@ -74,7 +74,7 @@
             style="@style/StoreMainButton"
             android:layout_width="280dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="72dp"
+            android:layout_marginTop="100dp"
             android:paddingVertical="14dp"
             android:text="@string/calculate_price"
             android:textSize="18sp"

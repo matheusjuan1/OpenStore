@@ -47,14 +47,24 @@ class ScaleActivity : AppCompatActivity() {
     private fun initObservers() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
+                scaleViewModel.initialLoading.collect { isLoading ->
+                    if (isLoading) {
+                        LoadingDialog.show(supportFragmentManager)
+                    } else {
+                        LoadingDialog.hide(supportFragmentManager)
+                    }
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
                 scaleViewModel.uiState
                     .map { it.price }
                     .distinctUntilChanged()
                     .collect { state ->
                         when (state) {
-                            is Result.Loading -> {
-                                LoadingDialog.show(supportFragmentManager)
-                            }
+                            is Result.Loading -> {}
 
                             is Result.Error -> {
                                 lifecycleScope.launch {
@@ -82,18 +92,49 @@ class ScaleActivity : AppCompatActivity() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 scaleViewModel.uiState
+                    .map { it.initialize }
+                    .collect { state ->
+                        when (state) {
+                            is Result.Loading -> {}
+                            is Result.Error -> {
+                                showSnackbar(binding.root, state.error, SnackbarType.ERROR)
+                            }
+
+                            is Result.Success -> {
+                                scaleViewModel.activate()
+                            }
+                        }
+                    }
+            }
+        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                scaleViewModel.uiState
+                    .map { it.activate }
+                    .collect { state ->
+                        when (state) {
+                            is Result.Loading -> {}
+                            is Result.Error -> {
+                                showSnackbar(binding.root, state.error, SnackbarType.ERROR)
+                            }
+
+                            is Result.Success -> {}
+                        }
+                    }
+            }
+        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                scaleViewModel.uiState
                     .map { it.weight }
                     .collect { state ->
                         when (state) {
                             is Result.Loading -> {
-//                                LoadingDialog.show(supportFragmentManager)
                             }
 
                             is Result.Error -> {
-//                                lifecycleScope.launch {
-//                                    delay(50)
-//                                    LoadingDialog.hide(supportFragmentManager)
-//                                }
                                 showSnackbar(
                                     binding.root, "Não foi possível obter o peso.",
                                     SnackbarType.ERROR
@@ -101,10 +142,6 @@ class ScaleActivity : AppCompatActivity() {
                             }
 
                             is Result.Success -> {
-//                                lifecycleScope.launch {
-//                                    delay(50)
-//                                    LoadingDialog.hide(supportFragmentManager)
-//                                }
                                 showSnackbar(
                                     binding.root,
                                     "Peso obtido com sucesso!\nPeso: ${state.data} kg",
