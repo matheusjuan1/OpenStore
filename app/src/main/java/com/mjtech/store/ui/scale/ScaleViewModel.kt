@@ -26,10 +26,11 @@ class ScaleViewModel(
     val initialLoading: StateFlow<Boolean> = _uiState
         .map { state ->
             val priceDone = state.price !is Result.Loading
+            val configDone = state.configScale !is Result.Loading
             val initializedDone = state.initialize !is Result.Loading
             val activatedDone = state.activate !is Result.Loading
 
-            val initialTasksDone = priceDone && initializedDone && activatedDone
+            val initialTasksDone = priceDone && configDone && initializedDone && activatedDone
 
             !initialTasksDone
         }
@@ -55,6 +56,66 @@ class ScaleViewModel(
         }
     }
 
+    fun configScale() {
+        viewModelScope.launch {
+            balConfigRepository.configurarBalanca().collect { configurarResult ->
+                _uiState.update { currentState ->
+                    currentState.copy(configScale = configurarResult)
+                }
+            }
+        }
+    }
+
+    fun activate() {
+        viewModelScope.launch {
+            balConfigRepository.ativar().collect { ativarResult ->
+                _uiState.update { currentState ->
+                    currentState.copy(activate = ativarResult)
+                }
+            }
+        }
+    }
+
+    fun deactivate() {
+        viewModelScope.launch {
+            balConfigRepository.desativar().collect { desativarResult ->
+                _uiState.update { currentState ->
+                    currentState.copy(deactivate = desativarResult)
+                }
+
+                if (desativarResult is Result.Success) {
+                    finishScaleResource()
+                }
+            }
+        }
+    }
+
+    fun calculatePlateValue() {
+        val currentState = _uiState.value
+
+        _uiState.update { it.copy(calculationError = null) }
+
+        val weightResult = currentState.weight
+        val priceResult = currentState.price
+
+        val calculatedValue = try {
+            val weight = (weightResult as? Result.Success)?.data
+            val price = (priceResult as? Result.Success)?.data?.pricePerKg
+
+            if (weight == null || price == null) {
+                throw IllegalStateException("Peso ou Preço não estão disponíveis ou estáveis.")
+            }
+            weight * price
+
+        } catch (e: Exception) {
+            _uiState.update { it.copy(calculationError = "Erro ao calcular: ${e.message}") }
+            return
+        }
+        _uiState.update {
+            it.copy(totalValue = calculatedValue)
+        }
+    }
+
     private fun getPriceSetting() {
         viewModelScope.launch {
             pricingRepository.getPriceSetting().collect { priceResult ->
@@ -75,27 +136,7 @@ class ScaleViewModel(
         }
     }
 
-    fun activate() {
-        viewModelScope.launch {
-            balConfigRepository.ativar().collect { ativarResult ->
-                _uiState.update { currentState ->
-                    currentState.copy(activate = ativarResult)
-                }
-            }
-        }
-    }
-
-    private fun deactivate() {
-        viewModelScope.launch {
-            balConfigRepository.desativar().collect { desativarResult ->
-                _uiState.update { currentState ->
-                    currentState.copy(deactivate = desativarResult)
-                }
-            }
-        }
-    }
-
-    private fun finish() {
+    private fun finishScaleResource() {
         viewModelScope.launch {
             balConfigRepository.finalizar().collect { finalizarResult ->
                 _uiState.update { currentState ->

@@ -45,4 +45,8 @@
     <string name="valor_do_prato">Valor do Prato:</string>
     <string name="peso_liquido">Peso Líquido:</string>
     <string name="ct_scale_instruction">Ilustração do Passo Atual</string>
+    <string name="error_price_scale">Não foi possível obter o preço.</string>
+    <string name="error_get_weight">Não foi possível obter o peso.</string>
+    <string name="peso_kg">Peso: %1$s kg</string>
+    <string name="error_generic">Ocorreu um erro, Tente novamente.</string>
 </resources>

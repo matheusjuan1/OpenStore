@@ -2,6 +2,7 @@ package com.mjtech.store.ui.scale
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -17,7 +18,7 @@ import com.mjtech.store.ui.common.components.LoadingDialog
 import com.mjtech.store.ui.common.components.SnackbarType
 import com.mjtech.store.ui.common.components.showSnackbar
 import com.mjtech.store.ui.common.currencyFormat
-import kotlinx.coroutines.delay
+import com.mjtech.store.ui.common.format
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -44,6 +45,11 @@ class ScaleActivity : AppCompatActivity() {
         initObservers()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        scaleViewModel.deactivate()
+    }
+
     private fun initObservers() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -67,21 +73,13 @@ class ScaleActivity : AppCompatActivity() {
                             is Result.Loading -> {}
 
                             is Result.Error -> {
-                                lifecycleScope.launch {
-                                    delay(50)
-                                    LoadingDialog.hide(supportFragmentManager)
-                                }
                                 showSnackbar(
-                                    binding.root, "Não foi possível obter o preço.",
+                                    binding.root, getString(R.string.error_price_scale),
                                     SnackbarType.ERROR
                                 )
                             }
 
                             is Result.Success -> {
-                                lifecycleScope.launch {
-                                    delay(50)
-                                    LoadingDialog.hide(supportFragmentManager)
-                                }
                                 setupPriceDisplay(state.data)
                             }
                         }
@@ -93,6 +91,27 @@ class ScaleActivity : AppCompatActivity() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 scaleViewModel.uiState
                     .map { it.initialize }
+                    .distinctUntilChanged()
+                    .collect { state ->
+                        when (state) {
+                            is Result.Loading -> {}
+                            is Result.Error -> {
+                                showSnackbar(binding.root, state.error, SnackbarType.ERROR)
+                            }
+
+                            is Result.Success -> {
+                                scaleViewModel.configScale()
+                            }
+                        }
+                    }
+            }
+        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                scaleViewModel.uiState
+                    .map { it.configScale }
+                    .distinctUntilChanged()
                     .collect { state ->
                         when (state) {
                             is Result.Loading -> {}
@@ -112,6 +131,7 @@ class ScaleActivity : AppCompatActivity() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 scaleViewModel.uiState
                     .map { it.activate }
+                    .distinctUntilChanged()
                     .collect { state ->
                         when (state) {
                             is Result.Loading -> {}
@@ -129,6 +149,7 @@ class ScaleActivity : AppCompatActivity() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 scaleViewModel.uiState
                     .map { it.weight }
+                    .distinctUntilChanged()
                     .collect { state ->
                         when (state) {
                             is Result.Loading -> {
@@ -136,20 +157,34 @@ class ScaleActivity : AppCompatActivity() {
 
                             is Result.Error -> {
                                 showSnackbar(
-                                    binding.root, "Não foi possível obter o peso.",
+                                    binding.root, getString(R.string.error_get_weight),
                                     SnackbarType.ERROR
                                 )
                             }
 
                             is Result.Success -> {
-                                showSnackbar(
-                                    binding.root,
-                                    "Peso obtido com sucesso!\nPeso: ${state.data} kg",
-                                    SnackbarType.SUCCESS
-                                )
+                                scaleViewModel.calculatePlateValue()
                             }
                         }
                     }
+            }
+        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                scaleViewModel.uiState.collect { state ->
+                    state.calculationError?.let { error ->
+                        showSnackbar(binding.root, error, SnackbarType.ERROR)
+                    }
+                    if (state.totalValue > 0.0) {
+                        setupResultCard(
+                            state.totalValue,
+                            (state.weight as? Result.Success)?.data ?: 0.0
+                        )
+                    } else {
+                        binding.bottomPanelContainer.visibility = View.INVISIBLE
+                    }
+                }
             }
         }
     }
@@ -164,7 +199,7 @@ class ScaleActivity : AppCompatActivity() {
         }
 
         binding.btnAddToCart.setOnClickListener {
-            // Abrir dialogo de adicionais ou finalizar compra
+
         }
     }
 
@@ -172,5 +207,14 @@ class ScaleActivity : AppCompatActivity() {
     private fun setupPriceDisplay(priceSetting: PriceSetting) {
         binding.tvPrice.text =
             "Preço por ${priceSetting.unit}: ${priceSetting.pricePerKg.currencyFormat()}"
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun setupResultCard(totalValue: Double, weight: Double) {
+        binding.bottomPanelContainer.visibility = View.VISIBLE
+
+        binding.tvWeight.text = getString(R.string.peso_kg, weight.format())
+
+        binding.tvFinalValue.text = totalValue.currencyFormat()
     }
 }

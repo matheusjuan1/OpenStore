@@ -12,4 +12,6 @@ interface BalConfigRepository {
     fun ativar(): Flow<Result<Unit>>
 
     fun desativar(): Flow<Result<Unit>>
+
+    fun configurarBalanca(): Flow<Result<Unit>>
 }

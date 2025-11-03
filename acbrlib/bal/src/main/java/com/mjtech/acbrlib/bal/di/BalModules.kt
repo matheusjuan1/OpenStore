@@ -10,7 +10,7 @@ fun balModule(appDir: String) = module {
 
     single<ACBrLibBALManager> { ACBrLibBALManager.getInstance(appDir) }
 
-    single<BalConfigRepository> { BalRepository(acbrLibBal = get()) }
+    single<BalConfigRepository> { BalRepository(acbrLibBal = get(), appDir = appDir) }
 
-    single<ScaleRepository> { BalRepository(acbrLibBal = get()) }
+    single<ScaleRepository> { BalRepository(acbrLibBal = get(), appDir = appDir) }
 }
