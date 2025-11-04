@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.mjtech.store.databinding.ActivitySplashScreenBinding
-import com.mjtech.store.ui.onboarding.OnboardingActivity
+import com.mjtech.store.ui.products.ProductsActivity
 
 @SuppressLint("CustomSplashScreen")
 class SplashScreenActivity : AppCompatActivity() {
@@ -31,7 +31,7 @@ class SplashScreenActivity : AppCompatActivity() {
         }
 
         Handler(Looper.getMainLooper()).postDelayed({
-            startActivity(Intent(this, OnboardingActivity::class.java))
+            startActivity(Intent(this, ProductsActivity::class.java))
             finish()
         }, SPLASH_SCREEN_DURATION)
 
