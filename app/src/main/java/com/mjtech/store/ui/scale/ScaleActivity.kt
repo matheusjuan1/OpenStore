@@ -1,6 +1,6 @@
 package com.mjtech.store.ui.scale
 
-import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.activity.enableEdgeToEdge
@@ -19,6 +19,7 @@ import com.mjtech.store.ui.common.components.SnackbarType
 import com.mjtech.store.ui.common.components.showSnackbar
 import com.mjtech.store.ui.common.currencyFormat
 import com.mjtech.store.ui.common.format
+import com.mjtech.store.ui.products.ProductsActivity
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -187,6 +188,34 @@ class ScaleActivity : AppCompatActivity() {
                 }
             }
         }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                scaleViewModel.uiState
+                    .map { it.addToCart }
+                    .distinctUntilChanged()
+                    .collect { state ->
+                        when (state) {
+                            is Result.Loading -> {
+                                LoadingDialog.show(supportFragmentManager)
+                            }
+
+                            is Result.Error -> {
+                                LoadingDialog.hide(supportFragmentManager)
+                                showSnackbar(binding.root, state.error, SnackbarType.ERROR)
+                                scaleViewModel.resetAddToCartState()
+                            }
+
+                            is Result.Success -> {
+                                LoadingDialog.hide(supportFragmentManager)
+                                showPostAddDialog()
+                            }
+
+                            else -> {}
+                        }
+                    }
+            }
+        }
     }
 
     private fun initListeners() {
@@ -199,17 +228,34 @@ class ScaleActivity : AppCompatActivity() {
         }
 
         binding.btnAddToCart.setOnClickListener {
-
+            scaleViewModel.addToCart()
         }
     }
 
-    @SuppressLint("SetTextI18n")
-    private fun setupPriceDisplay(priceSetting: PriceSetting) {
-        binding.tvPrice.text =
-            "Preço por ${priceSetting.unit}: ${priceSetting.pricePerKg.currencyFormat()}"
+    private fun showPostAddDialog() {
+        val dialog = CheckoutScaleDialog()
+        dialog.show(supportFragmentManager, "PostAddDialog")
     }
 
-    @SuppressLint("SetTextI18n")
+    fun onFinishPlateClick() {
+        finish()
+    }
+
+    fun onAddMoreClick() {
+        Intent(this, ProductsActivity::class.java).apply {
+            startActivity(this)
+        }
+    }
+
+    private fun setupPriceDisplay(priceSetting: PriceSetting) {
+        binding.tvPrice.text =
+            getString(
+                R.string.preco_por_,
+                priceSetting.unit,
+                priceSetting.pricePerKg.currencyFormat()
+            )
+    }
+
     private fun setupResultCard(totalValue: Double, weight: Double) {
         binding.bottomPanelContainer.visibility = View.VISIBLE
 

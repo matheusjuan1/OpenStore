@@ -11,6 +11,7 @@ data class ScaleUiState(
     val finish: Result<Unit> = Result.Loading,
     val activate: Result<Unit> = Result.Loading,
     val deactivate: Result<Unit> = Result.Loading,
+    val addToCart: Result<Unit>? = null,
     val totalValue: Double = 0.0,
     val calculationError: String? = null
 )

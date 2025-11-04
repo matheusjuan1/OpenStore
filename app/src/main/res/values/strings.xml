@@ -49,4 +49,5 @@
     <string name="error_get_weight">Não foi possível obter o peso.</string>
     <string name="peso_kg">Peso: %1$s kg</string>
     <string name="error_generic">Ocorreu um erro, Tente novamente.</string>
+    <string name="preco_por_">Preço por %1$s: %2$s</string>
 </resources>

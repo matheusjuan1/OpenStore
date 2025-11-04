@@ -2,15 +2,13 @@ package com.mjtech.acbrlib.bal.data.repository
 
 import com.mjtech.acbrlib.bal.data.source.ACBrLibBALManager
 import com.mjtech.store.domain.common.Result
-import com.mjtech.store.domain.scale.repository.ScaleRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 
-class BalRepository(private val acbrLibBal: ACBrLibBALManager, private val appDir: String) :
-    ScaleRepository,
-    BalConfigRepository {
+class AcbrLibBalRepository(private val acbrLibBal: ACBrLibBALManager, private val appDir: String) :
+    BalancaRepository {
 
     private var isConfigured: Boolean = false
 
@@ -46,7 +44,7 @@ class BalRepository(private val acbrLibBal: ACBrLibBALManager, private val appDi
         }
     }
 
-    override fun getWeight(): Flow<Result<Double>> = flow {
+    override fun lerPeso(): Flow<Result<Double>> = flow {
         emit(Result.Loading)
         try {
             val weight = withContext(Dispatchers.IO) {

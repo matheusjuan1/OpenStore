@@ -2,10 +2,11 @@ package com.mjtech.store.ui.scale
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mjtech.acbrlib.bal.data.repository.BalConfigRepository
+import com.mjtech.acbrlib.bal.data.repository.BalancaRepository
+import com.mjtech.store.domain.cart.repostitory.CartRepository
 import com.mjtech.store.domain.common.Result
+import com.mjtech.store.domain.products.model.Product
 import com.mjtech.store.domain.scale.repository.PricingRepository
-import com.mjtech.store.domain.scale.repository.ScaleRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -16,8 +17,8 @@ import kotlinx.coroutines.launch
 
 class ScaleViewModel(
     private val pricingRepository: PricingRepository,
-    private val acbrLibBalRepository: ScaleRepository,
-    private val balConfigRepository: BalConfigRepository
+    private val balancaRepository: BalancaRepository,
+    private val cartRepository: CartRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ScaleUiState())
@@ -48,7 +49,7 @@ class ScaleViewModel(
 
     fun getWeight() {
         viewModelScope.launch {
-            acbrLibBalRepository.getWeight().collect { weightResult ->
+            balancaRepository.lerPeso().collect { weightResult ->
                 _uiState.update { currentState ->
                     currentState.copy(weight = weightResult)
                 }
@@ -58,7 +59,7 @@ class ScaleViewModel(
 
     fun configScale() {
         viewModelScope.launch {
-            balConfigRepository.configurarBalanca().collect { configurarResult ->
+            balancaRepository.configurarBalanca().collect { configurarResult ->
                 _uiState.update { currentState ->
                     currentState.copy(configScale = configurarResult)
                 }
@@ -68,7 +69,7 @@ class ScaleViewModel(
 
     fun activate() {
         viewModelScope.launch {
-            balConfigRepository.ativar().collect { ativarResult ->
+            balancaRepository.ativar().collect { ativarResult ->
                 _uiState.update { currentState ->
                     currentState.copy(activate = ativarResult)
                 }
@@ -78,7 +79,7 @@ class ScaleViewModel(
 
     fun deactivate() {
         viewModelScope.launch {
-            balConfigRepository.desativar().collect { desativarResult ->
+            balancaRepository.desativar().collect { desativarResult ->
                 _uiState.update { currentState ->
                     currentState.copy(deactivate = desativarResult)
                 }
@@ -116,6 +117,46 @@ class ScaleViewModel(
         }
     }
 
+    fun addToCart() {
+        val currentState = _uiState.value
+
+        val weightSuccess = (currentState.weight as? Result.Success)?.data
+
+        val total = currentState.totalValue
+
+        if (total <= 0.0 || weightSuccess == null) {
+            _uiState.update {
+                it.copy(
+                    addToCart = Result.Error("O valor ou peso não são válidos para adicionar."),
+                )
+            }
+            return
+        }
+
+        val product = Product(
+            id = "101",
+            categoryId = "0",
+            name = "Prato por KG",
+            description = "",
+            price = total,
+            imageUrl = "",
+            isAvailable = true
+        )
+
+        viewModelScope.launch {
+            cartRepository.addItem(product).collect { result ->
+                _uiState.update { currentState ->
+                    currentState.copy(addToCart = result)
+                }
+            }
+        }
+    }
+
+
+    fun resetAddToCartState() {
+        _uiState.update { it.copy(addToCart = null) }
+    }
+
     private fun getPriceSetting() {
         viewModelScope.launch {
             pricingRepository.getPriceSetting().collect { priceResult ->
@@ -128,7 +169,7 @@ class ScaleViewModel(
 
     private fun initialize() {
         viewModelScope.launch {
-            balConfigRepository.inicializar().collect { inicializarResult ->
+            balancaRepository.inicializar().collect { inicializarResult ->
                 _uiState.update { currentState ->
                     currentState.copy(initialize = inicializarResult)
                 }
@@ -138,7 +179,7 @@ class ScaleViewModel(
 
     private fun finishScaleResource() {
         viewModelScope.launch {
-            balConfigRepository.finalizar().collect { finalizarResult ->
+            balancaRepository.finalizar().collect { finalizarResult ->
                 _uiState.update { currentState ->
                     currentState.copy(finish = finalizarResult)
                 }

@@ -3,7 +3,9 @@ package com.mjtech.acbrlib.bal.data.repository
 import com.mjtech.store.domain.common.Result
 import kotlinx.coroutines.flow.Flow
 
-interface BalConfigRepository {
+interface BalancaRepository {
+
+    fun lerPeso(): Flow<Result<Double>>
 
     fun inicializar(): Flow<Result<Unit>>
 
