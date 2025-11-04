@@ -19,7 +19,8 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "open-store"
+rootProject.name = "acbr-pdv"
 include(":app")
 include(":domain")
 include(":simulate")
+include(":acbrlib:bal")

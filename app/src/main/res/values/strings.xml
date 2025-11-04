@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">OpenStore</string>
+    <string name="app_name">ACBrFood</string>
     <string name="carrinho_de_compras">Carrinho de Compras</string>
     <string name="buscar">Buscar</string>
     <string name="todos">Todos</string>
@@ -33,4 +33,24 @@
     <string name="success_message_buy">Compra realizada com sucesso!</string>
     <string name="error_process_payment">Erro ao processar o pagamento.</string>
     <string name="error_process_payment_retry">Ocorreu um erro na transação. Tente novamente.</string>
+    <string name="welcome_message">Bem-vindo(a)! O que você deseja para hoje?</string>
+    <string name="weigh_dish">Pesar Prato</string>
+    <string name="pratos_e_adicionais">Pratos e\nAdicionais</string>
+    <string name="ct_food">Imagem de pratos e adicionais</string>
+    <string name="ct_scale">Imagem de balança</string>
+    <string name="voltar">Voltar</string>
+    <string name="instruction_weighing">Por favor, coloque o prato na balança antes de começar.</string>
+    <string name="calculate_price">Calcular Valor do Prato</string>
+    <string name="finalizar">Finalizar</string>
+    <string name="valor_do_prato">Valor do Prato:</string>
+    <string name="peso_liquido">Peso Líquido:</string>
+    <string name="ct_scale_instruction">Ilustração do Passo Atual</string>
+    <string name="error_price_scale">Não foi possível obter o preço.</string>
+    <string name="error_get_weight">Não foi possível obter o peso.</string>
+    <string name="peso_kg">Peso: %1$s kg</string>
+    <string name="error_generic">Ocorreu um erro, Tente novamente.</string>
+    <string name="preco_por_">Preço por %1$s: %2$s</string>
+    <string name="message_scale_checkout">Deseja adicionar mais itens a sua compra?</string>
+    <string name="atencao">Atenção</string>
+    <string name="adicionar">Adicionar</string>
 </resources>

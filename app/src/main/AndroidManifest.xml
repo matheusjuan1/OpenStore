@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-feature android:name="android.hardware.usb.host" />
+    <uses-permission android:name="android.permission.USB_PERMISSION" />
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -15,6 +17,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.OpenStore"
         tools:targetApi="31">
+        <activity
+            android:name=".ui.scale.ScaleActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.onboarding.OnboardingActivity"
+            android:exported="false" />
         <activity
             android:name=".ui.checkout.CheckoutActivity"
             android:exported="false" />

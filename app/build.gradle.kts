@@ -44,6 +44,7 @@ dependencies {
 
     implementation(project(":domain"))
     implementation(project(":simulate"))
+    implementation(project(":acbrlib:bal"))
 
     implementation(libs.coil)
     implementation(libs.coil.network.okhttp)
