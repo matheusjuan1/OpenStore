@@ -71,7 +71,7 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
             when (checkoutStatus) {
                 CheckoutActivity.RESULT_SUCCESS -> {
                     showSnackbar(
-                        anchorView = binding.container,
+                        anchorView = binding.root,
                         message = getString(R.string.success_message_buy),
                         type = SnackbarType.SUCCESS
                     )
@@ -79,7 +79,7 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
 
                 CheckoutActivity.RESULT_FAILURE -> {
                     showSnackbar(
-                        anchorView = binding.container,
+                        anchorView = binding.root,
                         message = getString(R.string.error_process_payment),
                         type = SnackbarType.ERROR
                     )
@@ -126,7 +126,7 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
 
                             is Result.Error -> {
                                 showSnackbar(
-                                    binding.container,
+                                    binding.root,
                                     getString(R.string.error_loading_categories),
                                     SnackbarType.ERROR
                                 )
@@ -151,7 +151,7 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
                         when (state) {
                             is Result.Error -> {
                                 showSnackbar(
-                                    binding.container,
+                                    binding.root,
                                     getString(R.string.error_add_cart_item),
                                     SnackbarType.ERROR
                                 )
@@ -178,7 +178,7 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
                         when (state) {
                             is Result.Error -> {
                                 showSnackbar(
-                                    binding.container,
+                                    binding.root,
                                     getString(R.string.error_remove_cart_item),
                                     SnackbarType.ERROR
                                 )
@@ -245,7 +245,7 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
 
                         is Result.Error -> {
                             showSnackbar(
-                                binding.container,
+                                binding.root,
                                 getString(R.string.error_loading_products),
                                 SnackbarType.ERROR
                             )
@@ -304,7 +304,7 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
                 showCartDialog()
             } else {
                 showSnackbar(
-                    binding.container,
+                    binding.root,
                     getString(R.string.empty_cart),
                     SnackbarType.INFO
                 )
@@ -476,10 +476,6 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
     private fun setupFabButton() {
         binding.fabCart.setOnClickListener {
             showCartDialog()
-        }
-
-        binding.fabBack.setOnClickListener {
-            finish()
         }
     }
 
