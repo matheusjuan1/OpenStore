@@ -134,7 +134,7 @@ class ScaleViewModel(
         }
 
         val product = Product(
-            id = "101",
+            id = "000",
             categoryId = "0",
             name = "Prato por KG",
             description = "",

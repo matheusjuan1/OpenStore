@@ -50,4 +50,7 @@
     <string name="peso_kg">Peso: %1$s kg</string>
     <string name="error_generic">Ocorreu um erro, Tente novamente.</string>
     <string name="preco_por_">Preço por %1$s: %2$s</string>
+    <string name="message_scale_checkout">Deseja adicionar mais itens a sua compra?</string>
+    <string name="atencao">Atenção</string>
+    <string name="adicionar">Adicionar</string>
 </resources>

@@ -14,6 +14,7 @@ import com.mjtech.store.R
 import com.mjtech.store.databinding.ActivityScaleBinding
 import com.mjtech.store.domain.common.Result
 import com.mjtech.store.domain.scale.model.PriceSetting
+import com.mjtech.store.ui.checkout.CheckoutActivity
 import com.mjtech.store.ui.common.components.LoadingDialog
 import com.mjtech.store.ui.common.components.SnackbarType
 import com.mjtech.store.ui.common.components.showSnackbar
@@ -238,12 +239,16 @@ class ScaleActivity : AppCompatActivity() {
     }
 
     fun onFinishPlateClick() {
-        finish()
+        Intent(this, CheckoutActivity::class.java).apply {
+            startActivity(this)
+            finish()
+        }
     }
 
     fun onAddMoreClick() {
         Intent(this, ProductsActivity::class.java).apply {
             startActivity(this)
+            finish()
         }
     }
 
