@@ -5,35 +5,31 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/rounded_bottom_sheet_background"
-    android:paddingHorizontal="16dp"
-    android:paddingBottom="8dp"
-    android:paddingTop="16dp"
     android:clickable="true"
-    android:focusable="true">
+    android:focusable="true"
+    android:paddingHorizontal="16dp"
+    android:paddingTop="16dp"
+    android:paddingBottom="8dp">
 
     <TextView
+        style="@style/StoreBody.Small"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:textColor="@color/black"
         android:paddingBottom="8dp"
-        android:textSize="16sp"
         android:text="@string/total"
-        />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tv_cart_total_value"
+        style="@style/StoreTitle.Medium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
-        android:textAlignment="center"
-        android:textColor="@color/black"
         android:paddingBottom="8dp"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintTop_toTopOf="parent"
+        android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:text="R$ 99,99" />
 
     <com.google.android.material.button.MaterialButton

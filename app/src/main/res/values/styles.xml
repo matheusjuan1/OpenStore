@@ -42,4 +42,74 @@
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:backgroundDimAmount">0.0</item>
     </style>
+
+    <style name="StoreTitle">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="StoreTitle.Small">
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="StoreTitle.Small.Gray">
+        <item name="android:textColor">@color/gray</item>
+    </style>
+
+    <style name="StoreTitle.Medium">
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="StoreTitle.Medium.Gray">
+        <item name="android:textColor">@color/gray</item>
+    </style>
+
+    <style name="StoreTitle.Large">
+        <item name="android:textSize">22sp</item>
+    </style>
+
+    <style name="StoreTitle.Large.Gray">
+        <item name="android:textColor">@color/gray</item>
+    </style>
+
+    <style name="StoreTitle.Large.White">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="StoreTitle.ExtraLarge">
+        <item name="android:textSize">28sp</item>
+    </style>
+
+    <style name="StoreBody">
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="StoreBody.Small">
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="StoreBody.Medium">
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="StoreBody.Large">
+        <item name="android:textSize">22sp</item>
+    </style>
+
+    <style name="StoreBody.ExtraLarge">
+        <item name="android:textSize">28sp</item>
+    </style>
+
+    <style name="StoreLabel">
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="StoreLabel.Strong">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="StoreLabel.Strong.Gray">
+        <item name="android:textColor">@color/gray</item>
+    </style>
 </resources>

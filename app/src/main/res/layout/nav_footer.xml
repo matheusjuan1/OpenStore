@@ -8,12 +8,10 @@
     android:padding="16dp">
 
     <TextView
-        android:id="@+id/tv_acquirer_info"
+        android:id="@+id/tv_version_info"
+        style="@style/StoreLabel.Strong.Gray"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/gray"
-        android:textSize="12sp"
-        android:textStyle="bold"
         tols:text="Versão: 1.0.0" />
 
 </LinearLayout>

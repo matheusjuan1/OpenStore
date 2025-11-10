@@ -30,4 +30,8 @@ class AppBarDrawer @JvmOverloads constructor(
     fun setItemActive(itemDrawer: ItemDrawer) {
         navView.menu.findItem(itemDrawer.id)?.isChecked = true
     }
+
+    fun setVersionName(versionName: String) {
+        binding.navFooter.tvVersionInfo.text = context.getString(R.string.version, versionName)
+    }
 }
