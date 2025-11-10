@@ -33,4 +33,5 @@
     <string name="success_message_buy">Compra realizada com sucesso!</string>
     <string name="error_process_payment">Erro ao processar o pagamento.</string>
     <string name="error_process_payment_retry">Ocorreu um erro na transação. Tente novamente.</string>
+    <string name="version">Versão: %s</string>
 </resources>

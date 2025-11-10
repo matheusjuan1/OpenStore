@@ -44,6 +44,7 @@ import com.mjtech.store.ui.common.components.AppBarDrawer
 import com.mjtech.store.ui.common.components.LoadingDialog
 import com.mjtech.store.ui.common.components.SnackbarType
 import com.mjtech.store.ui.common.components.showSnackbar
+import com.mjtech.store.ui.common.getAppVersionName
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
@@ -71,7 +72,7 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
             when (checkoutStatus) {
                 CheckoutActivity.RESULT_SUCCESS -> {
                     showSnackbar(
-                        anchorView = binding.root,
+                        anchorView = binding.mainLayout,
                         message = getString(R.string.success_message_buy),
                         type = SnackbarType.SUCCESS
                     )
@@ -79,7 +80,7 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
 
                 CheckoutActivity.RESULT_FAILURE -> {
                     showSnackbar(
-                        anchorView = binding.root,
+                        anchorView = binding.mainLayout,
                         message = getString(R.string.error_process_payment),
                         type = SnackbarType.ERROR
                     )
@@ -126,7 +127,7 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
 
                             is Result.Error -> {
                                 showSnackbar(
-                                    binding.root,
+                                    binding.mainLayout,
                                     getString(R.string.error_loading_categories),
                                     SnackbarType.ERROR
                                 )
@@ -151,7 +152,7 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
                         when (state) {
                             is Result.Error -> {
                                 showSnackbar(
-                                    binding.root,
+                                    binding.mainLayout,
                                     getString(R.string.error_add_cart_item),
                                     SnackbarType.ERROR
                                 )
@@ -178,7 +179,7 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
                         when (state) {
                             is Result.Error -> {
                                 showSnackbar(
-                                    binding.root,
+                                    binding.mainLayout,
                                     getString(R.string.error_remove_cart_item),
                                     SnackbarType.ERROR
                                 )
@@ -245,7 +246,7 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
 
                         is Result.Error -> {
                             showSnackbar(
-                                binding.root,
+                                binding.mainLayout,
                                 getString(R.string.error_loading_products),
                                 SnackbarType.ERROR
                             )
@@ -285,6 +286,8 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         binding.appBarDrawer.setNavigationListener(this)
 
         binding.appBarDrawer.setItemActive(AppBarDrawer.ItemDrawer.HOME)
+
+        binding.appBarDrawer.setVersionName(getAppVersionName(packageManager, packageName))
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -304,7 +307,7 @@ class ProductsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
                 showCartDialog()
             } else {
                 showSnackbar(
-                    binding.root,
+                    binding.mainLayout,
                     getString(R.string.empty_cart),
                     SnackbarType.INFO
                 )
