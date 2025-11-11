@@ -22,4 +22,5 @@ dependencyResolutionManagement {
 rootProject.name = "open-store"
 include(":app")
 include(":domain")
-include(":simulate")
+include(":data:common")
+include(":data:mock")
