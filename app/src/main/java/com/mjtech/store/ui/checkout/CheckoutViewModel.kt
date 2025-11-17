@@ -120,6 +120,8 @@ class CheckoutViewModel(
 
         if (selectedMethod?.requiresInstallments == true && amount > 0.0) {
             loadInstallmentOptions(methodId, amount)
+        } else if (selectedMethod?.requiresInstallments == false && amount > 0.0) {
+            processPayment()
         }
     }
 
@@ -134,6 +136,7 @@ class CheckoutViewModel(
                 )
             )
         }
+        processPayment()
     }
 
     fun processPayment() {

@@ -2,6 +2,7 @@ package com.mjtech.store.ui.checkout
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -50,8 +51,9 @@ class InstallmentOptionAdapter(
                     totalValue
                 )
 
-            binding.root.setOnClickListener {
+            binding.mainLayout.setOnClickListener {
                 viewModel.onInstallmentSelected(option)
+                (binding.root.context as? FragmentActivity)?.supportFragmentManager?.popBackStack()
             }
         }
     }
