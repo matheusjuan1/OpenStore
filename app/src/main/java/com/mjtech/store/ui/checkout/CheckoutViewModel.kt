@@ -6,11 +6,13 @@ import androidx.lifecycle.viewModelScope
 import com.mjtech.store.domain.cart.repostitory.CartRepository
 import com.mjtech.store.domain.common.Result
 import com.mjtech.store.domain.payment.model.InstallmentDetails
+import com.mjtech.store.domain.payment.model.InstallmentOption
 import com.mjtech.store.domain.payment.model.InstallmentType
 import com.mjtech.store.domain.payment.model.Payment
 import com.mjtech.store.domain.payment.model.PaymentType
 import com.mjtech.store.domain.payment.repository.PaymentCallback
 import com.mjtech.store.domain.payment.repository.PaymentProcessor
+import com.mjtech.store.domain.payment.repository.PaymentRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,6 +21,7 @@ import kotlinx.coroutines.launch
 
 class CheckoutViewModel(
     private val paymentProcessor: PaymentProcessor,
+    private val paymentRepository: PaymentRepository,
     private val cartRepository: CartRepository
 ) : ViewModel() {
 
@@ -80,32 +83,52 @@ class CheckoutViewModel(
         }
     }
 
-    fun setTransactionAmount(amount: Double) {
-        _uiState.update { it.copy(transactionAmount = amount) }
-        getPaymentOptions(amount)
+    init {
+        loadPaymentMethods()
     }
 
-    fun startNewTransaction(paymentType: PaymentType) {
-        val orderId = System.currentTimeMillis()
+    fun setTransactionAmount(amount: Double) {
+        _uiState.update { it.copy(transactionAmount = amount) }
+    }
 
+    fun onPaymentMethodSelected(methodId: String) {
+        val selectedMethod = _uiState.value.availablePaymentMethods.find { it.id == methodId }
+        val amount = _uiState.value.transactionAmount
+
+        _uiState.update {
+            it.copy(selectedPaymentMethodId = methodId)
+        }
+
+        val paymentType = try {
+            PaymentType.valueOf(methodId)
+        } catch (_: Exception) {
+            Log.e(TAG, "Método de pagamento inválido selecionado: $methodId")
+            return
+        }
+
+        val orderId = System.currentTimeMillis()
         _uiState.update {
             it.copy(
                 payment = Payment(
                     id = orderId,
-                    amount = _uiState.value.transactionAmount,
+                    amount = amount,
                     type = paymentType,
                     installmentDetails = null
                 )
             )
         }
+
+        if (selectedMethod?.requiresInstallments == true && amount > 0.0) {
+            loadInstallmentOptions(methodId, amount)
+        }
     }
 
-    fun onInstallmentSelected(installments: Int) {
+    fun onInstallmentSelected(installment: InstallmentOption) {
         _uiState.update {
             it.copy(
                 payment = it.payment?.copy(
                     installmentDetails = InstallmentDetails(
-                        installments = installments,
+                        installments = installment.count,
                         installmentType = InstallmentType.MERCHANT
                     )
                 )
@@ -144,33 +167,31 @@ class CheckoutViewModel(
         _uiState.update { it.copy(paymentResult = null, errorMessage = null) }
     }
 
-    fun isInstallmentAvailable(): Boolean {
-        return _uiState.value.installmentOptions.size > 1
-    }
-
-    fun getInstallmentValue(installment: Int): Double {
-        return _uiState.value.transactionAmount / installment
-    }
-
-    private fun getPaymentOptions(amount: Double) {
+    private fun loadPaymentMethods() {
         viewModelScope.launch {
-            _uiState.update {
-                it.copy(
-                    isLoading = true
-                )
-            }
+            paymentRepository.getAvailablePaymentMethods()
+                .collect { result ->
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            paymentMethods = result,
+                            isLoading = result is Result.Loading
+                        )
+                    }
+                }
+        }
+    }
 
-            val installmentOptions = if (amount >= 100.0) {
-                listOf(1, 2, 3, 4, 5, 6)
-            } else {
-                listOf(1)
-            }
-            _uiState.update {
-                it.copy(
-                    installmentOptions = installmentOptions,
-                    isLoading = false
-                )
-            }
+    private fun loadInstallmentOptions(methodId: String, amount: Double) {
+        viewModelScope.launch {
+            paymentRepository.getInstallmentOptions(methodId, amount)
+                .collect { result ->
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            installmentsOptions = result,
+                            isLoading = result is Result.Loading
+                        )
+                    }
+                }
         }
     }
 

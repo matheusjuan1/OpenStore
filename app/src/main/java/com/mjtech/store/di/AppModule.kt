@@ -12,5 +12,5 @@ val appModule = module {
 
     viewModel { CartViewModel(get()) }
 
-    viewModel { CheckoutViewModel(get(), get()) }
+    viewModel { CheckoutViewModel(get(), get(), get()) }
 }

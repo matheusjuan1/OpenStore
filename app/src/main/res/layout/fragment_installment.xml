@@ -39,17 +39,20 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <LinearLayout
-        android:id="@+id/lyt_installment_buttons"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_installment_options"
         android:layout_width="280dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:gravity="center_horizontal"
         android:orientation="vertical"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:itemCount="5"
+        tools:listitem="@layout/item_installment_option" />
 
     <Button
         android:id="@+id/btn_cancel"
