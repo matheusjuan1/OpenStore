@@ -13,11 +13,13 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.mjtech.store.R
 import com.mjtech.store.databinding.ActivityCheckoutBinding
-import com.mjtech.store.domain.payment.model.PaymentType
+import com.mjtech.store.domain.common.Result
+import com.mjtech.store.domain.payment.model.PaymentMethod
 import com.mjtech.store.ui.cart.CartViewModel
 import com.mjtech.store.ui.common.components.LoadingDialog
 import com.mjtech.store.ui.common.components.SnackbarType
 import com.mjtech.store.ui.common.components.showSnackbar
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -25,6 +27,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class CheckoutActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityCheckoutBinding
+    private lateinit var paymentAdapter: PaymentMethodAdapter
     private val checkoutViewModel: CheckoutViewModel by viewModel()
     private val cartViewModel: CartViewModel by viewModel()
 
@@ -46,6 +49,8 @@ class CheckoutActivity : AppCompatActivity() {
 
     private fun initViews() {
         binding.appBar.flCartIconContainer.visibility = View.INVISIBLE
+        paymentAdapter = PaymentMethodAdapter(checkoutViewModel)
+        binding.recyclerViewPaymentMethods.adapter = paymentAdapter
     }
 
     private fun initObservers() {
@@ -53,6 +58,7 @@ class CheckoutActivity : AppCompatActivity() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 cartViewModel.cartUiState
                     .map { it.totalPrice }
+                    .distinctUntilChanged()
                     .collect { totalPrice ->
                         checkoutViewModel.setTransactionAmount(totalPrice)
                     }
@@ -63,8 +69,9 @@ class CheckoutActivity : AppCompatActivity() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 checkoutViewModel.uiState
                     .map { it.isLoading }
+                    .distinctUntilChanged()
                     .collect { isLoading ->
-                        binding.layoutPaymentMethods.isEnabled = !isLoading
+                        binding.recyclerViewPaymentMethods.isEnabled = !isLoading
                         if (isLoading) {
                             LoadingDialog.show(supportFragmentManager)
                         } else {
@@ -77,36 +84,55 @@ class CheckoutActivity : AppCompatActivity() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 checkoutViewModel.uiState
-                    .collect { state ->
-                        handlePaymentResult(state.paymentResult, state.errorMessage)
+                    .map { it.availablePaymentMethods }
+                    .distinctUntilChanged()
+                    .collect { methods ->
+                        renderPaymentMethods(methods)
+                    }
+            }
+        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                checkoutViewModel.uiState
+                    .map { state ->
+                        val selectedMethod = state.availablePaymentMethods.find {
+                            it.id == state.selectedPaymentMethodId
+                        }
+                        Triple(
+                            state.selectedPaymentMethodId,
+                            selectedMethod?.requiresInstallments,
+                            state.installmentsOptions
+                        )
+                    }
+                    .distinctUntilChanged()
+                    .collect { (selectedId, requiresInstallments, installmentResult) ->
+                        if (selectedId != null && requiresInstallments == true && installmentResult is Result.Success) {
+                            if (supportFragmentManager.findFragmentById(R.id.fragment_container_view) == null) {
+                                if (installmentResult.data.isNotEmpty()) {
+                                    showInstallmentFragment()
+                                }
+                            }
+                        }
+                    }
+            }
+        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                checkoutViewModel.uiState
+                    .map { state ->
+                        Pair(state.paymentResult, state.errorMessage)
+                    }
+                    .distinctUntilChanged()
+                    .collect { (paymentResult, errorMessage) ->
+                        handlePaymentResult(paymentResult, errorMessage)
                     }
             }
         }
     }
 
     private fun initListeners() {
-        binding.btnDebit.setOnClickListener {
-            checkoutViewModel.startNewTransaction(PaymentType.DEBIT)
-            checkoutViewModel.processPayment()
-        }
-        binding.btnCredit.setOnClickListener {
-            if (checkoutViewModel.isInstallmentAvailable()) {
-                checkoutViewModel.startNewTransaction(PaymentType.CREDIT)
-                showInstallmentFragment()
-            } else {
-                checkoutViewModel.startNewTransaction(PaymentType.CREDIT)
-                checkoutViewModel.processPayment()
-            }
-        }
-        binding.btnPix.setOnClickListener {
-            checkoutViewModel.startNewTransaction(PaymentType.PIX)
-            checkoutViewModel.processPayment()
-        }
-        binding.btnVoucher.setOnClickListener {
-            checkoutViewModel.startNewTransaction(PaymentType.VOUCHER)
-            checkoutViewModel.processPayment()
-        }
-
         binding.btnCancel.setOnClickListener {
             finish()
         }
@@ -138,6 +164,10 @@ class CheckoutActivity : AppCompatActivity() {
                 checkoutViewModel.resetPaymentResult()
             }
         }
+    }
+
+    private fun renderPaymentMethods(methods: List<PaymentMethod>) {
+        paymentAdapter.submitList(methods)
     }
 
     private fun showInstallmentFragment() {

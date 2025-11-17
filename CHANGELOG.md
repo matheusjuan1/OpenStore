@@ -5,14 +5,28 @@ Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 e este projeto adere ao [Versionamento Semântico](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.3] - 2025-11-17
+
+### 🐛 Corrigido (Fixed)
+
+- Resolvido o problema onde o componente ``Snackbar`` era exibido atrás da barra de navegação/tarefas do sistema.
+
+### 🧹 Refatorado (Refactored)
+
+- **Modularização:** O pacote de dados foi promovido a um módulo Gradle separado (``:data``), completando a separação das responsabilidades entre a camada de Domínio e as implementações de dados.
+- **Checkout:** A lógica de seleção de métodos de pagamento e opções de parcelamento foram movidos para um repositório dedicado (``PaymentRepository``), removendo a lógica de negócio do ViewModel e da View.
+- **Design System:** Estilos de texto foram centralizados no ``styles.xml`` para facilitar a manutenção e garantir consistência visual.
+
+### ✨ Adicionado (Added)
+
+- **Versionamento do App:** Adicionada exibição da versão atual do aplicativo no menu de navegação (``Drawer``).
+
 ## [0.0.2] - 2025-10-27
 
 ### 🧹 Refatorado (Refactored)
 
-- **Estrutura de Domínio:** 
-  - O projeto foi refatorado para ter modelos (``models``) e repositórios (``repositories``) mais granulares e específicos por funcionalidade (ex: ``products``, ``cart``), melhorando o desacoplamento.
-- **Consistência:** 
-  - Pacotes e nomes de classes foram revisados para manter a consistência com os princípios de Arquitetura Limpa.
+- **Estrutura de Domínio:** O projeto foi refatorado para ter modelos (``models``) e repositórios (``repositories``) mais granulares e específicos por funcionalidade (ex: ``products``, ``cart``), melhorando o desacoplamento.
+- **Consistência:** Pacotes e nomes de classes foram revisados para manter a consistência com os princípios de Arquitetura Limpa.
 
 ## [0.0.1] - 2025-10-23
 

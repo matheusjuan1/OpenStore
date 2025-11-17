@@ -36,25 +36,22 @@
 
         <TextView
             android:id="@+id/tv_product_name"
+            style="@style/StoreLabel.Strong"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:ellipsize="end"
             android:maxLines="2"
             android:textAlignment="center"
-            android:textSize="14sp"
-            android:textStyle="bold"
             tools:text="Nome do Produto Ficou Longo Demais Para Uma Linha Só" />
 
         <TextView
             android:id="@+id/tv_product_price"
+            style="@style/StoreTitle.Medium.Gray"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="1dp"
             android:textAlignment="center"
-            android:textColor="@color/gray"
-            android:textSize="18sp"
-            android:textStyle="bold"
             tools:text="R$ 99,99" />
 
         <LinearLayout
@@ -77,14 +74,12 @@
 
             <TextView
                 android:id="@+id/tv_item_quantity"
+                style="@style/StoreTitle.Medium.Gray"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp"
                 android:text="@string/initial_value"
-                android:textAlignment="center"
-                android:textColor="@color/gray"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textAlignment="center" />
 
             <ImageButton
                 android:id="@+id/btn_add_item"
